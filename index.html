@@ -132,6 +132,11 @@
     .who{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:24px;background:#fff8e7;background-image:radial-gradient(circle at 90% 0,#ffe9a8 0,transparent 38%),radial-gradient(circle at 0 100%,#ffc6d8 0,transparent 40%)}
     .who h1{font:700 1.5rem var(--cute);margin:0}.who p{margin:0 0 14px;color:#9a9484}
     .who .row{display:flex;gap:16px;width:100%;max-width:420px;justify-content:center}
+    .auth-card{width:100%;max-width:420px;background:var(--card,#fff);border:1px solid var(--line);border-radius:26px;padding:24px 20px;display:flex;flex-direction:column;align-items:center;gap:12px;box-shadow:0 8px 28px #8a6d1d20}
+    .auth-card h1{font-size:1.25rem;text-align:center}.auth-card p{margin:0;color:var(--mute)}
+    .auth-card input{width:100%;min-height:46px;border:2px solid var(--line);border-radius:14px;padding:10px 12px;font:inherit;font-size:16px;background:var(--field);color:var(--ink)}
+    #authMsg[data-error=true]{color:#c0392b}
+
     .pick{flex:1;max-width:190px;border:3px solid #f0e8d2;background:#fffdf7;border-radius:28px;padding:14px 12px 12px;display:grid;justify-items:center;gap:8px;font:700 1.1rem var(--cute);color:#3b3a33;box-shadow:0 8px 24px #8a6d1d18}
     .pick.ai{border-color:#f7dce6;background:#fffafc}
     .pick img{width:100%;aspect-ratio:1;border-radius:50%;object-fit:cover}
@@ -232,6 +237,12 @@ nav button:active span{transform:scale(.85)}
       <form id="expense" class="card">
         <div class="seg" id="typeSeg"><label><input type="radio" name="type" value="out" checked><span>💸 รายจ่าย</span></label><label><input type="radio" name="type" value="in"><span>💰 รายรับ</span></label></div>
         <button type="button" class="slipbtn" id="slipBtn">📷 อ่านจากสลิปโอนเงิน</button><input type="file" id="slipFile" accept="image/*" hidden>
+        <div id="slipReview" class="card hide" style="padding:10px 12px;font-size:.8rem;gap:6px">
+          <b id="slipReviewTitle">ผลตรวจสลิป</b>
+          <p id="slipReviewText" style="margin:0"></p>
+          <label style="display:flex;gap:8px;align-items:flex-start;font-weight:500"><input id="slipConfirm" type="checkbox" style="margin-top:3px"> ฉันตรวจยอดเงินและวันที่เทียบกับภาพสลิปแล้ว</label>
+          <details><summary>ข้อความที่ OCR อ่านได้</summary><pre id="slipRaw" style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:150px;overflow:auto"></pre></details>
+        </div>
         <div class="row2">
           <label class="f">จำนวนเงิน (บาท)<input class="amt" name="amount" type="text" inputmode="decimal" maxlength="12" pattern="[0-9]{1,9}([.][0-9]{1,2})?" placeholder="0.00" required></label>
           <label class="f">วันที่<input name="date" type="date" required></label>
@@ -289,8 +300,21 @@ nav button:active span{transform:scale(.85)}
     <div class="acts" id="profActs"><button type="button" class="del" id="profDel">🗑️ ลบ</button><button type="button" class="cancel" id="profCancel">ยกเลิก</button><button class="go" type="submit">บันทึก</button></div>
   </form>
 </div></div>
-<div id="who" class="who"><h1>ใครใช้งานอยู่นะ? 💰</h1><p>แตะรูปเพื่อเข้าใช้งาน</p>
-  <div class="row" id="pickRow"></div><img id="whoPet" class="whopet" alt="" onerror="this.remove()"></div>
+<div id="who" class="who">
+  <div class="auth-card">
+    <img src="face-tang.png" alt="" style="width:76px;height:76px;border-radius:50%;object-fit:cover">
+    <h1>บัญชีรายรับรายจ่าย 💰</h1>
+    <p id="authHint">เข้าสู่ระบบเพื่อดูข้อมูลของคุณ</p>
+    <form id="authForm" class="box" style="width:100%;max-width:360px">
+      <label class="f">อีเมล<input type="email" name="email" autocomplete="email" required placeholder="you@example.com"></label>
+      <label class="f">รหัสผ่าน<input type="password" name="password" autocomplete="current-password" minlength="6" required placeholder="อย่างน้อย 6 ตัวอักษร"></label>
+      <p id="authMsg" role="status" style="min-height:1.2em;text-align:center;overflow-wrap:anywhere"></p>
+      <button class="go" id="authSubmit" type="submit">เข้าสู่ระบบ</button>
+      <button class="slipbtn" id="authToggle" type="button">ยังไม่มีบัญชี? สมัครสมาชิก</button>
+    </form>
+    <small style="color:#9a9484;text-align:center">ข้อมูลแต่ละบัญชีจะแยกจากกัน</small>
+  </div>
+</div>
 <script>
 /* ถ้าเปิดลิงก์ในเบราว์เซอร์ของแอปอื่น (LINE/Facebook/Instagram ฯลฯ) ให้พาไปเปิดใน Chrome */
 (function(){
@@ -311,9 +335,17 @@ nav button:active span{transform:scale(.85)}
   document.body.appendChild(b);
 })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const API_URL='https://script.google.com/macros/s/AKfycbz4oi19f_33egH2RnFaD2Vp-tJ9sOFf2LzxuIu_kqA2thQr-6aiP19efxxksVhOPsMI/exec';
-const QUEUE_KEY='expense-queue', TOKEN_KEY='expense-token-2';
+const QUEUE_KEY='expense-queue-v3';
+const SUPABASE_URL='https://eicfatftqvtfzcknzzuv.supabase.co';
+const SUPABASE_ANON_KEY='sb_publishable_l7mMQl7YzkJ8Sf8sIrQq5g_8uxHgfkn';
+const supabaseClient = (window.supabase && SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('ใส่_'))
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+let authUser=null, authMode='signin';
 const CATS={'อาหาร':['🍜','#ffb36b','food'],'เดินทาง':['🚌','#7cc4f0','travel'],'ช้อปปิ้ง':['🛍️','#f59ac0','shop'],
   'ที่พักและบิล':['🏠','#b7a2f0','bill'],'สุขภาพ':['💊','#7fd8a6','health'],'อื่น ๆ':['✨','#f2d36b','other']};
 const ICATS={'เงินเดือน':['💼','#7fd8a6','inc-salary'],'ธุรกิจ/ขาย':['🏪','#7cc4f0','inc-biz'],'โอนเข้า/ของขวัญ':['🎁','#f59ac0','inc-gift'],'อื่น ๆ (รับ)':['✨','#f2d36b','inc-other']};
@@ -346,24 +378,25 @@ const icoOf=c=>{ const x=CATS_ALL[c]||['✨','#f2d36b','other'];
   if(document.documentElement.dataset.theme!=='rwb') return x;
   const i=Object.keys(CATS_ALL).indexOf(c); return [x[0],RWB[i<0?5:i%6],x[2]]; };
 const form=$('#expense'), status=$('#status');
-let user=null, rows=[], descs={}, monthOff=0, flushing=false;
-const uk=b=>user==='tang'?b:b+'-'+user;
+let user=null, rows=[], descs={}, monthOff=0, flushing=false, slipScanMeta=null;
+const uk=b=>b+'-'+user;
 
 function showStatus(m,err=false){status.textContent=m;status.dataset.error=String(err);}
 function remember(cat,text){ if(!text) return; descs[cat]=[text,...(descs[cat]||[]).filter(x=>x!==text)].slice(0,8); save(uk('expense-desc'),descs); }
-function allRows(){ const ids=new Set(rows.map(r=>r.id)); return rows.concat(readQueue().filter(q=>(q.user||'tang')===user&&!ids.has(q.id)).map(q=>({...q,amount:Number(q.amount)}))); }
+function allRows(){
+  const ids=new Set(rows.map(r=>r.id));
+  return rows.concat(readQueue().filter(q=>q.user===user&&!ids.has(q.id)).map(q=>({...q,amount:Number(q.amount)})));
+}
 const readQueue=()=>load(QUEUE_KEY,[]);
 
-/* ---------- API ---------- */
+/* ---------- API: ส่ง access token ให้ Apps Script ตรวจสอบกับ Supabase ---------- */
 async function api(payload){
-  let token=localStorage.getItem(TOKEN_KEY);
-  if(!token){ token=(prompt('ใส่รหัสเข้าใช้งาน (API_TOKEN จาก Apps Script)')||'').trim();
-    if(!token) return {ok:false,code:'notoken',error:'ยังไม่ได้ใส่รหัสเข้าใช้งาน'};
-    localStorage.setItem(TOKEN_KEY,token); }
-  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...payload,token})});
-  const r=await res.json();
-  if(r.code==='unauthorized') localStorage.removeItem(TOKEN_KEY);
-  return r;
+  if(!supabaseClient) return {ok:false,error:'ยังไม่ได้ตั้งค่า Supabase URL และ Publishable/Anon Key'};
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session||!session.access_token) return {ok:false,code:'unauthorized',error:'กรุณาเข้าสู่ระบบใหม่'};
+  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({...payload,authToken:session.access_token})});
+  return await res.json();
 }
 async function refresh(){
   if(!user) return; const u=user;
@@ -374,18 +407,25 @@ async function refresh(){
   render(); renderChips();
 }
 async function flush(){
-  if(flushing) return; flushing=true; let lastError='';
+  if(flushing||!user) return; flushing=true;
+  const owner=user;
   try{
     let queue=readQueue();
-    while(queue.length){
+    while(true){
+      const qi=queue.findIndex(q=>q.user===owner);
+      if(qi<0) break;
+      const item=queue[qi];
       let r;
-      try{ r=await api({expense:queue[0],user:queue[0].user||'tang'}); }
-      catch{ showStatus(`ยังไม่มีสัญญาณ — รอส่ง ${queue.length} รายการ`); return; }
-      if(!r.ok&&(r.code==='unauthorized'||r.code==='notoken')){ showStatus(r.error+' — แตะบันทึกอีกครั้งเพื่อใส่รหัส',true); return; }
-      queue=queue.slice(1); save(QUEUE_KEY,queue);
-      if(!r.ok) lastError=r.error||'บันทึกไม่สำเร็จ';
+      try{ r=await api({expense:item}); }
+      catch{ showStatus('ยังไม่มีสัญญาณ — เก็บรายการไว้รอส่ง'); return; }
+      if(owner!==user) return;
+      if(!r.ok){
+        if(r.code==='duplicate'){ queue.splice(qi,1); save(QUEUE_KEY,queue); showStatus(r.error||'พบสลิปซ้ำ',true); continue; }
+        showStatus(r.error||'บันทึกไม่สำเร็จ',true); return;
+      }
+      queue.splice(qi,1); save(QUEUE_KEY,queue);
     }
-    showStatus(lastError||'บันทึกแล้ว 🎉',!!lastError);
+    showStatus('บันทึกแล้ว 🎉');
     refresh();
   } finally { flushing=false; }
 }
@@ -469,9 +509,11 @@ form.addEventListener('submit',e=>{
   e.preventDefault();
   const f=Object.fromEntries(new FormData(form));
   if(!(Number(f.amount)>0)){ showStatus('กรุณากรอกจำนวนเงินมากกว่า 0 บาท',true); form.elements.amount.focus(); return; }
+  if(slipScanMeta && !$('#slipConfirm').checked){ showStatus('กรุณาตรวจยอดเงินและวันที่จากภาพ แล้วติ๊กยืนยันก่อนบันทึก',true); $('#slipConfirm').focus(); return; }
   f.description=f.description.trim();
+  if(slipScanMeta){ f.slipRef=slipScanMeta.slipRef||''; f.slipHash=slipScanMeta.slipHash||''; }
   const q=readQueue(); q.push({...f,id:crypto.randomUUID(),user}); save(QUEUE_KEY,q);
-  remember(f.category,f.description);
+  remember(f.category,f.description); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
   const keep=f.date,kt=f.type; form.reset(); form.elements.date.value=keep; form.elements.type.value=kt;
   showStatus('กำลังส่ง…'); renderChips(); render(); document.activeElement&&document.activeElement.blur(); burst(); flush();
 });
@@ -564,55 +606,78 @@ const BASE=[{id:'tang',name:'Naaaaaaaaaa',theme:'rwb',face:'face-tang.png'}];
 let PROFILES=load('profiles-v2',BASE);
 const emFace=e=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="68" font-size="56" text-anchor="middle">${e}</text></svg>`);
 const faceOf=p=>p.face||emFace(p.emoji||'🙂');
-function renderPicks(){
-  $('#pickRow').innerHTML=PROFILES.map(p=>`<button class="pick" style="border-color:${TH(p.theme).a}" data-u="${esc(p.id)}"><span class="pedit" data-e="${esc(p.id)}" role="button" aria-label="แก้ไขโปรไฟล์">✏️</span><img src="${faceOf(p)}" alt="">${esc(p.name)}</button>`).join(''); }
 const THEMES={rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'ชมพูหวาน',a:'#ff8fb5',b:'#fff0f5'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
 const TH=k=>THEMES[k]||THEMES.tang;
-let editId=null, editTheme='tang', photoNew=null;
-const pm=$('#profModal'), pf=$('#profForm');
-function drawThemes(){ $('#themes').innerHTML=Object.entries(THEMES).map(([k,x])=>`<button type="button" class="sw${k===editTheme?' on':''}" data-t="${k}"><i style="--a:${x.a};--b:${x.b}"></i>${x.n}</button>`).join(''); }
-function editProf(id){
-  const p=PROFILES.find(x=>x.id===id); editId=p?id:null; editTheme=p&&THEMES[p.theme]?p.theme:'tang';
-  $('#profTitle').textContent=p?'แก้โปรไฟล์ ✏️':'เพิ่มโปรไฟล์ ✨';
-  pf.elements.name.value=p?p.name:''; pf.elements.acct.value=p&&p.acct||''; pf.elements.emoji.value=p&&!p.face?(p.emoji||''):'';
-  pf.elements.emoji.placeholder=p&&p.face?'ว่าง = ใช้รูปเดิม':'🙂';
-  photoNew=null; $('#profPrev').src=p?faceOf(p):emFace('🙂');
-  const canDel=!!p&&PROFILES.length>1; $('#profDel').classList.toggle('hide',!canDel); $('#profActs').classList.toggle('two',!canDel);
-  drawThemes(); pm.classList.remove('hide'); }
-$('#themes').onclick=e=>{ const b=e.target.closest('.sw'); if(b){ editTheme=b.dataset.t; drawThemes(); } };
-$('#profCancel').onclick=()=>pm.classList.add('hide');
-$('#profPhoto').onclick=()=>$('#profFile').click();
-$('#profFile').onchange=e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return;
-  const im=new Image();
-  im.onload=()=>{ const s=Math.min(im.width,im.height), c=document.createElement('canvas'); c.width=c.height=256;
-    c.getContext('2d').drawImage(im,(im.width-s)/2,(im.height-s)/2,s,s,0,0,256,256); URL.revokeObjectURL(im.src);
-    photoNew=c.toDataURL('image/jpeg',.85); $('#profPrev').src=photoNew; pf.elements.emoji.value=''; };
-  im.onerror=()=>alert('เปิดรูปนี้ไม่ได้ ลองรูปอื่นนะ'); im.src=URL.createObjectURL(f); };
-pm.addEventListener('click',e=>{ if(e.target===pm) pm.classList.add('hide'); });
-$('#profDel').onclick=()=>{ const p=PROFILES.find(x=>x.id===editId);
-  if(p&&confirm('ลบโปรไฟล์ '+p.name+' ? (ข้อมูลในชีตไม่หาย)')){ PROFILES=PROFILES.filter(x=>x!==p); save('profiles-v2',PROFILES); renderPicks(); pm.classList.add('hide'); } };
-pf.addEventListener('submit',e=>{ e.preventDefault();
-  const n=pf.elements.name.value.trim().slice(0,20), em=pf.elements.emoji.value.trim().slice(0,4); if(!n) return;
-  let p=PROFILES.find(x=>x.id===editId);
-  if(!p){ p={id:'u'+Date.now().toString(36)}; PROFILES.push(p); }
-  p.name=n; p.acct=pf.elements.acct.value.trim().slice(0,60); p.theme=editTheme; if(photoNew){ p.face=photoNew; } else if(em){ p.emoji=em; delete p.face; } else if(!p.face) p.emoji='🙂';
-  save('profiles-v2',PROFILES); renderPicks(); pm.classList.add('hide'); if(user===p.id) choose(p.id); });
-$('#pickRow').onclick=e=>{
-  const ed=e.target.closest('[data-e]'); if(ed){ editProf(ed.dataset.e); return; }
-  if(e.target.closest('#addProf')){ editProf(null); return; }
-  const b=e.target.closest('.pick[data-u]'); if(b) choose(b.dataset.u); };
-function choose(u){
-  const p=PROFILES.find(x=>x.id===u); if(!p) return;
-  cuLast=0; user=u; save('last-user',u);
-  rows=load(uk('expense-rows'),[]); descs=load(uk('expense-desc'),{}); monthOff=0;
-  document.documentElement.dataset.theme=p.theme;
-  $('#face').src=faceOf(p); $('#ttl').textContent=p.name; document.title=p.name;
-  document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
-  form.reset(); drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
-  document.querySelector('nav button[data-page=home]').click();
-  $('#who').classList.add('hide'); render(); renderChips(); refresh();
+
+function authMessage(message,error=false){
+  const el=$('#authMsg'); el.textContent=message; el.dataset.error=String(error);
 }
-$('#swap').onclick=()=>editProf(user);
+function setAuthMode(mode){
+  authMode=mode;
+  $('#authHint').textContent=mode==='signin'?'เข้าสู่ระบบเพื่อดูข้อมูลของคุณ':'สร้างบัญชีใหม่เพื่อเริ่มใช้งาน';
+  $('#authSubmit').textContent=mode==='signin'?'เข้าสู่ระบบ':'สมัครสมาชิก';
+  $('#authToggle').textContent=mode==='signin'?'ยังไม่มีบัญชี? สมัครสมาชิก':'มีบัญชีแล้ว? เข้าสู่ระบบ';
+  $('#authForm').elements.password.autocomplete=mode==='signin'?'current-password':'new-password';
+  authMessage('');
+}
+$('#authToggle').onclick=()=>setAuthMode(authMode==='signin'?'signup':'signin');
+$('#authForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!supabaseClient){ authMessage('ยังไม่ได้ตั้งค่า Supabase URL และ Key ในไฟล์ index.html',true); return; }
+  const email=$('#authForm').elements.email.value.trim();
+  const password=$('#authForm').elements.password.value;
+  $('#authSubmit').disabled=true; authMessage('กำลังดำเนินการ…');
+  try{
+    if(authMode==='signup'){
+      const {data,error}=await supabaseClient.auth.signUp({email,password});
+      if(error) throw error;
+      if(!data.session) authMessage('สมัครแล้ว! กรุณาเปิดอีเมลเพื่อยืนยันบัญชี แล้วกลับมาเข้าสู่ระบบ');
+      else authMessage('สมัครสำเร็จ กำลังเข้าสู่ระบบ…');
+    }else{
+      const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      authMessage('เข้าสู่ระบบสำเร็จ');
+    }
+  }catch(err){ authMessage(err.message||'ดำเนินการไม่สำเร็จ',true); }
+  finally{$('#authSubmit').disabled=false;}
+});
+
+async function enterApp(sessionUser){
+  if(!sessionUser) return;
+  authUser=sessionUser; user=sessionUser.id;
+  const p=PROFILES[0]||BASE[0];
+  cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0;
+  document.documentElement.dataset.theme=p.theme;
+  $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
+  $('#sub').textContent=sessionUser.email||'บัญชีของฉัน';
+  document.title=p.name||'รายรับรายจ่าย';
+  document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
+  form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
+  $('#who').classList.add('hide');
+  document.querySelector('nav button[data-page=home]').click();
+  await refresh();
+  flush();
+}
+async function leaveApp(){
+  if(supabaseClient) await supabaseClient.auth.signOut();
+  authUser=null; user=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
+  $('#who').classList.remove('hide');
+  $('#sub').textContent='ภาพรวมการใช้จ่าย';
+}
+$('#swap').onclick=leaveApp;
+if(supabaseClient){
+  supabaseClient.auth.onAuthStateChange((event,session)=>{
+    if(session&&session.user){ enterApp(session.user); }
+    else if(event==='SIGNED_OUT'){ authUser=null; user=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; $('#who').classList.remove('hide'); }
+  });
+  supabaseClient.auth.getSession().then(({data:{session}})=>{
+    if(session&&session.user) enterApp(session.user);
+    else $('#who').classList.remove('hide');
+  });
+}else{
+  $('#who').classList.remove('hide');
+  authMessage('ตั้งค่า Supabase URL และ Key ก่อนใช้งาน',true);
+}
 /* ---------- น้องแมว ---------- */
 $('#petImg').src=petAt(0); $('#whoPet').src=petAt(2);
 $('#petBtn').onclick=()=>{ petNow=(petNow+1)%PETS.length; $('#petImg').src=petAt(0);
@@ -655,29 +720,90 @@ function burst(){
     const prev=dx>0, btn=$(prev?'#prev':'#next'); if(btn.disabled) return;
     btn.click(); el.animate([{transform:`translateX(${prev?-40:40}px)`,opacity:.3},{transform:'none',opacity:1}],{duration:250,easing:'ease-out'});
   },{passive:true}); })();
-/* ---------- อ่านสลิป ---------- */
-const shrink=f=>new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>{ const s=Math.min(1,1200/Math.max(im.width,im.height)), c=document.createElement('canvas');
-  c.width=im.width*s; c.height=im.height*s; c.getContext('2d').drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(im.src); ok(c.toDataURL('image/jpeg',.8)); };
+/* ---------- อ่าน + ตรวจสลิปในเบราว์เซอร์ด้วย Tesseract.js ---------- */
+const shrink=f=>new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>{ const s=Math.min(1,1800/Math.max(im.width,im.height)), c=document.createElement('canvas');
+  c.width=Math.round(im.width*s); c.height=Math.round(im.height*s); c.getContext('2d').drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(im.src); ok(c.toDataURL('image/jpeg',.92)); };
   im.onerror=()=>no(new Error('เปิดรูปไม่ได้')); im.src=URL.createObjectURL(f); });
+let slipWorkerPromise=null;
+async function getSlipWorker(){
+  if(!window.Tesseract) throw new Error('โหลด OCR ไม่สำเร็จ กรุณาเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่');
+  if(!slipWorkerPromise) slipWorkerPromise=Tesseract.createWorker('tha+eng',1,{logger:m=>{
+    if(m.status==='recognizing text') showStatus('กำลังอ่านข้อความจากสลิป '+Math.round((m.progress||0)*100)+'%…');
+  }});
+  try{return await slipWorkerPromise;}catch(err){slipWorkerPromise=null;throw err;}
+}
+const thaiMonths={'ม.ค.':1,'มกราคม':1,'ก.พ.':2,'กุมภาพันธ์':2,'มี.ค.':3,'มีนาคม':3,'เม.ย.':4,'เมษายน':4,'พ.ค.':5,'พฤษภาคม':5,'มิ.ย.':6,'มิถุนายน':6,'ก.ค.':7,'กรกฎาคม':7,'ส.ค.':8,'สิงหาคม':8,'ก.ย.':9,'กันยายน':9,'ต.ค.':10,'ตุลาคม':10,'พ.ย.':11,'พฤศจิกายน':11,'ธ.ค.':12,'ธันวาคม':12};
+function thaiDigits(s){return String(s).replace(/[๐-๙]/g,d=>'๐๑๒๓๔๕๖๗๘๙'.indexOf(d));}
+function validDate(y,m,d){const dt=new Date(Date.UTC(y,m-1,d));return dt.getUTCFullYear()===y&&dt.getUTCMonth()===m-1&&dt.getUTCDate()===d?`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`:null;}
+function parseSlipDate(text){
+  const t=thaiDigits(text).replace(/,/g,' ');let m;
+  // ISO year-month-day first, otherwise it can be mistaken for day-month-year.
+  m=t.match(/(\d{4})[\/.-](\d{1,2})[\/.-](\d{1,2})/);
+  if(m){let y=+m[1],mo=+m[2],d=+m[3];if(y>2400)y-=543;const out=validDate(y,mo,d);if(out)return out;}
+  m=t.match(/(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);
+  if(m){let d=+m[1],mo=+m[2],y=+m[3];if(y<100)y+=2500;if(y>2400)y-=543;const out=validDate(y,mo,d);if(out)return out;}
+  const names=Object.keys(thaiMonths).sort((a,b)=>b.length-a.length).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|');
+  m=t.match(new RegExp('(\\d{1,2})\\s*('+names+')\\s*(\\d{2,4})','i'));
+  if(m){let d=+m[1],mo=thaiMonths[m[2]],y=+m[3];if(y<100)y+=2500;if(y>2400)y-=543;return validDate(y,mo,d);}
+  return null;
+}
+function parseSlipAmount(text){
+  const lines=thaiDigits(text).split(/\n+/).map(x=>x.trim()).filter(Boolean),found=[];
+  const marker=/(จำนวนเงิน|ยอดเงิน|ยอดโอน|จำนวนที่โอน|amount|total|transfer amount|paid|thb|บาท)/i;
+  for(let i=0;i<lines.length;i++){
+    if(/ค่าธรรมเนียม|fee/i.test(lines[i])||!marker.test(lines[i]))continue;
+    const moneyRe=/(?:฿|THB\s*)([0-9][0-9,]*(?:\.\d{1,2})?)|([0-9][0-9,]*(?:\.\d{1,2})?)\s*(?:บาท|THB)|\b([0-9][0-9,]*\.[0-9]{1,2})\b/g;
+    let matches=[...lines[i].matchAll(moneyRe)];
+    if(!matches.length && lines[i+1] && !/\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}/.test(lines[i+1])) matches=[...lines[i+1].matchAll(moneyRe)];
+    for(const m of matches){const raw=m[1]||m[2]||m[3];const n=Number(raw.replace(/,/g,''));if(n>0&&n<100000000)found.push(n);}
+  }
+  const unique=[...new Set(found)];return unique.length===1?{amount:unique[0],ambiguous:false}:{amount:null,ambiguous:unique.length>1};
+}
+function detectSlipDirection(text,myname){
+  if(myname){const norm=s=>String(s).replace(/นาย|นางสาว|นาง|คุณ|\s|\*/g,'').toLowerCase(),n=norm(myname);
+    if(n.length>=4){const lines=text.split(/\n+/);const from=lines.some(x=>/(จาก|ผู้โอน|ต้นทาง)/.test(x)&&norm(x).includes(n));const to=lines.some(x=>/(ไปยัง|ผู้รับ|ปลายทาง)/.test(x)&&norm(x).includes(n));if(from&&!to)return 'out';if(to&&!from)return 'in';}}
+  if(/(รับโอน|เงินเข้า|โอนเข้าบัญชี|ได้รับเงิน)/.test(text))return 'in';
+  if(/(โอนเงินสำเร็จ|ทำรายการสำเร็จ|รายการสำเร็จ|โอนออก)/.test(text))return 'out';
+  return null;
+}
+async function readSlipQR(file){
+  try{if(!('BarcodeDetector' in window))return '';const detector=new BarcodeDetector({formats:['qr_code']});const bitmap=await createImageBitmap(file);const codes=await detector.detect(bitmap);bitmap.close?.();return codes[0]?.rawValue||'';}catch(_){return '';}
+}
+async function hashSlip(text,amount,date,qr){
+  if(!crypto.subtle)return '';const src=thaiDigits(text).toLowerCase().replace(/\s+/g,' ').trim()+'|'+(amount||'')+'|'+(date||'')+'|'+(qr||'');
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(src));return [...new Uint8Array(buf)].map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+function showSlipReview(title,message,raw,canConfirm){
+  $('#slipReview').classList.remove('hide');$('#slipReviewTitle').textContent=title;$('#slipReviewText').textContent=message;$('#slipRaw').textContent=raw||'(ไม่พบข้อความ)';
+  $('#slipConfirm').checked=false;$('#slipConfirm').disabled=!canConfirm;
+}
 $('#slipBtn').onclick=()=>$('#slipFile').click();
 $('#slipFile').onchange=async e=>{
-  const f=e.target.files[0]; e.target.value=''; if(!f) return; showStatus('กำลังอ่านสลิป…');
+  const file=e.target.files[0];e.target.value='';if(!file)return;slipScanMeta=null;$('#slipReview').classList.add('hide');showStatus('กำลังเตรียมภาพ…');
   try{
-    const img=await shrink(f), r=await api({action:'slip',image:img.split(',')[1],mime:'image/jpeg',user,myname:(PROFILES.find(x=>x.id===user)||{}).acct||''});
-    if(!r.ok) throw new Error(r.error||'อ่านสลิปไม่ได้');
-    const d=r.data||{};
-    if(Number(d.amount)>0) form.elements.amount.value=String(d.amount);
-    if(/^\d{4}-\d\d-\d\d$/.test(d.date||'')) form.elements.date.value=d.date;
-    if(d.direction==='in'||d.direction==='out'){ form.elements.type.value=d.direction; drawCats(d.direction); }
-    if((form.elements.type.value==='in'?ICATS:CATS)[d.category]) form.elements.category.value=d.category;
-    renderChips();
-    if(d.memo) form.elements.description.value=String(d.memo).slice(0,300);
-    showStatus('อ่านสลิปแล้ว ตรวจให้ถูกต้องก่อนกดบันทึก ✅');
-  }catch(err){ showStatus(err.message||'ไม่มีสัญญาณ ลองใหม่อีกครั้ง',true); }
+    if(!/^image\/(jpeg|png|webp)$/.test(file.type))throw new Error('รองรับเฉพาะไฟล์ JPG, PNG หรือ WEBP');
+    if(file.size>12*1024*1024)throw new Error('รูปใหญ่เกิน 12 MB กรุณาเลือกรูปที่เล็กลง');
+    const worker=await getSlipWorker(),image=await shrink(file),result=await worker.recognize(image),raw=String(result.data.text||'').trim();
+    if(raw.length<12)throw new Error('อ่านข้อความได้น้อยเกินไป กรุณาถ่ายภาพให้ชัดและไม่เอียง');
+    const amountInfo=parseSlipAmount(raw),date=parseSlipDate(raw),qr=await readSlipQR(file);
+    const success=/(โอนเงินสำเร็จ|ทำรายการสำเร็จ|รายการสำเร็จ|สำเร็จ|transfer successful|transaction successful|success)/i.test(raw);
+    const bank=/(ธนาคาร|bank|พร้อมเพย์|promptpay|กสิกร|ไทยพาณิชย์|กรุงไทย|กรุงเทพ|กรุงศรี|ทหารไทย|ออมสิน|ทีทีบี|scb|kbank|bbl|ktb|bay|gsb)/i.test(raw);
+    const refMatch=raw.match(/(?:เลขที่รายการ|รหัสอ้างอิง|เลขอ้างอิง|transaction\s*(?:id|no|ref)|reference\s*(?:no|id)?|ref\.?\s*no\.?)\s*[:：#-]?\s*([A-Z0-9-]{6,40})/i);
+    const today=ymd(new Date()),future=date&&date>today,amountOK=!!amountInfo.amount,dateOK=!!date&&!future;
+    const checks=[success?'พบข้อความแจ้งว่าสำเร็จ':'ไม่พบข้อความยืนยันความสำเร็จ',bank?'พบชื่อธนาคาร/ระบบชำระเงิน':'ไม่พบชื่อธนาคารที่ชัดเจน',amountOK?'อ่านยอดเงินได้':amountInfo.ambiguous?'พบหลายยอดเงิน ต้องเลือกเอง':'อ่านยอดเงินไม่ได้',dateOK?'อ่านวันที่ได้และไม่ใช่อนาคต':future?'วันที่ในสลิปอยู่ในอนาคต':'อ่านวันที่ไม่ได้'];
+    if(qr)checks.push('ตรวจพบ QR ในภาพ (ไม่ใช่การยืนยันธุรกรรม)');
+    const pass=success&&bank&&amountOK&&dateOK;
+    const dir=detectSlipDirection(raw,'');
+    if(amountOK)form.elements.amount.value=String(amountInfo.amount);if(dateOK)form.elements.date.value=date;
+    if(dir){form.elements.type.value=dir;drawCats(dir);}
+    const memo=raw.split(/\n+/).map(x=>x.trim()).find(x=>/(ไปยัง|ผู้รับ|จาก|ผู้โอน)/.test(x)&&x.length<100);if(memo)form.elements.description.value=memo;
+    renderChips();const slipHash=await hashSlip(raw,amountInfo.amount,date,qr);
+    slipScanMeta=pass?{slipRef:refMatch?refMatch[1]:'',slipHash:slipHash}:null;
+    showSlipReview(pass?'ตรวจรูปแบบเบื้องต้นผ่าน':'ยังตรวจรูปแบบสลิปไม่ผ่าน',checks.join(' · ')+(refMatch?' · พบเลขอ้างอิง':' · ไม่พบเลขอ้างอิง')+' — ไม่สามารถยืนยันว่าเงินโอนจริงหรือสลิปไม่ถูกปลอมได้',raw,pass);
+    showStatus(pass?'อ่านแล้ว กรุณาตรวจยอด/วันที่และติ๊กยืนยันก่อนบันทึก':'อ่านได้บางส่วน แต่ยังไม่ผ่านเกณฑ์ กรุณากรอกเองและตรวจสอบกับแอปธนาคาร',!pass);
+  }catch(err){showStatus(err.message||'อ่านสลิปไม่สำเร็จ',true);}
 };
-renderPicks();
-{ const last=load('last-user',null); choose(PROFILES.some(p=>p.id===last)?last:PROFILES[0].id); }
-if(readQueue().length) flush();
+if(readQueue().length && user) flush();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
