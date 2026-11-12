@@ -739,7 +739,7 @@ if(supabaseClient){
   authMessage('ตั้งค่า Supabase URL และ Key ก่อนใช้งาน',true);
 }
 /* ---------- น้องแมว ---------- */
-$('#petImg').src=petAt(0); $('#whoPet').src=petAt(2);
+$('#petImg').src=petAt(0); { const wp=$('#whoPet'); if(wp) wp.src=petAt(2); }
 $('#petBtn').onclick=()=>{ petNow=(petNow+1)%PETS.length; $('#petImg').src=petAt(0);
   const b=$('#petBtn'); b.classList.remove('hop'); void b.offsetWidth; b.classList.add('hop'); };
 const fitPet=()=>{ const p=$('#petAdd'); p.classList.toggle('tiny',p.clientHeight<80); };
