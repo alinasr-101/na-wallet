@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="th">
+<html lang="th" data-theme="rwb">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -220,6 +220,27 @@ nav button:active span{transform:scale(.85)}
 :root[data-theme=rwb] .seg input:checked+span{background:#111;color:#fff;border-color:#111}
 .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;flex:none;text-align:center}
 .sum small{display:block;color:var(--mute);font-size:.68rem}.sum b{font:700 .95rem var(--cute)}.sum .neg{color:#d9534f}
+
+    /* ===== ธีมขาว-ดำ-แดง-ม่วง ===== */
+    :root[data-theme=rwb]{--ink:#17131d;--mute:#716b78;--cream:#fff;--line:#e4dfea;--green:#d92745;--soft:#f4edf8;--field:#fff;--glow:#f0dff7;--glow2:#fbe2e8;--navbg:#17131df2;--on:#fff;--card:#fff}
+    :root[data-theme=rwb] .who{background:#fff;background-image:radial-gradient(circle at 90% 0,#ead8f5 0,transparent 42%),radial-gradient(circle at 0 100%,#ffdce3 0,transparent 42%)}
+    :root[data-theme=rwb] .auth-card{border:2px solid #21182a;border-radius:18px;box-shadow:6px 6px 0 #7136a8}
+    :root[data-theme=rwb] .auth-card h1{color:#21182a}
+    :root[data-theme=rwb] .auth-card input:focus{border-color:#7136a8;outline:3px solid #7136a833}
+    :root[data-theme=rwb] .go{background:linear-gradient(100deg,#d92745,#7136a8)!important;color:#fff!important;border:0}
+    :root[data-theme=rwb] .slipbtn{border-color:#7136a8;color:#54277f;background:#f8f1fb}
+    :root[data-theme=rwb] .card{border-color:#21182a;box-shadow:4px 4px 0 #7136a8}
+    :root[data-theme=rwb] .st:nth-child(4){background:#f0e4f8!important}
+    :root[data-theme=rwb] .st:nth-child(5){background:#ffe5e9!important}
+    :root[data-theme=rwb] .st:nth-child(6){background:#21182a!important;color:#fff}
+    :root[data-theme=rwb] .st:nth-child(6) .down{color:#fff}
+    :root[data-theme=rwb] nav{background:#21182a;border-top:3px solid #d92745}
+    :root[data-theme=rwb] nav button.on{background:#d92745!important;color:#fff!important}
+    :root[data-theme=rwb] .cats input:checked+label{border-color:#7136a8;background:#f0e4f8;color:#54277f}
+    :root[data-theme=rwb] .seg input:checked+span{background:#21182a;color:#fff;border-color:#7136a8}
+    :root[data-theme=rwb] .month button{background:#f0e4f8;color:#54277f}
+    :root[data-theme=rwb] .brand img#face{border-color:#d92745}
+    :root[data-theme=rwb] :focus-visible{outline-color:#7136a8}
   </style>
 </head>
 <body>
@@ -645,7 +666,7 @@ $('#authForm').addEventListener('submit',async e=>{
 async function enterApp(sessionUser){
   if(!sessionUser) return;
   authUser=sessionUser; user=sessionUser.id;
-  const p=PROFILES[0]||BASE[0];
+  const p={...(PROFILES[0]||BASE[0]),theme:'rwb'};
   cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0;
   document.documentElement.dataset.theme=p.theme;
   $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
