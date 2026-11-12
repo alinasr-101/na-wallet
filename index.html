@@ -336,11 +336,11 @@ nav button:active span{transform:scale(.85)}
   <form id="profForm" class="box" novalidate>
     <h2 id="profTitle">โปรไฟล์</h2>
     <label class="f">ชื่อ<input type="text" name="name" maxlength="20" required></label>
-    <div class="f">รูปโปรไฟล์<div style="display:flex;gap:10px;align-items:center"><img id="profPrev" alt="" style="width:56px;height:56px;flex:none;border-radius:50%;object-fit:cover;border:2px solid var(--line)"><button type="button" class="slipbtn" id="profPhoto" style="flex:1">📷 เลือกรูปจากเครื่อง</button><input type="file" id="profFile" accept="image/*" hidden></div></div>
+    <div class="f">รูปโปรไฟล์<div style="display:flex;gap:10px;align-items:center"><img id="profPrev" alt="" style="width:56px;height:56px;flex:none;border-radius:50%;object-fit:cover;border:2px solid var(--line)"><button type="button" class="slipbtn" id="profPhoto" style="flex:1">📷 เลือกรูปจากเครื่อง</button><input type="file" id="profFile" accept="image/*" hidden></div><button type="button" class="slipbtn" id="profClear" style="border-style:solid;padding:6px;font-size:.8rem;margin-top:6px">ใช้อีโมจิแทนรูป</button></div>
     <label class="f">ชื่อบนบัญชีธนาคาร (ไม่บังคับ ช่วยให้อ่านสลิปแยกรายรับ/รายจ่ายได้)<input type="text" name="acct" maxlength="60" placeholder="เช่น นายสมชาย ใจดี"></label>
     <label class="f">อีโมจิโปรไฟล์<input type="text" name="emoji" maxlength="4"></label>
     <div class="f">สีธีม<div class="themes" id="themes"></div></div>
-    <div class="acts" id="profActs"><button type="button" class="del" id="profDel">🗑️ ลบ</button><button type="button" class="cancel" id="profCancel">ยกเลิก</button><button class="go" type="submit">บันทึก</button></div>
+    <div class="acts" id="profActs"><button type="button" class="del" id="profDel">ออกจากระบบ</button><button type="button" class="cancel" id="profCancel">ยกเลิก</button><button class="go" type="submit">บันทึก</button></div>
   </form>
 </div></div>
 <div id="who" class="who">
@@ -651,6 +651,54 @@ const emFace=e=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www
 const faceOf=p=>p.face||emFace(p.emoji||'🙂');
 const THEMES={rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'ชมพูหวาน',a:'#ff8fb5',b:'#fff0f5'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
 const TH=k=>THEMES[k]||THEMES.tang;
+/* ---------- โปรไฟล์ (แยกตามบัญชีที่ล็อกอิน เก็บในเครื่อง) ---------- */
+let curProf=null, pendingFace='', pendingTheme='rwb';
+const loadProfile=()=>({...BASE[0],theme:'rwb',...(load(uk('profile'),null)||{})});
+function applyProfile(p){
+  document.documentElement.dataset.theme=p.theme;
+  $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
+  document.title=p.name||'รายรับรายจ่าย';
+  document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
+}
+const squarePhoto=f=>new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>{
+  const m=Math.min(im.width,im.height),c=document.createElement('canvas'); c.width=c.height=256;
+  c.getContext('2d').drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,256,256); URL.revokeObjectURL(im.src); ok(c.toDataURL('image/jpeg',.85)); };
+  im.onerror=()=>no(new Error('เปิดรูปไม่ได้')); im.src=URL.createObjectURL(f); });
+const profForm=$('#profForm'), profModal=$('#profModal');
+const profPreview=()=>{ $('#profPrev').src=pendingFace||emFace(profForm.elements.emoji.value.trim()||'🙂'); };
+function drawThemes(){ $('#themes').innerHTML=Object.entries(THEMES).map(([k,t])=>`<button type="button" class="sw${k===pendingTheme?' on':''}" data-k="${k}" style="--a:${t.a};--b:${t.b}"><i></i>${esc(t.n)}</button>`).join(''); }
+function openProf(){
+  if(!user||!curProf) return;
+  pendingFace=curProf.face||''; pendingTheme=curProf.theme;
+  profForm.elements.name.value=curProf.name||''; profForm.elements.acct.value=curProf.acct||''; profForm.elements.emoji.value=curProf.emoji||'';
+  profPreview(); drawThemes(); profModal.classList.remove('hide');
+}
+function closeProf(revert){ profModal.classList.add('hide'); if(revert&&curProf) applyProfile(curProf); }
+$('#swap').onclick=openProf;
+$('#profCancel').onclick=()=>closeProf(true);
+profModal.addEventListener('click',e=>{ if(e.target===profModal) closeProf(true); });
+$('#profDel').onclick=()=>{ closeProf(false); leaveApp(); };
+$('#profPhoto').onclick=()=>$('#profFile').click();
+$('#profClear').onclick=()=>{ pendingFace=''; profPreview(); };
+profForm.elements.emoji.addEventListener('input',()=>{ if(!pendingFace) profPreview(); });
+$('#profFile').onchange=async e=>{
+  const f=e.target.files[0]; e.target.value=''; if(!f) return;
+  try{
+    if(!/^image\//.test(f.type)) throw new Error('กรุณาเลือกไฟล์รูปภาพ');
+    if(f.size>20*1024*1024) throw new Error('รูปใหญ่เกิน 20 MB');
+    pendingFace=await squarePhoto(f); profPreview();
+  }catch(err){ alert(err.message||'เลือกรูปไม่สำเร็จ'); }
+};
+$('#themes').addEventListener('click',e=>{
+  const b=e.target.closest('.sw'); if(!b) return;
+  pendingTheme=b.dataset.k; drawThemes(); document.documentElement.dataset.theme=pendingTheme; /* พรีวิวสีทันที */
+});
+profForm.addEventListener('submit',e=>{
+  e.preventDefault(); if(!user||!curProf) return;
+  const next={name:profForm.elements.name.value.trim()||'บัญชีของฉัน',acct:profForm.elements.acct.value.trim(),emoji:profForm.elements.emoji.value.trim(),face:pendingFace,theme:pendingTheme};
+  try{ save(uk('profile'),next); }catch(_){ alert('บันทึกไม่สำเร็จ พื้นที่เก็บข้อมูลในเบราว์เซอร์เต็ม'); return; }
+  curProf={...curProf,...next}; applyProfile(curProf); closeProf(false);
+});
 
 function authMessage(message,error=false){
   const el=$('#authMsg'); el.textContent=message; el.dataset.error=String(error);
@@ -694,13 +742,10 @@ async function enterApp(sessionUser){
   try{
     // ซ่อนหน้าล็อกอินทันทีเมื่อได้รับบัญชีที่ยืนยันแล้ว
     $('#who').classList.add('hide');
-    const p={...(PROFILES[0]||BASE[0]),theme:'rwb'};
+    const p=curProf=loadProfile();
     cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0;
-    document.documentElement.dataset.theme=p.theme;
-    $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
+    applyProfile(p);
     $('#sub').textContent=sessionUser.email||'บัญชีของฉัน';
-    document.title=p.name||'รายรับรายจ่าย';
-    document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
     form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
     const homeButton=document.querySelector('nav button[data-page=home]');
     if(!homeButton) throw new Error('ไม่พบปุ่มหน้าหลักในหน้าเว็บ');
@@ -719,16 +764,15 @@ async function enterApp(sessionUser){
 }
 async function leaveApp(){
   if(supabaseClient) await supabaseClient.auth.signOut();
-  authUser=null; user=null; enteringUserId=null; enteredUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
+  authUser=null; user=null; curProf=null; enteringUserId=null; enteredUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
   $('#who').classList.remove('hide');
   $('#sub').textContent='ภาพรวมการใช้จ่าย';
 }
-$('#swap').onclick=leaveApp;
 if(supabaseClient){
   // การเข้าสู่ระบบเรียก enterApp จาก submit โดยตรง ส่วน listener นี้ดูแลการออกจากระบบเท่านั้น
   // ป้องกัน SIGNED_IN listener กับ submit เรียก enterApp ซ้อนกัน
   supabaseClient.auth.onAuthStateChange((event,session)=>{
-    if(event==='SIGNED_OUT'){ authUser=null; user=null; enteringUserId=null; enteredUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; $('#who').classList.remove('hide'); }
+    if(event==='SIGNED_OUT'){ authUser=null; user=null; curProf=null; enteringUserId=null; enteredUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; $('#who').classList.remove('hide'); }
   });
   supabaseClient.auth.getSession().then(({data:{session}})=>{
     if(session&&session.user) enterApp(session.user);
@@ -781,9 +825,36 @@ function burst(){
     btn.click(); el.animate([{transform:`translateX(${prev?-40:40}px)`,opacity:.3},{transform:'none',opacity:1}],{duration:250,easing:'ease-out'});
   },{passive:true}); })();
 /* ---------- อ่าน + ตรวจสลิปในเบราว์เซอร์ด้วย Tesseract.js ---------- */
-const shrink=f=>new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>{ const s=Math.min(1,1800/Math.max(im.width,im.height)), c=document.createElement('canvas');
-  c.width=Math.round(im.width*s); c.height=Math.round(im.height*s); c.getContext('2d').drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(im.src); ok(c.toDataURL('image/jpeg',.92)); };
+const shrink=f=>new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>{
+  const w=im.width,h=im.height,s=Math.min(2600/Math.max(w,h),Math.max(1,1500/Math.min(w,h))),c=document.createElement('canvas');
+  c.width=Math.round(w*s); c.height=Math.round(h*s);
+  const x=c.getContext('2d',{willReadFrequently:true}); x.imageSmoothingQuality='high'; x.drawImage(im,0,0,c.width,c.height); URL.revokeObjectURL(im.src);
+  try{
+    const d=x.getImageData(0,0,c.width,c.height),p=d.data,hist=new Uint32Array(256),n=c.width*c.height;let sum=0;
+    for(let i=0;i<p.length;i+=4){const g=(p[i]*299+p[i+1]*587+p[i+2]*114)/1000|0;p[i]=g;hist[g]++;sum+=g;}
+    let lo=0,hi=255,a=0;while(lo<254&&(a+=hist[lo])<n*.02)lo++;a=0;while(hi>1&&(a+=hist[hi])<n*.02)hi--;
+    const span=Math.max(hi-lo,40),invert=sum/n<110;
+    for(let i=0;i<p.length;i+=4){let v=(p[i]-lo)*255/span;v=v<0?0:v>255?255:v;if(invert)v=255-v;p[i]=p[i+1]=p[i+2]=v;p[i+3]=255;}
+    x.putImageData(d,0,0);
+  }catch(_){}
+  ok(c); };
   im.onerror=()=>no(new Error('เปิดรูปไม่ได้')); im.src=URL.createObjectURL(f); });
+/* OCR ไทยมักแทรกช่องว่างกลางคำ → เทียบคำสำคัญทั้งแบบเดิมและแบบตัดช่องว่าง */
+const slipCompact=s=>String(s).replace(/\s+/g,'').replace(/\u0e4d\u0e32/g,'\u0e33');
+const slipHas=(re,t)=>re.test(t)||re.test(slipCompact(t));
+const SLIP_OK_RE=/(โอนเงินสำเร็จ|ทำรายการสำเร็จ|รายการสำเร็จ|สำเร็จ|transfer successful|transaction successful|success)/i;
+const SLIP_BANK_RE=/(ธนาคาร|bank|พร้อมเพย์|promptpay|กสิกร|ไทยพาณิชย์|กรุงไทย|กรุงเทพ|กรุงศรี|ทหารไทย|ออมสิน|ทีทีบี|scb|kbank|bbl|ktb|bay|gsb|ttb|krungsri|truemoney|k\s*plus|mymo)/i;
+function scoreSlip(t){return (slipHas(SLIP_OK_RE,t)?1:0)+(slipHas(SLIP_BANK_RE,t)?1:0)+(parseSlipAmount(t).amount?1:0)+(parseSlipDate(t)?1:0)+Math.min(t.length,600)/1000;}
+async function ocrSlip(worker,image){
+  let best='',bestScore=-1;
+  for(const psm of ['4','6','3']){
+    try{await worker.setParameters({tessedit_pageseg_mode:psm,preserve_interword_spaces:'1'});}catch(_){}
+    const r=await worker.recognize(image),t=String(r.data.text||'').trim(),sc=scoreSlip(t);
+    if(sc>bestScore){best=t;bestScore=sc;}
+    if(bestScore>=4) break;
+  }
+  return best;
+}
 let slipWorkerPromise=null;
 async function getSlipWorker(){
   if(!window.Tesseract) throw new Error('โหลด OCR ไม่สำเร็จ กรุณาเชื่อมต่ออินเทอร์เน็ตแล้วลองใหม่');
@@ -802,21 +873,27 @@ function parseSlipDate(text){
   if(m){let y=+m[1],mo=+m[2],d=+m[3];if(y>2400)y-=543;const out=validDate(y,mo,d);if(out)return out;}
   m=t.match(/(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/);
   if(m){let d=+m[1],mo=+m[2],y=+m[3];if(y<100)y+=2500;if(y>2400)y-=543;const out=validDate(y,mo,d);if(out)return out;}
-  const names=Object.keys(thaiMonths).sort((a,b)=>b.length-a.length).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|');
-  m=t.match(new RegExp('(\\d{1,2})\\s*('+names+')\\s*(\\d{2,4})','i'));
-  if(m){let d=+m[1],mo=thaiMonths[m[2]],y=+m[3];if(y<100)y+=2500;if(y>2400)y-=543;return validDate(y,mo,d);}
+  // ชื่อเดือนไทย: ยอมให้ OCR ทำจุดหายหรือมีช่องว่างแทรก
+  const strip=k=>k.replace(/\./g,''),map={};Object.keys(thaiMonths).forEach(k=>map[strip(k)]=thaiMonths[k]);
+  const names=Object.keys(map).sort((a,b)=>b.length-a.length).map(k=>[...k].join('\\.?\\s*')).join('|');
+  m=t.match(new RegExp('(\\d{1,2})\\s*\\.?\\s*('+names+')\\s*\\.?\\s*(\\d{2,4})'));
+  if(m){let d=+m[1],mo=map[m[2].replace(/[.\s]/g,'')],y=+m[3];if(y<100)y+=2500;if(y>2400)y-=543;return validDate(y,mo,d);}
   return null;
 }
 function parseSlipAmount(text){
   const lines=thaiDigits(text).split(/\n+/).map(x=>x.trim()).filter(Boolean),found=[];
-  const marker=/(จำนวนเงิน|ยอดเงิน|ยอดโอน|จำนวนที่โอน|amount|total|transfer amount|paid|thb|บาท)/i;
+  const marker=/(จำนวนเงิน|ยอดเงิน|ยอดโอน|จำนวนที่โอน|amount|total|transferamount|paid|thb|บาท)/i,fee=/ค่าธรรมเนียม|fee/i;
+  const moneyRe=/(?:฿|THB\s*)([0-9][0-9,]*(?:\.\d{1,2})?)|([0-9][0-9,]*(?:\.\d{1,2})?)\s*(?:บาท|THB)|\b([0-9][0-9,]*\.[0-9]{1,2})\b/g;
+  const add=ms=>{for(const m of ms){const raw=m[1]||m[2]||m[3];const n=Number(raw.replace(/,/g,''));if(n>0&&n<100000000)found.push(n);}};
   for(let i=0;i<lines.length;i++){
-    if(/ค่าธรรมเนียม|fee/i.test(lines[i])||!marker.test(lines[i]))continue;
-    const moneyRe=/(?:฿|THB\s*)([0-9][0-9,]*(?:\.\d{1,2})?)|([0-9][0-9,]*(?:\.\d{1,2})?)\s*(?:บาท|THB)|\b([0-9][0-9,]*\.[0-9]{1,2})\b/g;
+    const c=slipCompact(lines[i]);
+    if(fee.test(c)||!marker.test(c))continue;
     let matches=[...lines[i].matchAll(moneyRe)];
     if(!matches.length && lines[i+1] && !/\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}/.test(lines[i+1])) matches=[...lines[i+1].matchAll(moneyRe)];
-    for(const m of matches){const raw=m[1]||m[2]||m[3];const n=Number(raw.replace(/,/g,''));if(n>0&&n<100000000)found.push(n);}
+    add(matches);
   }
+  // สำรอง: ไม่เจอคำนำหน้ายอด → หาตัวเลขรูปแบบ 1,234.00 ในบรรทัดที่ไม่ใช่ค่าธรรมเนียม
+  if(!found.length){for(const l of lines){if(fee.test(slipCompact(l)))continue;add([...l.matchAll(/\b(\d{1,3}(?:,\d{3})*\.\d{2})\b/g)].map(m=>[null,null,null,m[1]]).map(a=>({1:a[1],2:a[2],3:a[3]})));}}
   const unique=[...new Set(found)];return unique.length===1?{amount:unique[0],ambiguous:false}:{amount:null,ambiguous:unique.length>1};
 }
 function detectSlipDirection(text,myname){
@@ -843,17 +920,17 @@ $('#slipFile').onchange=async e=>{
   try{
     if(!/^image\/(jpeg|png|webp)$/.test(file.type))throw new Error('รองรับเฉพาะไฟล์ JPG, PNG หรือ WEBP');
     if(file.size>12*1024*1024)throw new Error('รูปใหญ่เกิน 12 MB กรุณาเลือกรูปที่เล็กลง');
-    const worker=await getSlipWorker(),image=await shrink(file),result=await worker.recognize(image),raw=String(result.data.text||'').trim();
+    const worker=await getSlipWorker(),image=await shrink(file),raw=await ocrSlip(worker,image);
     if(raw.length<12)throw new Error('อ่านข้อความได้น้อยเกินไป กรุณาถ่ายภาพให้ชัดและไม่เอียง');
     const amountInfo=parseSlipAmount(raw),date=parseSlipDate(raw),qr=await readSlipQR(file);
-    const success=/(โอนเงินสำเร็จ|ทำรายการสำเร็จ|รายการสำเร็จ|สำเร็จ|transfer successful|transaction successful|success)/i.test(raw);
-    const bank=/(ธนาคาร|bank|พร้อมเพย์|promptpay|กสิกร|ไทยพาณิชย์|กรุงไทย|กรุงเทพ|กรุงศรี|ทหารไทย|ออมสิน|ทีทีบี|scb|kbank|bbl|ktb|bay|gsb)/i.test(raw);
+    const success=slipHas(SLIP_OK_RE,raw);
+    const bank=slipHas(SLIP_BANK_RE,raw);
     const refMatch=raw.match(/(?:เลขที่รายการ|รหัสอ้างอิง|เลขอ้างอิง|transaction\s*(?:id|no|ref)|reference\s*(?:no|id)?|ref\.?\s*no\.?)\s*[:：#-]?\s*([A-Z0-9-]{6,40})/i);
     const today=ymd(new Date()),future=date&&date>today,amountOK=!!amountInfo.amount,dateOK=!!date&&!future;
     const checks=[success?'พบข้อความแจ้งว่าสำเร็จ':'ไม่พบข้อความยืนยันความสำเร็จ',bank?'พบชื่อธนาคาร/ระบบชำระเงิน':'ไม่พบชื่อธนาคารที่ชัดเจน',amountOK?'อ่านยอดเงินได้':amountInfo.ambiguous?'พบหลายยอดเงิน ต้องเลือกเอง':'อ่านยอดเงินไม่ได้',dateOK?'อ่านวันที่ได้และไม่ใช่อนาคต':future?'วันที่ในสลิปอยู่ในอนาคต':'อ่านวันที่ไม่ได้'];
     if(qr)checks.push('ตรวจพบ QR ในภาพ (ไม่ใช่การยืนยันธุรกรรม)');
     const pass=success&&bank&&amountOK&&dateOK;
-    const dir=detectSlipDirection(raw,'');
+    const dir=detectSlipDirection(raw,(curProf&&curProf.acct)||'');
     if(amountOK)form.elements.amount.value=String(amountInfo.amount);if(dateOK)form.elements.date.value=date;
     if(dir){form.elements.type.value=dir;drawCats(dir);}
     const memo=raw.split(/\n+/).map(x=>x.trim()).find(x=>/(ไปยัง|ผู้รับ|จาก|ผู้โอน)/.test(x)&&x.length<100);if(memo)form.elements.description.value=memo;
