@@ -388,7 +388,7 @@ const SUPABASE_ANON_KEY='sb_publishable_l7mMQl7YzkJ8Sf8sIrQq5g_8uxHgfkn';
 const supabaseClient = (window.supabase && SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('ใส่_'))
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
-let authUser=null, authMode='signin', enteringUserId=null;
+let authUser=null, authMode='signin', enteringUserId=null, enteredUserId=null;
 const CATS={'อาหาร':['🍜','#ffb36b','food'],'เดินทาง':['🚌','#7cc4f0','travel'],'ช้อปปิ้ง':['🛍️','#f59ac0','shop'],
   'ที่พักและบิล':['🏠','#b7a2f0','bill'],'สุขภาพ':['💊','#7fd8a6','health'],'อื่น ๆ':['✨','#f2d36b','other']};
 const ICATS={'เงินเดือน':['💼','#7fd8a6','inc-salary'],'ธุรกิจ/ขาย':['🏪','#7cc4f0','inc-biz'],'โอนเข้า/ของขวัญ':['🎁','#f59ac0','inc-gift'],'อื่น ๆ (รับ)':['✨','#f2d36b','inc-other']};
@@ -688,33 +688,47 @@ $('#authForm').addEventListener('submit',async e=>{
 
 async function enterApp(sessionUser){
   if(!sessionUser) return;
-  if(enteringUserId===sessionUser.id && user===sessionUser.id) return;
+  if(enteredUserId===sessionUser.id || enteringUserId===sessionUser.id) return;
   enteringUserId=sessionUser.id;
   authUser=sessionUser; user=sessionUser.id;
-  const p={...(PROFILES[0]||BASE[0]),theme:'rwb'};
-  cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0;
-  document.documentElement.dataset.theme=p.theme;
-  $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
-  $('#sub').textContent=sessionUser.email||'บัญชีของฉัน';
-  document.title=p.name||'รายรับรายจ่าย';
-  document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
-  form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
-  $('#who').classList.add('hide');
-  document.querySelector('nav button[data-page=home]').click();
-  await refresh();
-  flush();
+  try{
+    // ซ่อนหน้าล็อกอินทันทีเมื่อได้รับบัญชีที่ยืนยันแล้ว
+    $('#who').classList.add('hide');
+    const p={...(PROFILES[0]||BASE[0]),theme:'rwb'};
+    cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0;
+    document.documentElement.dataset.theme=p.theme;
+    $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
+    $('#sub').textContent=sessionUser.email||'บัญชีของฉัน';
+    document.title=p.name||'รายรับรายจ่าย';
+    document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
+    form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
+    const homeButton=document.querySelector('nav button[data-page=home]');
+    if(!homeButton) throw new Error('ไม่พบปุ่มหน้าหลักในหน้าเว็บ');
+    homeButton.click();
+    await refresh();
+    enteredUserId=sessionUser.id;
+    flush();
+  }catch(err){
+    authUser=null; user=null;
+    $('#who').classList.remove('hide');
+    authMessage('เข้าสู่ระบบแล้ว แต่เปิดหน้าหลักไม่สำเร็จ: '+(err.message||err),true);
+    throw err;
+  }finally{
+    if(enteringUserId===sessionUser.id) enteringUserId=null;
+  }
 }
 async function leaveApp(){
   if(supabaseClient) await supabaseClient.auth.signOut();
-  authUser=null; user=null; enteringUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
+  authUser=null; user=null; enteringUserId=null; enteredUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
   $('#who').classList.remove('hide');
   $('#sub').textContent='ภาพรวมการใช้จ่าย';
 }
 $('#swap').onclick=leaveApp;
 if(supabaseClient){
+  // การเข้าสู่ระบบเรียก enterApp จาก submit โดยตรง ส่วน listener นี้ดูแลการออกจากระบบเท่านั้น
+  // ป้องกัน SIGNED_IN listener กับ submit เรียก enterApp ซ้อนกัน
   supabaseClient.auth.onAuthStateChange((event,session)=>{
-    if(session&&session.user){ setTimeout(()=>enterApp(session.user),0); }
-    else if(event==='SIGNED_OUT'){ authUser=null; user=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; $('#who').classList.remove('hide'); }
+    if(event==='SIGNED_OUT'){ authUser=null; user=null; enteringUserId=null; enteredUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; $('#who').classList.remove('hide'); }
   });
   supabaseClient.auth.getSession().then(({data:{session}})=>{
     if(session&&session.user) enterApp(session.user);
