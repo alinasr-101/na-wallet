@@ -241,6 +241,28 @@ nav button:active span{transform:scale(.85)}
     :root[data-theme=rwb] .month button{background:#f0e4f8;color:#54277f}
     :root[data-theme=rwb] .brand img#face{border-color:#d92745}
     :root[data-theme=rwb] :focus-visible{outline-color:#7136a8}
+
+    /* ===== ปรับสัดส่วนสี: ขาว-ดำ-แดงเป็นหลัก / ม่วงแต้มเล็กน้อย ===== */
+    :root[data-theme=rwb]{--ink:#111111;--mute:#666666;--cream:#ffffff;--line:#dedede;--green:#d71920;--soft:#f4f4f4;--field:#ffffff;--glow:#f7e9f5;--glow2:#f5e6e6;--navbg:#111111f2;--on:#ffffff;--card:#ffffff}
+    :root[data-theme=rwb] body{background:#ffffff;background-image:none}
+    :root[data-theme=rwb] .who{background:#ffffff;background-image:radial-gradient(circle at 95% 0,#f1eaf5 0,transparent 34%),radial-gradient(circle at 0 100%,#fae9e9 0,transparent 30%)}
+    :root[data-theme=rwb] .auth-card{border:2px solid #171717;box-shadow:5px 5px 0 #d71920}
+    :root[data-theme=rwb] .auth-card h1{color:#111111}
+    :root[data-theme=rwb] .auth-card input:focus{border-color:#8a55a2;outline:2px solid #8a55a222}
+    :root[data-theme=rwb] .go{background:#d71920!important;color:#ffffff!important;border:1px solid #d71920}
+    :root[data-theme=rwb] .go:hover{background:#b9151b!important}
+    :root[data-theme=rwb] .slipbtn{border-color:#8a55a2;color:#684078;background:#faf7fb}
+    :root[data-theme=rwb] .card{border-color:#171717;box-shadow:4px 4px 0 #171717}
+    :root[data-theme=rwb] .st:nth-child(4){background:#f4f4f4!important}
+    :root[data-theme=rwb] .st:nth-child(5){background:#fae9e9!important}
+    :root[data-theme=rwb] .st:nth-child(6){background:#171717!important;color:#ffffff}
+    :root[data-theme=rwb] nav{background:#111111;border-top:3px solid #d71920}
+    :root[data-theme=rwb] nav button.on{background:#d71920!important;color:#ffffff!important}
+    :root[data-theme=rwb] .cats input:checked+label{border-color:#8a55a2;background:#f7f0f8;color:#684078}
+    :root[data-theme=rwb] .seg input:checked+span{background:#171717;color:#ffffff;border-color:#8a55a2}
+    :root[data-theme=rwb] .month button{background:#f7f0f8;color:#684078}
+    :root[data-theme=rwb] .brand img#face{border-color:#d71920}
+    :root[data-theme=rwb] :focus-visible{outline-color:#8a55a2}
   </style>
 </head>
 <body>
@@ -366,7 +388,7 @@ const SUPABASE_ANON_KEY='sb_publishable_l7mMQl7YzkJ8Sf8sIrQq5g_8uxHgfkn';
 const supabaseClient = (window.supabase && SUPABASE_URL.startsWith('https://') && !SUPABASE_URL.includes('ใส่_'))
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
-let authUser=null, authMode='signin';
+let authUser=null, authMode='signin', enteringUserId=null;
 const CATS={'อาหาร':['🍜','#ffb36b','food'],'เดินทาง':['🚌','#7cc4f0','travel'],'ช้อปปิ้ง':['🛍️','#f59ac0','shop'],
   'ที่พักและบิล':['🏠','#b7a2f0','bill'],'สุขภาพ':['💊','#7fd8a6','health'],'อื่น ๆ':['✨','#f2d36b','other']};
 const ICATS={'เงินเดือน':['💼','#7fd8a6','inc-salary'],'ธุรกิจ/ขาย':['🏪','#7cc4f0','inc-biz'],'โอนเข้า/ของขวัญ':['🎁','#f59ac0','inc-gift'],'อื่น ๆ (รับ)':['✨','#f2d36b','inc-other']};
@@ -655,9 +677,10 @@ $('#authForm').addEventListener('submit',async e=>{
       if(!data.session) authMessage('สมัครแล้ว! กรุณาเปิดอีเมลเพื่อยืนยันบัญชี แล้วกลับมาเข้าสู่ระบบ');
       else authMessage('สมัครสำเร็จ กำลังเข้าสู่ระบบ…');
     }else{
-      const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+      const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
       if(error) throw error;
       authMessage('เข้าสู่ระบบสำเร็จ');
+      if(data.user) await enterApp(data.user);
     }
   }catch(err){ authMessage(err.message||'ดำเนินการไม่สำเร็จ',true); }
   finally{$('#authSubmit').disabled=false;}
@@ -665,6 +688,8 @@ $('#authForm').addEventListener('submit',async e=>{
 
 async function enterApp(sessionUser){
   if(!sessionUser) return;
+  if(enteringUserId===sessionUser.id && user===sessionUser.id) return;
+  enteringUserId=sessionUser.id;
   authUser=sessionUser; user=sessionUser.id;
   const p={...(PROFILES[0]||BASE[0]),theme:'rwb'};
   cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0;
@@ -681,14 +706,14 @@ async function enterApp(sessionUser){
 }
 async function leaveApp(){
   if(supabaseClient) await supabaseClient.auth.signOut();
-  authUser=null; user=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
+  authUser=null; user=null; enteringUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
   $('#who').classList.remove('hide');
   $('#sub').textContent='ภาพรวมการใช้จ่าย';
 }
 $('#swap').onclick=leaveApp;
 if(supabaseClient){
   supabaseClient.auth.onAuthStateChange((event,session)=>{
-    if(session&&session.user){ enterApp(session.user); }
+    if(session&&session.user){ setTimeout(()=>enterApp(session.user),0); }
     else if(event==='SIGNED_OUT'){ authUser=null; user=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; $('#who').classList.remove('hide'); }
   });
   supabaseClient.auth.getSession().then(({data:{session}})=>{
