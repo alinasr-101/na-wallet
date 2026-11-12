@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Naaaaaaaaaa</title>
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#fff8e7">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -679,6 +679,26 @@ renderPicks();
 { const last=load('last-user',null); choose(PROFILES.some(p=>p.id===last)?last:PROFILES[0].id); }
 if(readQueue().length) flush();
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+<script>
+/* ไอคอนแอป + manifest วาดด้วย JS (ไม่ต้องมีไฟล์รูป) — ไฟล์ icon-*.png / manifest.json ยังใช้เป็นตัวสำรอง */
+(function(){
+  const draw=s=>{ const c=document.createElement('canvas'); c.width=c.height=s; const g=c.getContext('2d');
+    g.fillStyle='#111'; g.fillRect(0,0,s,s);
+    const m=s*.2, b=(s-2*m)*.2, x0=m, y0=m, x1=s-m, y1=s-m;
+    g.fillStyle='#fff'; g.fillRect(x0,y0,b,y1-y0); g.fillRect(x1-b,y0,b,y1-y0);
+    g.fillStyle='#e10600'; g.beginPath(); g.moveTo(x0,y0); g.lineTo(x0+b*1.25,y0); g.lineTo(x1,y1); g.lineTo(x1-b*1.25,y1); g.closePath(); g.fill();
+    g.fillRect(0,s*.965,s,s*.035);
+    return c.toDataURL('image/png'); };
+  const set=(rel,href)=>{ let l=document.querySelector('link[rel="'+rel+'"]'); if(!l){ l=document.createElement('link'); l.rel=rel; document.head.appendChild(l); } l.href=href; };
+  try{
+    set('icon',draw(192)); set('apple-touch-icon',draw(180));
+    const man={name:'Naaaaaaaaaa',short_name:'Naaaaaaaaaa',display:'standalone',lang:'th',background_color:'#ffffff',theme_color:'#ffffff',
+      start_url:location.origin+location.pathname, scope:new URL('./',location.href).href,
+      icons:[{src:draw(192),sizes:'192x192',type:'image/png',purpose:'any maskable'},{src:draw(512),sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
+    set('manifest',URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'})));
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
