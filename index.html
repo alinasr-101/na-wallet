@@ -302,6 +302,86 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 @keyframes rcIn{from{opacity:0;transform:translateY(8px)}}
 .rc{animation:rcIn .35s both}.rc:nth-child(2){animation-delay:.04s}.rc:nth-child(3){animation-delay:.08s}.rc:nth-child(4){animation-delay:.12s}.rc:nth-child(5){animation-delay:.16s}
 @media (prefers-reduced-motion:reduce){.bal::after,.rc{animation:none}}
+
+
+/* ===== Pink Cloud: ชมพูละมุน + เหลืองเนย / layout น่ารัก ===== */
+:root[data-theme=ai]{
+  --ink:#59424f;--mute:#a58a98;--cream:#fff8f5;--line:#f4dce4;
+  --green:#dc7d9f;--soft:#ffedf2;--field:#fffdfb;--glow:#ffd8e5;
+  --glow2:#fff0bd;--navbg:#fffaf7f5;--card:#fffdfb;--on:#fff;
+  color-scheme:light;
+}
+:root[data-theme=ai] body{
+  background-color:var(--cream);
+  background-image:radial-gradient(circle at 92% 2%,#ffe7a8 0,transparent 32%),
+    radial-gradient(circle at 0 88%,#ffdce8 0,transparent 38%),
+    linear-gradient(145deg,#fffaf7 0%,#fff4f6 55%,#fff9e9 100%);
+}
+:root[data-theme=ai] .brand{padding-bottom:10px}
+:root[data-theme=ai] .brand img#face{border:3px solid #fff0bd;box-shadow:0 4px 12px #d98da733}
+:root[data-theme=ai] .brand h1{font-family:var(--cute);font-size:1.18rem;letter-spacing:0;color:#8d526c}
+:root[data-theme=ai] .brand small{color:#b18a9b}
+:root[data-theme=ai] .card{
+  border:1px solid #f3dce5;border-radius:23px;
+  box-shadow:0 7px 20px #c9879c18,0 2px 5px #e7c18a12;
+}
+:root[data-theme=ai] .st{border:1px solid #f5dfe6;border-radius:17px;box-shadow:0 3px 9px #d69aaa12}
+:root[data-theme=ai] .st:nth-child(1){background:#fff0f4!important}
+:root[data-theme=ai] .st:nth-child(2){background:#fff4d6!important}
+:root[data-theme=ai] .st:nth-child(3){background:#fffaf2!important}
+:root[data-theme=ai] .st:nth-child(4){background:#fceaf1!important}
+:root[data-theme=ai] .st:nth-child(5){background:#fff1c9!important}
+:root[data-theme=ai] .st:nth-child(6){background:#80566b!important;color:#fff}
+:root[data-theme=ai] .st:nth-child(6) small,:root[data-theme=ai] .st:nth-child(6) span{color:#fff0f5}
+:root[data-theme=ai] .st .up{color:#d66e91}
+:root[data-theme=ai] .st .down{color:#98713c}
+:root[data-theme=ai] .bal{
+  border:1px solid #f5d9e3;border-bottom:4px solid #f1c96e;border-radius:25px;
+  background:linear-gradient(135deg,#e99bb7 0%,#d981a4 58%,#bd7897 100%);
+  box-shadow:0 9px 22px #d98da744;
+}
+:root[data-theme=ai] .bal .ie{background:#fff9f1;color:#765267;border-radius:17px 17px 0 0}
+:root[data-theme=ai] .bal .ie span:last-child b{color:#bd7897}
+:root[data-theme=ai] .sec{color:#96677d}
+:root[data-theme=ai] .ac{border:1px solid #fff8f0;border-radius:19px;box-shadow:0 6px 15px #c98ca833}
+:root[data-theme=ai] .ac.add{background:#fff5d9;color:#99764c;border:1.5px dashed #e9c879;box-shadow:none}
+:root[data-theme=ai] #fab{background:linear-gradient(100deg,#e78eae,#d77c9e);box-shadow:0 7px 18px #d77c9e55;border:2px solid #fff4d7}
+:root[data-theme=ai] nav{
+  background:#fffaf7f5;border-top:1px solid #f1d9e2;
+  box-shadow:0 -5px 18px #c9879c12;backdrop-filter:blur(14px);
+}
+:root[data-theme=ai] nav button{color:#b18b9c}
+:root[data-theme=ai] nav button.on{background:#ffe8ef!important;color:#b85f83!important;border-radius:16px}
+:root[data-theme=ai] .month button{background:#fff0c8;color:#987449}
+:root[data-theme=ai] .bar{background:linear-gradient(180deg,#f3b3c9,#e58eae)}
+:root[data-theme=ai] .col.today .bar{background:linear-gradient(180deg,#f4d98d,#e8bd63)}
+:root[data-theme=ai] .col.today .d{color:#bd8b42}
+:root[data-theme=ai] .tip{background:#fff3d4;color:#8d704c;border:1px solid #f6e5b8}
+:root[data-theme=ai] .cats label{border-color:#f2dce4;background:#fffaf8;border-radius:18px}
+:root[data-theme=ai] .cats input:checked+label{border-color:#e99bb7;background:#ffedf3;color:#a65377;box-shadow:0 3px 9px #df9bb522}
+:root[data-theme=ai] select,:root[data-theme=ai] input[type=text],:root[data-theme=ai] input[type=date],:root[data-theme=ai] textarea{
+  border:1.5px solid #f0d8e1;border-radius:15px;background:#fffdfb;
+}
+:root[data-theme=ai] select:focus,:root[data-theme=ai] input:focus,:root[data-theme=ai] textarea:focus{border-color:#e59ab6;outline:3px solid #f5cbd966}
+:root[data-theme=ai] .sheet{border:1px solid #f3dce5;background:#fffaf8;box-shadow:0 -8px 30px #9d647322}
+:root[data-theme=ai] .sheet h2{color:#965b75}
+:root[data-theme=ai] .acts .go,:root[data-theme=ai] .go{background:linear-gradient(100deg,#e995b2,#d77d9f)!important;color:#fff!important;border:0;border-radius:15px}
+:root[data-theme=ai] .acts .cancel{background:#fff0c9;color:#8e7049;border-radius:15px}
+:root[data-theme=ai] .acts .del{background:#ffe7ec;color:#b75d78;border-radius:15px}
+:root[data-theme=ai] .slipbtn{border-color:#edc5d4;background:#fff5f7;color:#a35f7b}
+:root[data-theme=ai] .chips button{background:#fff0d0;color:#856744}
+:root[data-theme=ai] .rc{border-top:1px dashed #f0dce3}
+:root[data-theme=ai] .act button{background:#fff0d4;color:#8e7049}
+:root[data-theme=ai] .act button[data-act=del]{background:#ffe8ee;color:#b75d78}
+:root[data-theme=ai] .sw{border-color:#f1dce4;background:#fffaf8;border-radius:16px}
+:root[data-theme=ai] .sw.on{border-color:#df8eaa;background:#fff0f4;box-shadow:0 3px 10px #d98da722}
+:root[data-theme=ai] .sw i{border:2px solid #fff;box-shadow:0 1px 5px #9c6b7b25}
+:root[data-theme=ai] .auth-card{border:1px solid #f1d9e3;border-radius:25px;box-shadow:0 12px 35px #d98da733;background:#fffaf8}
+:root[data-theme=ai] .auth-card h1{color:#965b75}
+:root[data-theme=ai] .who{background:radial-gradient(circle at 90% 8%,#fff0bd 0,transparent 34%),radial-gradient(circle at 0 90%,#ffdce8 0,transparent 42%),#fff8f5}
+:root[data-theme=ai] .brand .petbtn{background:#fff0d2;border:1px solid #f4dfb2;border-radius:50%}
+:root[data-theme=ai] :focus-visible{outline-color:#e59ab6}
+
 </style>
 </head>
 <body>
@@ -776,7 +856,7 @@ const BASE=[{id:'tang',name:'Naaaaaaaaaa',theme:'rwb',face:'face-tang.png'}];
 let PROFILES=load('profiles-v2',BASE);
 const emFace=e=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="68" font-size="56" text-anchor="middle">${e}</text></svg>`);
 const faceOf=p=>p.face||emFace(p.emoji||'🙂');
-const THEMES={rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},fin:{n:'ฟินแทรค (ฟ้า)',a:'#3b6cd4',b:'#f2f5fb'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'ชมพูหวาน',a:'#ff8fb5',b:'#fff0f5'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
+const THEMES={rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},fin:{n:'ฟินแทรค (ฟ้า)',a:'#3b6cd4',b:'#f2f5fb'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'Pink Cloud ☁️',a:'#f28caf',b:'#fff0bd'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
 const TH=k=>THEMES[k]||THEMES.tang;
 /* ---------- โปรไฟล์ (แยกตามบัญชีที่ล็อกอิน เก็บในเครื่อง) ---------- */
 let curProf=null, pendingFace='', pendingTheme='rwb';
