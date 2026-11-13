@@ -818,6 +818,21 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 }
 
 </style>
+<style>
+#edToWrap[hidden],#edSwap[hidden],#edCatWrap[hidden]{display:none!important}
+.edswap{border:2px dashed var(--line);background:var(--soft);color:var(--ink);border-radius:14px;padding:9px;font:700 .85rem var(--cute)}
+.ordbtn{border:0;border-radius:999px;padding:3px 10px;background:var(--soft);color:var(--mute);font:700 .72rem var(--cute);letter-spacing:0}
+.ord-tip{font-size:.78rem;color:var(--mute);line-height:1.4}
+.ord-list{display:grid;gap:8px}
+.ord-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:14px;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 3px 8px #0002;user-select:none;-webkit-user-select:none}
+.ord-item b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ord-item em{font:700 .8rem var(--cute);font-style:normal;opacity:.85;min-width:1.2em;text-align:center}
+.ord-h{touch-action:none;cursor:grab;font-size:1.3rem;line-height:1;padding:8px 6px}
+.ord-item button{width:34px;height:34px;border:0;border-radius:50%;background:#ffffff38;color:#fff;font-size:.8rem;padding:0}
+.ord-item button:disabled{opacity:.35}
+.ord-item.drag{transform:scale(1.03);box-shadow:0 8px 18px #0004;position:relative;z-index:2}
+:root[data-theme=ai] .ord-item{background:var(--c1)}
+</style>
 </head>
 <body>
 <div id="app">
@@ -826,7 +841,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
     <section id="p-home" class="pg">
       <div class="month"><button id="prev" aria-label="เดือนก่อน">‹</button><b id="month"></b><button id="next" aria-label="เดือนถัดไป">›</button></div>
       <div class="bal"><button type="button" class="eye" id="eye" aria-label="ซ่อนหรือแสดงยอดเงิน"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
-      <div class="sec" style="display:flex;justify-content:space-between;align-items:center">บัญชีของฉัน<span class="streak" id="streak" hidden></span></div><div class="accs" id="accs"></div>
+      <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;gap:8px;align-items:center">บัญชีของฉัน<button type="button" id="ordBtn" class="ordbtn" aria-label="จัดลำดับบัญชี">⇅ จัดลำดับ</button></span><span class="streak" id="streak" hidden></span></div><div class="accs" id="accs"></div>
       <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
       <div class="card"><h2>รายการล่าสุด</h2><div id="recentHome"></div></div>
       <div class="stats" id="stats"></div>
@@ -870,11 +885,17 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 <div id="modal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
   <form id="editForm" novalidate>
     <h2>แก้ไขรายการ ✏️</h2>
+    <label class="f">ประเภท<select name="type" id="edType"><option value="out">▼ รายจ่าย</option><option value="in">▲ รายรับ</option><option value="transfer">⇄ โอนระหว่างบัญชี</option><option value="deposit">＋ เติมเงินเข้าบัญชี</option></select></label>
     <div class="row2">
       <label class="f">จำนวนเงิน (บาท)<input class="amt" name="amount" type="text" inputmode="decimal" maxlength="12" required></label>
       <label class="f">วันที่<input name="date" type="date" required></label>
     </div>
-    <label class="f">หมวดหมู่<select name="category"></select></label>
+    <div class="row2" id="edAccRow">
+      <label class="f"><span id="edAccTxt">บัญชี</span><select name="account" id="edAcc"></select></label>
+      <label class="f" id="edToWrap">ไปยังบัญชี<select name="to_account" id="edTo"></select></label>
+    </div>
+    <button type="button" id="edSwap" class="edswap" hidden>⇄ สลับต้นทาง / ปลายทาง</button>
+    <label class="f" id="edCatWrap">หมวดหมู่<select name="category"></select></label>
     <label class="f">รายละเอียด<input name="description" type="text" maxlength="300"></label>
     <p id="est" role="status"></p>
     <div class="acts"><button type="button" class="del" id="delBtn">🗑️ ลบ</button><button type="button" class="cancel" data-close>ยกเลิก</button><button class="go" type="submit">บันทึก</button></div>
@@ -882,6 +903,14 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
   <div id="delBox" class="box hide">
     <h2>ลบรายการนี้? 🗑️</h2><p id="dmsg"></p><p id="dst" role="status"></p>
     <div class="acts two"><button type="button" class="cancel" data-close>ยกเลิก</button><button type="button" class="del" id="delGo">ลบเลย</button></div>
+  </div>
+</div></div>
+<div id="ordModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
+  <div class="box">
+    <h2>จัดลำดับบัญชี ⇅</h2>
+    <p class="ord-tip">จับ ☰ แล้วลากขึ้น-ลง หรือกด ▲▼ — บัญชีที่ใช้บ่อยให้อยู่บนสุด (จะขึ้นก่อนในหน้าแรกและในช่องเลือกบัญชี)</p>
+    <div id="ordList" class="ord-list"></div>
+    <div class="acts two"><button type="button" class="cancel" id="ordCancel">ยกเลิก</button><button type="button" class="go" id="ordSave">บันทึกลำดับ</button></div>
   </div>
 </div></div>
 <div id="dayModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
@@ -1117,7 +1146,7 @@ function renderStats(all,m,key,total,ents){
 }
 const rcHtml=(r,act=true)=>{ const tr=r.type==='transfer', inn=r.type==='in', dep=r.type==='deposit', c=icoOf(r.category);
   const sub=tr?`${esc(r.account||'?')} → ${esc(r.to_account||'?')}`:`${esc(r.category)}${r.account?' · '+esc(r.account):''}`;
-  const actions=act?(dep?'<div class="act"><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>':'<div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>'):'';
+  const actions=act?'<div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>':'';
   return `<div class="rc" data-id="${esc(r.id)}"><div class="ico" style="background:${c[1]}55">${ic('icons/cat/'+c[2]+'.png',c[0])}</div><div class="n">${esc(r.description||r.category)}<small>${sub} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${(inn||dep)?' style="color:#1f9d6b"':''}>${(inn||dep)?'+':''}${baht(r.amount)}</div>${actions}</div>`; };
 function renderRecent(all){
   all=all||allRows(); const rec=[...all].reverse().sort((a,b)=>b.date.localeCompare(a.date));
@@ -1232,6 +1261,39 @@ $('#fundForm').addEventListener('submit',async e=>{
 async function addFunds(i){openFundModal(i);}
 $('#accs').onclick=e=>{ const b=e.target.closest('.ac'); if(!b) return; const i=+b.dataset.i; if(i<0) editAcc(-1); else addFunds(i); };
 $('#accs').onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ const b=e.target.closest('.ac[role=button]'); if(b){ e.preventDefault(); addFunds(+b.dataset.i); } } };
+/* ---------- จัดลำดับบัญชี ---------- */
+let ordList=[], ordDrag=null;
+function drawOrd(){
+  $('#ordList').innerHTML=ordList.map((a,i)=>`<div class="ord-item" data-n="${esc(a.n)}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><span class="ord-h" aria-label="ลากเพื่อจัดลำดับ">☰</span><b>${esc(a.n)}</b><em>${i+1}</em><button type="button" data-mv="-1" aria-label="เลื่อนขึ้น"${i===0?' disabled':''}>▲</button><button type="button" data-mv="1" aria-label="เลื่อนลง"${i===ordList.length-1?' disabled':''}>▼</button></div>`).join('');
+}
+function openOrd(){ ordList=ACCS.map(a=>({...a})); drawOrd(); $('#ordModal').classList.remove('hide'); }
+function closeOrd(){ $('#ordModal').classList.add('hide'); ordDrag=null; }
+$('#ordBtn').onclick=openOrd;
+$('#ordCancel').onclick=closeOrd;
+$('#ordModal').addEventListener('click',e=>{ if(e.target===$('#ordModal')) closeOrd(); });
+$('#ordList').addEventListener('click',e=>{
+  const b=e.target.closest('button[data-mv]'); if(!b) return;
+  const i=[...$('#ordList').children].indexOf(b.closest('.ord-item')), j=i+Number(b.dataset.mv);
+  if(i<0||j<0||j>=ordList.length) return;
+  [ordList[i],ordList[j]]=[ordList[j],ordList[i]]; drawOrd();
+});
+$('#ordList').addEventListener('pointerdown',e=>{
+  const h=e.target.closest('.ord-h'); if(!h) return; e.preventDefault();
+  ordDrag=h.closest('.ord-item'); ordDrag.classList.add('drag'); try{ h.setPointerCapture(e.pointerId); }catch(_){}
+});
+$('#ordList').addEventListener('pointermove',e=>{
+  if(!ordDrag) return; const box=$('#ordList'); let before=null;
+  for(const it of [...box.children]){ if(it===ordDrag) continue; const r=it.getBoundingClientRect(); if(e.clientY<r.top+r.height/2){ before=it; break; } }
+  if(before!==ordDrag.nextSibling) box.insertBefore(ordDrag,before);
+});
+const endOrdDrag=()=>{ if(!ordDrag) return; ordDrag=null;
+  ordList=[...$('#ordList').children].map(el=>ordList.find(a=>a.n===el.dataset.n)).filter(Boolean); drawOrd(); };
+$('#ordList').addEventListener('pointerup',endOrdDrag);
+$('#ordList').addEventListener('pointercancel',endOrdDrag);
+$('#ordSave').onclick=()=>{
+  ACCS=ordList.map(o=>ACCS.find(a=>a.n===o.n)||o);
+  saveAccs(); fillAccSel(); closeOrd(); render();
+};
 $('#fab').onclick=()=>document.querySelector('nav button[data-page=add]').click();
 document.querySelectorAll('nav button[data-page]').forEach(b=>b.addEventListener('click',()=>$('#fab').classList.toggle('hide',b.dataset.page!=='home')));
 $('#prev').onclick=()=>{monthOff--;render();}; $('#next').onclick=()=>{monthOff++;render();};
@@ -1279,11 +1341,26 @@ const findRow=id=>allRows().find(r=>r.id===id);
 const srvErr=m=>Object.assign(new Error(m),{srv:true});
 const say=(el,m,err=false)=>{el.textContent=m;el.dataset.error=String(err);};
 function closeModal(){ modal.classList.add('hide'); curId=null; busy=false; }
+function edNames(...extra){ const n=ACCS.map(a=>a.n); extra.forEach(x=>{ if(x&&!n.includes(x)) n.push(x); }); return n; }
+function edFillAcc(acc,to){ const n=edNames(acc,to), o=sel=>n.map(x=>`<option value="${esc(x)}"${x===sel?' selected':''}>${esc(x)}</option>`).join('');
+  ed.elements.account.innerHTML=o(acc); ed.elements.to_account.innerHTML=o(to); }
+function edLayout(keepCat){
+  const tp=ed.elements.type.value, tr=tp==='transfer', dep=tp==='deposit';
+  $('#edToWrap').hidden=!tr; $('#edSwap').hidden=!tr; $('#edAccRow').classList.toggle('single',!tr);
+  $('#edAccTxt').textContent=tr?'โอนจากบัญชี':tp==='in'?'บัญชีที่รับเงิน':dep?'บัญชีที่เติมเงิน':'บัญชีที่ใช้จ่าย';
+  $('#edCatWrap').hidden=tr||dep;
+  if(!tr&&!dep){ const sel=ed.elements.category, cur=keepCat||sel.value; sel.innerHTML=catOpts(tp); sel.value=cur; if(!sel.value) sel.selectedIndex=sel.options.length-1; }
+}
 function openEdit(id){ const r=findRow(id); if(!r) return; curId=id; busy=false;
+  ed.elements.type.value=['in','transfer','deposit'].includes(r.type)?r.type:'out';
   ed.elements.amount.value=String(r.amount); ed.elements.date.value=r.date;
-  ed.elements.category.innerHTML=catOpts(r.type); ed.elements.category.value=CATS_ALL[r.category]?r.category:(r.type==='in'?'อื่น ๆ (รับ)':'อื่น ๆ');
+  const first=ACCS[0]?ACCS[0].n:'', other=(ACCS.find(a=>a.n!==(r.account||first))||{}).n||'';
+  edFillAcc(r.account||first, r.to_account||other);
+  edLayout(r.category);
   ed.elements.description.value=r.description||''; say(est,'');
   ed.classList.remove('hide'); delBox.classList.add('hide'); modal.classList.remove('hide'); }
+ed.elements.type.addEventListener('change',()=>edLayout());
+$('#edSwap').onclick=()=>{ const a=ed.elements.account.value; ed.elements.account.value=ed.elements.to_account.value; ed.elements.to_account.value=a; };
 function openDel(id){ const r=findRow(id); if(!r) return; curId=id; busy=false;
   $('#dmsg').textContent=`${r.description||r.category} · ${baht(r.amount)} (${r.date.slice(8)}/${r.date.slice(5,7)})`; say(dst,'');
   ed.classList.add('hide'); delBox.classList.remove('hide'); modal.classList.remove('hide'); }
@@ -1294,9 +1371,17 @@ modal.addEventListener('click',e=>{ if(e.target===modal||e.target.closest('[data
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!modal.classList.contains('hide')) closeModal(); });
 ed.addEventListener('submit',async e=>{
   e.preventDefault(); if(busy) return; const id=curId, u=user;
-  const f=Object.fromEntries(new FormData(ed)); f.amount=f.amount.trim(); f.description=f.description.trim(); { const r0=findRow(id)||{}; f.type=r0.type||'out'; f.account=r0.account||''; f.to_account=r0.to_account||''; }
+  const f=Object.fromEntries(new FormData(ed)); f.amount=f.amount.trim(); f.description=f.description.trim(); 
   if(!/^\d{1,9}([.]\d{1,2})?$/.test(f.amount)||!(Number(f.amount)>0)){ say(est,'กรุณากรอกจำนวนเงินมากกว่า 0 บาท (ทศนิยมไม่เกิน 2 ตำแหน่ง)',true); return; }
   if(!f.date){ say(est,'กรุณาเลือกวันที่',true); return; }
+  if(f.type==='transfer'){
+    if(!f.account||!f.to_account||f.account===f.to_account){ say(est,'เลือกบัญชีต้นทางและปลายทางให้ต่างกัน',true); return; }
+    f.category='โอนระหว่างบัญชี';
+  } else {
+    f.to_account='';
+    if(!f.account){ say(est,'กรุณาเลือกบัญชี',true); return; }
+    if(f.type==='deposit') f.category=DEPCAT;
+  }
   const q=readQueue(), qi=q.findIndex(x=>x.id===id);
   if(qi>=0){ q[qi]={...q[qi],...f}; save(QUEUE_KEY,q); remember(f.category,f.description); closeModal(); render(); renderChips(); return; }
   busy=true; say(est,'กำลังบันทึก…');
