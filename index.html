@@ -103,6 +103,8 @@
     .ico em,.oi em{font-style:normal}
     #expense{flex:1 0 auto;display:flex;flex-direction:column;gap:8px}
     .row2{display:grid;grid-template-columns:1.15fr 1fr;gap:8px}
+    .row2.single{grid-template-columns:1fr}
+    #toWrap[hidden]{display:none!important}
     .f{display:grid;gap:4px;font-weight:600;font-size:.85rem;min-width:0}
     input[type=text],input[type=date],textarea{display:block;width:100%;min-width:0;max-width:100%;font:inherit;font-size:16px;padding:9px 12px;border-radius:14px;border:2px solid var(--line);background:var(--field);color:inherit;font-weight:400;-webkit-appearance:none;appearance:none}
     input[type=date]{min-height:46px;text-align:left}
@@ -434,7 +436,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 </head>
 <body>
 <div id="app">
-  <header class="brand"><button type="button" id="swap" class="swap" aria-label="แก้โปรไฟล์"><img id="face" src="face-tang.png" alt=""></button><div><h1 id="ttl">รายรับ-รายจ่ายจ้า</h1><small id="sub">ภาพรวมการใช้จ่าย</small></div><button type="button" id="petBtn" class="petbtn" aria-label="เปลี่ยนน้องแมว"><img id="petImg" alt="" onerror="this.remove()"></button></header>
+  <header class="brand"><button type="button" id="swap" class="swap" aria-label="แก้โปรไฟล์"><img id="face" src="face-tang.png" alt=""></button><div><h1 id="ttl">รายรับ-รายจ่าย</h1><small id="sub">ภาพรวมการใช้จ่าย</small></div><button type="button" id="petBtn" class="petbtn" aria-label="เปลี่ยนน้องแมว"><img id="petImg" alt="" onerror="this.remove()"></button></header>
   <main>
     <section id="p-home" class="pg">
       <div class="month"><button id="prev" aria-label="เดือนก่อน">‹</button><b id="month"></b><button id="next" aria-label="เดือนถัดไป">›</button></div>
@@ -460,7 +462,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
           <label class="f">จำนวนเงิน (บาท)<input class="amt" name="amount" type="text" inputmode="decimal" maxlength="12" pattern="[0-9]{1,9}([.][0-9]{1,2})?" placeholder="0.00" required></label>
           <label class="f">วันที่<input name="date" type="date" required></label>
         </div>
-        <div class="row2"><label class="f" id="accLbl">บัญชีที่ใช้จ่าย<select name="account" id="accSel" required></select></label><label class="f" id="toWrap" hidden>ไปยังบัญชี<select name="to_account" id="toSel"></select></label></div>
+        <div class="row2 single" id="accountRow"><label class="f" id="accLbl">บัญชีที่ใช้จ่าย<select name="account" id="accSel" required></select></label><label class="f" id="toWrap" hidden>บัญชีปลายทาง<select name="to_account" id="toSel"></select></label></div>
         <div class="f">หมวดหมู่<div class="cats" id="cats"></div></div>
         <div class="f">รายละเอียด (ไม่บังคับ)
           <textarea name="description" maxlength="300" rows="2"></textarea>
@@ -504,6 +506,22 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
     <div id="dayList"></div>
   </div>
 </div></div>
+<div id="fundModal" class="modal hide">
+  <div class="fund-sheet" role="dialog" aria-modal="true" aria-labelledby="fundTitle">
+    <div class="fund-top">
+      <button type="button" id="fundClose" aria-label="ปิด">✕</button>
+      <div class="fund-topline"><div class="fund-mark">💗</div><div><h2 id="fundTitle">เติมเงินเข้าบัญชี</h2><p>เพิ่มยอดเงินให้กระเป๋าของคุณ</p></div></div>
+    </div>
+    <form id="fundForm" class="fund-body" novalidate>
+      <div class="fund-account"><div><small>บัญชีที่เลือก</small><b id="fundAccountName">—</b></div><span>👛</span></div>
+      <label class="f fund-amount-label" for="fundAmount">จำนวนเงินที่ต้องการเติม</label>
+      <div class="fund-amount-wrap"><input id="fundAmount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" maxlength="12"><span class="fund-baht">บาท</span></div>
+      <label class="f" for="fundNote">หมายเหตุ <span style="font-weight:400;color:#a78a98">(ไม่บังคับ)</span><input id="fundNote" name="note" type="text" maxlength="100" placeholder="เช่น เติมเงินสดเข้าบัญชี"></label>
+      <div id="fundError" role="status"></div>
+      <div class="fund-actions"><button type="button" id="fundCancel">ยกเลิก</button><button type="submit" id="fundSave">＋ ยืนยันเติมเงิน</button></div>
+    </form>
+  </div>
+</div>
 <div id="profModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
   <form id="profForm" class="box" novalidate>
     <h2 id="profTitle">โปรไฟล์</h2>
@@ -771,7 +789,8 @@ function setAccMode(tp){
   $('#toSel').innerHTML=o;
   if(ACCS[1]) $('#toSel').selectedIndex=1;
   $('#toWrap').hidden=!tr;
-  $('#accLbl').firstChild.nodeValue=tr?'จากบัญชี':tp==='in'?'เงินเข้าบัญชี':'บัญชีที่ใช้จ่าย';
+  $('#accountRow').classList.toggle('single',!tr);
+  $('#accLbl').firstChild.nodeValue=tr?'บัญชีต้นทาง':tp==='in'?'บัญชีที่รับเงิน':'บัญชีที่ใช้จ่าย';
   $('#accSel').required=true;
   $('#toSel').required=tr;
 }
@@ -786,17 +805,33 @@ function editAcc(i){
     if(b.trim()==='ลบ'){ if(ACCS.length<=1){ alert('ต้องมีอย่างน้อย 1 บัญชี'); return; } ACCS.splice(i,1); } else a.b0=Number(b.replace(/,/g,''))||0; }
   saveAccs(); fillAccSel(); render();
 }
-async function addFunds(i){
+let fundAccountIndex=-1;
+function openFundModal(i){
   const a=ACCS[i]; if(!a) return;
-  const raw=prompt('เติมเงินเข้าบัญชี '+a.n+' จำนวนเท่าไร (บาท)','');
-  if(raw===null) return;
-  const amount=Number(String(raw).replace(/,/g,'').trim());
-  if(!Number.isFinite(amount)||amount<=0||!/^\d{1,9}(?:\.\d{1,2})?$/.test(String(raw).replace(/,/g,'').trim())){ alert('กรุณากรอกจำนวนเงินให้ถูกต้อง (ทศนิยมไม่เกิน 2 ตำแหน่ง)'); return; }
-  const note=(prompt('หมายเหตุ (ไม่บังคับ)','เติมเงินเข้าบัญชี')||'เติมเงินเข้าบัญชี').trim();
-  const item={id:crypto.randomUUID(),user,type:'deposit',date:ymd(new Date()),amount:String(amount),category:DEPCAT,description:note||DEPCAT,account:a.n,to_account:''};
-  const q=readQueue(); q.push(item); save(QUEUE_KEY,q);
-  showStatus('กำลังบันทึกเงินเข้าบัญชี…'); render(); flush();
+  fundAccountIndex=i;
+  $('#fundAccountName').textContent=a.n;
+  $('#fundAmount').value=''; $('#fundNote').value=''; $('#fundError').textContent='';
+  $('#fundSave').disabled=false; $('#fundSave').textContent='＋ ยืนยันเติมเงิน';
+  $('#fundModal').classList.remove('hide');
+  setTimeout(()=>$('#fundAmount').focus(),60);
 }
+function closeFundModal(){ $('#fundModal').classList.add('hide'); fundAccountIndex=-1; }
+$('#fundClose').onclick=closeFundModal;
+$('#fundCancel').onclick=closeFundModal;
+$('#fundModal').addEventListener('click',e=>{if(e.target===$('#fundModal'))closeFundModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#fundModal').classList.contains('hide'))closeFundModal();});
+$('#fundForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const a=ACCS[fundAccountIndex]; if(!a){closeFundModal();return;}
+  const raw=$('#fundAmount').value.replace(/,/g,'').trim();
+  const amount=Number(raw);
+  if(!/^\d{1,9}(?:\.\d{1,2})?$/.test(raw)||!Number.isFinite(amount)||amount<=0){$('#fundError').textContent='กรุณากรอกจำนวนเงินให้ถูกต้อง (ทศนิยมไม่เกิน 2 ตำแหน่ง)';$('#fundAmount').focus();return;}
+  const note=$('#fundNote').value.trim()||'เติมเงินเข้าบัญชี';
+  const item={id:crypto.randomUUID(),user,type:'deposit',date:ymd(new Date()),amount:String(amount),category:DEPCAT,description:note,account:a.n,to_account:''};
+  const q=readQueue(); q.push(item); save(QUEUE_KEY,q);
+  closeFundModal(); showStatus('กำลังบันทึกเงินเข้าบัญชี…'); render(); flush();
+});
+async function addFunds(i){openFundModal(i);}
 $('#accs').onclick=e=>{ const f=e.target.closest('.ac-fund'); if(f){ addFunds(+f.dataset.fund); return; } const b=e.target.closest('.ac'); if(b) editAcc(+b.dataset.i); };
 $('#accs').onkeydown=e=>{ if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.ac-fund')){ const b=e.target.closest('.ac[role=button]'); if(b){ e.preventDefault(); editAcc(+b.dataset.i); } } };
 $('#fab').onclick=()=>document.querySelector('nav button[data-page=add]').click();
