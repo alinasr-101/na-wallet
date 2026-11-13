@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="th" data-theme="fin">
+<html lang="th" data-theme="rwb">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -279,6 +279,15 @@ nav button:active span{transform:scale(.85)}
 .ac.add{display:grid;place-items:center;width:84px;background:var(--soft);color:var(--mute);border:2px dashed var(--line);box-shadow:none;font-size:1.4rem}
 #fab{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;z-index:5;border:0;border-radius:999px;padding:12px 22px;background:#2fb57f;color:#fff;font:700 .95rem var(--cute);box-shadow:0 8px 20px #2fb57f66;white-space:nowrap}
 #p-home{padding-bottom:70px}
+:root[data-theme=rwb] .bal{background:linear-gradient(135deg,#111,#2e2e2e);box-shadow:0 8px 22px #0003;border-bottom:4px solid #e10600}
+:root[data-theme=rwb] .bal .ie{background:#fff;color:#111}
+:root[data-theme=rwb] .bal .ie span:last-child b{color:#e10600}
+:root[data-theme=rwb] .sec{color:#111}
+:root[data-theme=rwb] .ac{box-shadow:0 6px 14px #0003}
+:root[data-theme=rwb] .ac.add{background:#fff;color:#111;border-color:#111}
+:root[data-theme=rwb] #fab{background:#e10600;box-shadow:0 8px 20px #e1060066}
+:root[data-theme=rwb] .ico em,:root[data-theme=rwb] .oi em,:root[data-theme=rwb] .ico img,:root[data-theme=rwb] .oi img,:root[data-theme=rwb] .cats .ico{filter:grayscale(1)}
+:root[data-theme=rwb] .rc .a[style]{color:#e10600!important}
 </style>
 </head>
 <body>
@@ -287,12 +296,12 @@ nav button:active span{transform:scale(.85)}
   <main>
     <section id="p-home" class="pg">
       <div class="month"><button id="prev" aria-label="เดือนก่อน">‹</button><b id="month"></b><button id="next" aria-label="เดือนถัดไป">›</button></div>
-      <div class="bal"><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>🟢 รายรับ <b id="balIn">฿0</b></span><span>🔴 รายจ่าย <b id="balOut">฿0</b></span></div></div>
+      <div class="bal"><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
       <div class="sec">บัญชีของฉัน</div><div class="accs" id="accs"></div>
+      <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
       <div class="card"><h2>รายการล่าสุด 🧾</h2><div id="recentHome"></div></div>
       <div class="stats" id="stats"></div>
       <div class="card sum" id="sum"></div>
-      <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
       <div class="card grow"><h2>7 วันล่าสุด 📊</h2><div class="plot" id="bars"></div><p class="tip" id="tip"></p></div>
     </section>
     <section id="p-add" class="pg hide">
@@ -560,6 +569,8 @@ function renderRecent(all){
 /* ---------- บัญชี / ยอดคงเหลือ ---------- */
 const loadAccs=()=>{ ACCS=load(uk('accounts'),DEF_ACC); };
 const saveAccs=()=>save(uk('accounts'),ACCS);
+const RWBACC=[['#e10600','#a30000'],['#111111','#3a3a3a'],['#4a4a4a','#7c7c7c'],['#7a0000','#c40000']];
+const ac=(a,i)=>document.documentElement.dataset.theme==='rwb'?RWBACC[i%RWBACC.length]:[a.c1,a.c2];
 function accBal(a,every){ let s=a.b0||0;
   every.forEach(r=>{ const m=Number(r.amount);
     if(r.type==='transfer'){ if(r.account===a.n) s-=m; if(r.to_account===a.n) s+=m; }
@@ -571,7 +582,7 @@ function renderBal(every,key){
     tot+=r.type==='in'?m:-m;
     if(r.date.startsWith(key)){ if(r.type==='in') inM+=m; else outM+=m; } });
   $('#balTotal').textContent=(tot<0?'-':'')+baht(Math.abs(tot)); $('#balIn').textContent=baht(inM); $('#balOut').textContent=baht(outM);
-  $('#accs').innerHTML=ACCS.map((a,i)=>`<button type="button" class="ac" data-i="${i}" style="--c1:${a.c1};--c2:${a.c2}"><b>${esc(a.n)}</b><small>แตะเพื่อแก้ไข</small><span>${baht(accBal(a,every))}</span></button>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
+  $('#accs').innerHTML=ACCS.map((a,i)=>`<button type="button" class="ac" data-i="${i}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>แตะเพื่อแก้ไข</small><span>${baht(accBal(a,every))}</span></button>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
 }
 function fillAccSel(){ const o=ACCS.map(a=>`<option>${esc(a.n)}</option>`).join('');
   $('#accSel').innerHTML=o+'<option value="">ไม่ระบุบัญชี</option>'; $('#toSel').innerHTML=o; if(ACCS[1]) $('#toSel').selectedIndex=1; $('#toWrap').hidden=true; }
@@ -705,15 +716,15 @@ document.querySelectorAll('nav button[data-page]').forEach(b=>b.onclick=()=>{
 });
 window.addEventListener('online',()=>{flush();refresh();});
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ readQueue().length?flush():refresh(); } });
-const BASE=[{id:'tang',name:'Naaaaaaaaaa',theme:'fin',face:'face-tang.png'}];
+const BASE=[{id:'tang',name:'Naaaaaaaaaa',theme:'rwb',face:'face-tang.png'}];
 let PROFILES=load('profiles-v2',BASE);
 const emFace=e=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="68" font-size="56" text-anchor="middle">${e}</text></svg>`);
 const faceOf=p=>p.face||emFace(p.emoji||'🙂');
-const THEMES={fin:{n:'ฟินแทรค (ฟ้า)',a:'#3b6cd4',b:'#f2f5fb'},rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'ชมพูหวาน',a:'#ff8fb5',b:'#fff0f5'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
+const THEMES={rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},fin:{n:'ฟินแทรค (ฟ้า)',a:'#3b6cd4',b:'#f2f5fb'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'ชมพูหวาน',a:'#ff8fb5',b:'#fff0f5'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
 const TH=k=>THEMES[k]||THEMES.tang;
 /* ---------- โปรไฟล์ (แยกตามบัญชีที่ล็อกอิน เก็บในเครื่อง) ---------- */
 let curProf=null, pendingFace='', pendingTheme='rwb';
-const loadProfile=()=>({...BASE[0],theme:'fin',...(load(uk('profile'),null)||{})});
+const loadProfile=()=>({...BASE[0],theme:'rwb',...(load(uk('profile'),null)||{})});
 function applyProfile(p){
   document.documentElement.dataset.theme=p.theme;
   $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
