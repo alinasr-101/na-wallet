@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Naaaaaaaaaa</title>
+  <title>Wallet</title>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#fff8e7">
   <meta name="mobile-web-app-capable" content="yes">
@@ -288,6 +288,20 @@ nav button:active span{transform:scale(.85)}
 :root[data-theme=rwb] #fab{background:#e10600;box-shadow:0 8px 20px #e1060066}
 :root[data-theme=rwb] .ico em,:root[data-theme=rwb] .oi em,:root[data-theme=rwb] .ico img,:root[data-theme=rwb] .oi img,:root[data-theme=rwb] .cats .ico{filter:grayscale(1)}
 :root[data-theme=rwb] .rc .a[style]{color:#e10600!important}
+.gi{width:62%;height:62%;color:var(--ink);display:block}
+nav button span{display:grid;place-items:center;height:1.4rem}
+nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
+.bal{position:relative}
+.bal::after{content:"";position:absolute;top:0;bottom:0;left:0;width:35%;background:linear-gradient(90deg,transparent,#ffffff30,transparent);animation:sheen 6s ease-in-out infinite;pointer-events:none}
+@keyframes sheen{0%{transform:translateX(-120%) skewX(-20deg)}60%,100%{transform:translateX(320%) skewX(-20deg)}}
+.eye{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border:0;border-radius:50%;background:#ffffff26;display:grid;place-items:center;padding:0}
+.eye .gi{width:18px;height:18px;color:#fff}
+.hide-amt #balTotal,.hide-amt #balIn,.hide-amt #balOut,.hide-amt .ac span{filter:blur(7px);user-select:none}
+.streak{font:700 .7rem var(--cute);letter-spacing:0;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--ink);white-space:nowrap}
+.ac{transition:transform .2s}.ac:active{transform:perspective(500px) rotateX(8deg) scale(.96)}
+@keyframes rcIn{from{opacity:0;transform:translateY(8px)}}
+.rc{animation:rcIn .35s both}.rc:nth-child(2){animation-delay:.04s}.rc:nth-child(3){animation-delay:.08s}.rc:nth-child(4){animation-delay:.12s}.rc:nth-child(5){animation-delay:.16s}
+@media (prefers-reduced-motion:reduce){.bal::after,.rc{animation:none}}
 </style>
 </head>
 <body>
@@ -296,17 +310,17 @@ nav button:active span{transform:scale(.85)}
   <main>
     <section id="p-home" class="pg">
       <div class="month"><button id="prev" aria-label="เดือนก่อน">‹</button><b id="month"></b><button id="next" aria-label="เดือนถัดไป">›</button></div>
-      <div class="bal"><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
-      <div class="sec">บัญชีของฉัน</div><div class="accs" id="accs"></div>
+      <div class="bal"><button type="button" class="eye" id="eye" aria-label="ซ่อนหรือแสดงยอดเงิน"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
+      <div class="sec" style="display:flex;justify-content:space-between;align-items:center">บัญชีของฉัน<span class="streak" id="streak" hidden></span></div><div class="accs" id="accs"></div>
       <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
-      <div class="card"><h2>รายการล่าสุด 🧾</h2><div id="recentHome"></div></div>
+      <div class="card"><h2>รายการล่าสุด</h2><div id="recentHome"></div></div>
       <div class="stats" id="stats"></div>
       <div class="card sum" id="sum"></div>
-      <div class="card grow"><h2>7 วันล่าสุด 📊</h2><div class="plot" id="bars"></div><p class="tip" id="tip"></p></div>
+      <div class="card grow"><h2>7 วันล่าสุด</h2><div class="plot" id="bars"></div><p class="tip" id="tip"></p></div>
     </section>
     <section id="p-add" class="pg hide">
       <form id="expense" class="card">
-        <div class="seg" id="typeSeg"><label><input type="radio" name="type" value="out" checked><span>💸 รายจ่าย</span></label><label><input type="radio" name="type" value="in"><span>💰 รายรับ</span></label><label><input type="radio" name="type" value="transfer"><span>🔁 โอน</span></label></div>
+        <div class="seg" id="typeSeg"><label><input type="radio" name="type" value="out" checked><span>▼ รายจ่าย</span></label><label><input type="radio" name="type" value="in"><span>▲ รายรับ</span></label><label><input type="radio" name="type" value="transfer"><span>⇄ โอน</span></label></div>
         <button type="button" class="slipbtn" id="slipBtn">📷 อ่านจากสลิปโอนเงิน</button><input type="file" id="slipFile" accept="image/*" hidden>
         <div id="slipReview" class="card hide" style="padding:10px 12px;font-size:.8rem;gap:6px">
           <b id="slipReviewTitle">ผลตรวจสลิป</b>
@@ -318,7 +332,7 @@ nav button:active span{transform:scale(.85)}
           <label class="f">จำนวนเงิน (บาท)<input class="amt" name="amount" type="text" inputmode="decimal" maxlength="12" pattern="[0-9]{1,9}([.][0-9]{1,2})?" placeholder="0.00" required></label>
           <label class="f">วันที่<input name="date" type="date" required></label>
         </div>
-        <div class="row2"><label class="f">บัญชี<select name="account" id="accSel"></select></label><label class="f" id="toWrap" hidden>ไปยังบัญชี<select name="to_account" id="toSel"></select></label></div>
+        <div class="row2"><label class="f" id="accLbl">บัญชีที่ใช้ (ไม่บังคับ)<select name="account" id="accSel"></select></label><label class="f" id="toWrap" hidden>ไปยังบัญชี<select name="to_account" id="toSel"></select></label></div>
         <div class="f">หมวดหมู่<div class="cats" id="cats"></div></div>
         <div class="f">รายละเอียด (ไม่บังคับ)
           <textarea name="description" maxlength="300" rows="2"></textarea>
@@ -329,13 +343,13 @@ nav button:active span{transform:scale(.85)}
         <p id="status" role="status"></p>
       </form>
     </section>
-    <section id="p-list" class="pg hide"><div class="card"><h2>รายการล่าสุด 🧾</h2><div id="recent"></div></div></section>
+    <section id="p-list" class="pg hide"><div class="card"><h2>รายการล่าสุด</h2><div id="recent"></div></div></section>
   <button id="fab" type="button">＋ บันทึกรายการใหม่</button>
   </main>
   <nav>
-    <button data-page="home" class="on"><span>🏠</span>ภาพรวม</button>
-    <button data-page="add"><span>➕</span>บันทึก</button>
-    <button data-page="list"><span>🧾</span>รายการ</button>
+    <button data-page="home" class="on"><span><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7M6 10v10h12V10M10 20v-5h4v5"/></svg></span>ภาพรวม</button>
+    <button data-page="add"><span><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>บันทึก</button>
+    <button data-page="list"><span><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7h12M8 12h12M8 17h12M4 7h.01M4 12h.01M4 17h.01"/></svg></span>รายการ</button>
   </nav>
 </div>
 <div id="modal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
@@ -411,7 +425,7 @@ nav button:active span{transform:scale(.85)}
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const API_URL='https://script.google.com/macros/s/AKfycbz4oi19f_33egH2RnFaD2Vp-tJ9sOFf2LzxuIu_kqA2thQr-6aiP19efxxksVhOPsMI/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbzjGfjNpUHac7D2ByNwP3rfEXi36gnH5aMOI-SoOESbyH3QNr-EuR_g3Nk3AUatBI9S/exec';
 const QUEUE_KEY='expense-queue-v3';
 const SUPABASE_URL='https://eicfatftqvtfzcknzzuv.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_l7mMQl7YzkJ8Sf8sIrQq5g_8uxHgfkn';
@@ -436,7 +450,10 @@ const OPTS={
  health:O('health','medicine,💊,ค่ายา|hospital,🏥,โรงพยาบาล/พบแพทย์|clinic,🩺,คลินิก/ตรวจสุขภาพ|dental,🦷,ทำฟัน|vitamin,🍊,วิตามิน/อาหารเสริม|glasses,👓,แว่นตา/คอนแทคเลนส์|gym,🏋️,ฟิตเนส|sport,⚽,ค่าสนาม/อุปกรณ์กีฬา|massage,💆,นวด/สปา|mask,😷,หน้ากาก/ชุดตรวจ ATK'),
  other:O('other','merit,🙏,ทำบุญ/บริจาค|family,👨‍👩‍👧,ให้เงินครอบครัว|envelope,💌,ซองงานแต่ง/งานบุญ|friends,🍻,เลี้ยงสังสรรค์|trip,🏖️,ท่องเที่ยว|movie,🎬,ดูหนัง/คอนเสิร์ต|game,🎮,เติมเกม/ซื้อเกม|pet,🐶,สัตว์เลี้ยง/สัตวแพทย์|hair,💇,ตัดผม/ทำผม|laundry,🧺,ซักรีด|post,📮,ไปรษณีย์/ส่งพัสดุ|bank,🏦,ค่าธรรมเนียมธนาคาร')
 };
-const ic=(src,e)=>`<img src="${src}" alt="" onload="this.nextElementSibling.hidden=true;this.parentNode.style.background='none'" onerror="this.remove()"><em>${e}</em>`;
+const GP={"food": "<path d=\"M7 3v7M5 3v4a2 2 0 0 0 4 0V3M7 10v11M17 3c-2.2 1.6-3 4-3 7h4V3zM17 10v11\"/>", "travel": "<path d=\"M6 16V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8M4 16h16v2H4zM7 18v2M17 18v2M6 11h12\"/>", "shop": "<path d=\"M6 8h12l1 12H5L6 8zM9 8a3 3 0 0 1 6 0\"/>", "bill": "<path d=\"M4 11l8-7 8 7M6 10v10h12V10M10 20v-5h4v5\"/>", "health": "<path d=\"M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z\"/>", "other": "<circle cx=\"6\" cy=\"12\" r=\"1.3\"/><circle cx=\"12\" cy=\"12\" r=\"1.3\"/><circle cx=\"18\" cy=\"12\" r=\"1.3\"/>", "inc-salary": "<path d=\"M4 8h16v11H4zM9 8V6h6v2M4 13h16\"/>", "inc-biz": "<path d=\"M4 9l1.5-5h13L20 9M4 9h16v1a2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0 2.5 2.5 0 0 1-5 0zM5 12v8h14v-8\"/>", "inc-gift": "<path d=\"M4 9h16v4H4zM5 13v7h14v-7M12 9v11M12 9C10 5.5 7 6 7.5 8S11 9 12 9c1 0 4.5 1 4.5-1S14 5.5 12 9\"/>", "inc-other": "<path d=\"M12 5v14M5 12h14\"/>", "transfer": "<path d=\"M5 8h13l-3-3M19 16H6l3 3\"/>", "avg": "<path d=\"M5 19V9M11 19V5M17 19v-7M3 19h18\"/>", "max": "<path d=\"M12 19V5M6 11l6-6 6 6\"/>", "day": "<rect x=\"4\" y=\"5\" width=\"16\" height=\"15\" rx=\"2\"/><path d=\"M4 10h16M9 3v4M15 3v4\"/>", "top": "<path d=\"M12 4l2.4 5 5.6.7-4.1 3.8 1.1 5.5L12 16.3 7 19l1.1-5.5L4 9.7 9.6 9z\"/>", "count": "<path d=\"M8 7h12M8 12h12M8 17h12M4 7h.01M4 12h.01M4 17h.01\"/>", "trend": "<path d=\"M4 16l5-5 4 4 7-8M15 7h5v5\"/>", "home": "<path d=\"M4 11l8-7 8 7M6 10v10h12V10M10 20v-5h4v5\"/>", "plus": "<path d=\"M12 5v14M5 12h14\"/>", "eye": "<path d=\"M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/>"};
+const gico=k=>GP[k]?`<svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GP[k]}</svg>`:'';
+const ic=(src,e)=>{ const m=/icons\/(?:cat|stat)\/([\w-]+)\.png/.exec(src), s=m&&gico(m[1]); if(s) return s;
+  return `<img src="${src}" alt="" onload="this.nextElementSibling.hidden=true;this.parentNode.style.background='none'" onerror="this.remove()"><em>${e}</em>`; };
 const PETS=['box','tea','bake','yarn','plant','fish'].map(n=>`pets/cat-${n}.webp`);
 let petNow=Math.floor(Math.random()*PETS.length);
 const petAt=o=>PETS[(petNow+o)%PETS.length];
@@ -517,7 +534,7 @@ function render(){
   const by={}; let total=0;
   all.filter(r=>r.date.startsWith(key)).forEach(r=>{by[r.category]=(by[r.category]||0)+r.amount; total+=r.amount;});
   const ents=Object.entries(by).sort((a,b)=>b[1]-a[1]);
-  countUp($('#total'),total); renderStats(all,m,key,total,ents); renderSum(every,key,total); renderBal(every,key);
+  countUp($('#total'),total); renderStats(all,m,key,total,ents); renderSum(every,key,total); renderBal(every,key); renderStreak(every);
   let off=25, segs='<circle r="15.9155" cx="21" cy="21" fill="none" style="stroke:var(--line)" stroke-width="6"/>';
   ents.forEach(([c,a])=>{ const p=a/total*100, len=Math.max(p-(ents.length>1?.8:0),.1);
     segs+=`<circle r="15.9155" cx="21" cy="21" fill="none" stroke="${icoOf(c)[1]}" stroke-width="6" stroke-dasharray="${len} ${100-len}" stroke-dashoffset="${off}"/>`; off-=p; });
@@ -534,7 +551,7 @@ function render(){
 }
 function renderSum(every,key,spent){
   const inc=every.filter(r=>r.type==='in'&&r.date.startsWith(key)).reduce((s,r)=>s+r.amount,0), bal=inc-spent;
-  $('#sum').innerHTML=[['💰','รายรับ',baht(inc),''],['💸','รายจ่าย',baht(spent),''],['🟰','คงเหลือ',(bal<0?'-':'')+baht(Math.abs(bal)),bal<0?'neg':'']].map(([e,l,v,c])=>`<div><small>${e} ${l}</small><b class="${c}">${v}</b></div>`).join('');
+  $('#sum').innerHTML=[['▲','รายรับ',baht(inc),''],['▼','รายจ่าย',baht(spent),''],['＝','คงเหลือ',(bal<0?'-':'')+baht(Math.abs(bal)),bal<0?'neg':'']].map(([e,l,v,c])=>`<div><small>${e} ${l}</small><b class="${c}">${v}</b></div>`).join('');
 }
 function renderStats(all,m,key,total,ents){
   const mr=all.filter(r=>r.date.startsWith(key)), now=new Date();
@@ -571,6 +588,15 @@ const loadAccs=()=>{ ACCS=load(uk('accounts'),DEF_ACC); };
 const saveAccs=()=>save(uk('accounts'),ACCS);
 const RWBACC=[['#e10600','#a30000'],['#111111','#3a3a3a'],['#4a4a4a','#7c7c7c'],['#7a0000','#c40000']];
 const ac=(a,i)=>document.documentElement.dataset.theme==='rwb'?RWBACC[i%RWBACC.length]:[a.c1,a.c2];
+function renderStreak(every){
+  const days=new Set(every.map(r=>r.date)); let n=0; const d=new Date();
+  if(!days.has(ymd(d))) d.setDate(d.getDate()-1);
+  while(days.has(ymd(d))){ n++; d.setDate(d.getDate()-1); }
+  const el=$('#streak'); el.hidden=n<2; el.textContent='◆ จดต่อเนื่อง '+n+' วัน';
+}
+const setEye=on=>{ document.body.classList.toggle('hide-amt',on); try{ localStorage.setItem('hide-amt',on?'1':''); }catch(_){} };
+setEye(!!localStorage.getItem('hide-amt'));
+$('#eye').onclick=()=>setEye(!document.body.classList.contains('hide-amt'));
 function accBal(a,every){ let s=a.b0||0;
   every.forEach(r=>{ const m=Number(r.amount);
     if(r.type==='transfer'){ if(r.account===a.n) s-=m; if(r.to_account===a.n) s+=m; }
@@ -584,8 +610,10 @@ function renderBal(every,key){
   $('#balTotal').textContent=(tot<0?'-':'')+baht(Math.abs(tot)); $('#balIn').textContent=baht(inM); $('#balOut').textContent=baht(outM);
   $('#accs').innerHTML=ACCS.map((a,i)=>`<button type="button" class="ac" data-i="${i}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>แตะเพื่อแก้ไข</small><span>${baht(accBal(a,every))}</span></button>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
 }
-function fillAccSel(){ const o=ACCS.map(a=>`<option>${esc(a.n)}</option>`).join('');
-  $('#accSel').innerHTML=o+'<option value="">ไม่ระบุบัญชี</option>'; $('#toSel').innerHTML=o; if(ACCS[1]) $('#toSel').selectedIndex=1; $('#toWrap').hidden=true; }
+function setAccMode(tp){ const o=ACCS.map(a=>`<option>${esc(a.n)}</option>`).join(''), tr=tp==='transfer';
+  $('#accSel').innerHTML=(tr?'':'<option value="">ไม่ระบุบัญชี</option>')+o; $('#toSel').innerHTML=o; if(ACCS[1]) $('#toSel').selectedIndex=1;
+  $('#toWrap').hidden=!tr; $('#accLbl').firstChild.nodeValue=tr?'จากบัญชี':'บัญชีที่ใช้ (ไม่บังคับ)'; }
+const fillAccSel=()=>setAccMode(form.elements.type.value);
 function editAcc(i){
   if(i<0){ const n=(prompt('ชื่อบัญชีใหม่ (เช่น กรุงไทย, ออมสิน)','')||'').trim().slice(0,20); if(!n) return;
     if(ACCS.some(x=>x.n===n)){ alert('มีบัญชีชื่อนี้แล้ว'); return; }
@@ -605,7 +633,7 @@ $('#prev').onclick=()=>{monthOff--;render();}; $('#next').onclick=()=>{monthOff+
 function drawCats(tp){ $('#cats').innerHTML=Object.entries(tp==='in'?ICATS:tp==='transfer'?TCATS:CATS).map(([c,[e,col,k]],i)=>`<input type="radio" name="category" id="c${i}" value="${esc(c)}" required${tp==='transfer'?' checked':''}>
   <label for="c${i}"><span class="ico" style="background:${col}55">${ic('icons/cat/'+k+'.png',e)}</span>${esc(c)}</label>`).join(''); }
 drawCats('out');
-$('#typeSeg').addEventListener('change',()=>{ drawCats(form.elements.type.value); $('#toWrap').hidden=form.elements.type.value!=='transfer'; renderChips(); });
+$('#typeSeg').addEventListener('change',()=>{ drawCats(form.elements.type.value); setAccMode(form.elements.type.value); renderChips(); });
 function chipList(c){ const base=OPTS[(CATS[c]||[])[2]]||[], names=new Set(base.map(o=>o.t));
   return base.concat((descs[c]||[]).filter(t=>!names.has(t)).slice(0,8).map(t=>({t,k:'',e:'🕘'}))); }
 function renderChips(){
@@ -625,11 +653,13 @@ form.addEventListener('submit',e=>{
   if(!(Number(f.amount)>0)){ showStatus('กรุณากรอกจำนวนเงินมากกว่า 0 บาท',true); form.elements.amount.focus(); return; }
   if(slipScanMeta && !$('#slipConfirm').checked){ showStatus('กรุณาตรวจยอดเงินและวันที่จากภาพ แล้วติ๊กยืนยันก่อนบันทึก',true); $('#slipConfirm').focus(); return; }
   f.description=f.description.trim();
+  if(f.type!=='transfer') f.to_account='';
+  else if(!f.account||f.account===f.to_account){ showStatus('เลือกบัญชีต้นทางและปลายทางให้ต่างกัน',true); return; }
   if(slipScanMeta){ f.slipRef=slipScanMeta.slipRef||''; f.slipHash=slipScanMeta.slipHash||''; }
   const q=readQueue(); q.push({...f,id:crypto.randomUUID(),user}); save(QUEUE_KEY,q);
   remember(f.category,f.description); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
   const keep=f.date,kt=f.type; form.reset(); form.elements.date.value=keep; form.elements.type.value=kt;
-  showStatus('กำลังส่ง…'); renderChips(); render(); document.activeElement&&document.activeElement.blur(); burst(); flush();
+  showStatus('กำลังส่ง…'); renderChips(); render(); document.activeElement&&document.activeElement.blur(); burst(); navigator.vibrate&&navigator.vibrate(18); flush();
 });
 
 
