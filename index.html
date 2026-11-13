@@ -382,6 +382,54 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 :root[data-theme=ai] .brand .petbtn{background:#fff0d2;border:1px solid #f4dfb2;border-radius:50%}
 :root[data-theme=ai] :focus-visible{outline-color:#e59ab6}
 
+
+/* ===== Pink Cloud refinement: pink/mauve only, no yellow gradients ===== */
+:root[data-theme=ai]{
+  --ink:#594451;--mute:#9d8291;--cream:#fff8fb;--line:#efdce6;
+  --green:#c87998;--soft:#f9eaf1;--field:#fffdfd;--glow:#f7e5ed;
+  --glow2:#f1eafa;--navbg:#fffafdf5;--card:#fffdfd;--on:#fff;
+}
+:root[data-theme=ai] body{background:#fff8fb!important;background-image:none!important}
+:root[data-theme=ai] .who{background:#fff8fb!important;background-image:none!important}
+:root[data-theme=ai] .auth-card{background:#fffdfd;border-color:#efdce6;box-shadow:0 10px 28px #b9829b20}
+:root[data-theme=ai] .bal{background:#d98fa8!important;border:1px solid #cf829d;border-bottom:3px solid #bd718f;box-shadow:0 8px 18px #c77f9a26}
+:root[data-theme=ai] .bal::after{display:none}
+:root[data-theme=ai] .bal .ie{background:#fff8fb;color:#765365}
+:root[data-theme=ai] .bal .ie span:last-child b{color:#bd718f}
+:root[data-theme=ai] .st:nth-child(1),:root[data-theme=ai] .st:nth-child(4){background:#fff0f5!important}
+:root[data-theme=ai] .st:nth-child(2),:root[data-theme=ai] .st:nth-child(5){background:#f5eef9!important}
+:root[data-theme=ai] .st:nth-child(3){background:#fff8fb!important}
+:root[data-theme=ai] .st:nth-child(6){background:#8f6b83!important;color:#fff}
+:root[data-theme=ai] .st:nth-child(6) small,:root[data-theme=ai] .st:nth-child(6) span{color:#fff5fa}
+:root[data-theme=ai] .st .down{color:#a66d8b}
+:root[data-theme=ai] .ac{background:var(--c1)!important;border:1px solid #ffffff99;border-radius:18px;box-shadow:0 5px 13px #9d718b24;color:#fff}
+:root[data-theme=ai] .ac small{color:#fff;opacity:.86}
+:root[data-theme=ai] .ac.add{background:#f5edf8!important;color:#96738f;border:1.5px dashed #d9c5df;box-shadow:none}
+:root[data-theme=ai] #fab{background:#c87998!important;box-shadow:0 7px 16px #c8799838;border:1px solid #fff}
+:root[data-theme=ai] nav{background:#fffafdf5;border-top:1px solid #efdce6;box-shadow:0 -5px 18px #b9829b12}
+:root[data-theme=ai] nav button.on{background:#f9eaf1!important;color:#ad6485!important}
+:root[data-theme=ai] .month button{background:#f5edf8;color:#8f6b99}
+:root[data-theme=ai] .bar,:root[data-theme=ai] .col.today .bar{background:#d98fa8!important}
+:root[data-theme=ai] .col.today .d{color:#a66d8b}
+:root[data-theme=ai] .tip{background:#f5edf8;color:#806887;border:1px solid #e8d9ed}
+:root[data-theme=ai] .acts .go,:root[data-theme=ai] .go{background:#c87998!important;color:#fff!important;border:0;border-radius:15px}
+:root[data-theme=ai] .acts .cancel{background:#f5edf8;color:#806887;border-radius:15px}
+:root[data-theme=ai] .acts .del{background:#fbeaf0;color:#b75d78;border-radius:15px}
+:root[data-theme=ai] .chips button,:root[data-theme=ai] .act button{background:#f5edf8;color:#806887}
+:root[data-theme=ai] .act button[data-act=del]{background:#fbeaf0;color:#b75d78}
+:root[data-theme=ai] .cats input:checked+label{border-color:#d98fa8;background:#fff0f5;color:#a65377}
+:root[data-theme=ai] .slipbtn{border-color:#e8cbd9;background:#fff4f8;color:#a35f7b}
+:root[data-theme=ai] .brand img#face{border-color:#efdce6;box-shadow:0 4px 12px #b9829b22}
+:root[data-theme=ai] .brand .petbtn{background:#f5edf8;border:1px solid #e8d9ed;border-radius:50%}
+:root[data-theme=ai] .sw.on{border-color:#d98fa8;background:#fff0f5}
+:root[data-theme=ai] .sw i{box-shadow:0 1px 5px #9c6b7b25}
+:root[data-theme=ai] :focus-visible{outline-color:#d98fa8}
+
+
+:root[data-theme=ai] .ac{position:relative;min-height:112px;padding-bottom:40px;cursor:pointer}
+:root[data-theme=ai] .ac-fund{position:absolute;left:9px;right:9px;bottom:8px;width:calc(100% - 18px);border:1px solid #ffffff80;border-radius:999px;padding:5px 6px;background:#ffffff30;color:#fff;font:600 .68rem var(--cute);cursor:pointer}
+:root[data-theme=ai] .ac-fund:active{transform:scale(.97)}
+
 </style>
 </head>
 <body>
@@ -517,7 +565,8 @@ const CATS={'อาหาร':['🍜','#ffb36b','food'],'เดินทาง':
   'ที่พักและบิล':['🏠','#b7a2f0','bill'],'สุขภาพ':['💊','#7fd8a6','health'],'อื่น ๆ':['✨','#f2d36b','other']};
 const ICATS={'เงินเดือน':['💼','#7fd8a6','inc-salary'],'ธุรกิจ/ขาย':['🏪','#7cc4f0','inc-biz'],'โอนเข้า/ของขวัญ':['🎁','#f59ac0','inc-gift'],'อื่น ๆ (รับ)':['✨','#f2d36b','inc-other']};
 const TCATS={'โอนระหว่างบัญชี':['🔁','#7cc4f0','transfer']};
-const CATS_ALL=Object.assign({},CATS,ICATS,TCATS);
+const DEPCAT='เติมเงินเข้าบัญชี';
+const CATS_ALL=Object.assign({},CATS,ICATS,TCATS,{[DEPCAT]:['＋','#d98fa8','inc-other']});
 const PAL=[['#1e6fd9','#2a8be8'],['#2fa35a','#4cc07a'],['#6c4bb6','#8a66d6'],['#f0a030','#ffb84d'],['#d9455f','#f06a82'],['#1d9aa6','#3cc0cc']];
 const DEF_ACC=['KBank','SCB','Krungsri','Cash'].map((n,i)=>({n,c1:PAL[i][0],c2:PAL[i][1],b0:0}));
 let ACCS=[];
@@ -589,7 +638,12 @@ async function flush(){
     while(true){
       const qi=queue.findIndex(q=>q.user===owner);
       if(qi<0) break;
-      const item=queue[qi];
+      let item=queue[qi];
+      // รองรับรายการค้างจากแอปรุ่นก่อน: ถ้า ID เดิมไม่ใช่รูปแบบที่ใช้ได้ ให้สร้าง UUID ใหม่
+      if(!/^[A-Za-z0-9_-]{1,64}$/.test(String(item.id||''))){
+        item={...item,id:crypto.randomUUID()};
+        queue[qi]=item; save(QUEUE_KEY,queue);
+      }
       let r;
       try{ r=await api({expense:item}); }
       catch{ showStatus('ยังไม่มีสัญญาณ — เก็บรายการไว้รอส่ง'); return; }
@@ -607,7 +661,7 @@ async function flush(){
 
 /* ---------- Overview ---------- */
 function render(){
-  const every=allRows(), all=every.filter(r=>r.type!=='in'&&r.type!=='transfer'), now=new Date();
+  const every=allRows(), all=every.filter(r=>r.type!=='in'&&r.type!=='transfer'&&r.type!=='deposit'), now=new Date();
   const m=new Date(now.getFullYear(),now.getMonth()+monthOff,1), key=ymd(m).slice(0,7);
   $('#month').textContent=m.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
   $('#next').disabled=monthOff>=0; $('#prev').disabled=monthOff<=-5;
@@ -655,9 +709,10 @@ function renderStats(all,m,key,total,ents){
   const SK=['avg','max','day','top','count','trend'];
   $('#stats').innerHTML=cards.map(([e,l,v,s,c],i)=>`<div class="st"><small><span class="oi">${ic('icons/stat/'+SK[i]+'.png',e)}</span> ${l}</small><b class="${c}">${typeof v==='object'?v.h:esc(v)}</b><span>${esc(s)}</span></div>`).join('');
 }
-const rcHtml=(r,act=true)=>{ const tr=r.type==='transfer', inn=r.type==='in', c=icoOf(r.category);
+const rcHtml=(r,act=true)=>{ const tr=r.type==='transfer', inn=r.type==='in', dep=r.type==='deposit', c=icoOf(r.category);
   const sub=tr?`${esc(r.account||'?')} → ${esc(r.to_account||'?')}`:`${esc(r.category)}${r.account?' · '+esc(r.account):''}`;
-  return `<div class="rc" data-id="${esc(r.id)}"><div class="ico" style="background:${c[1]}55">${ic('icons/cat/'+c[2]+'.png',c[0])}</div><div class="n">${esc(r.description||r.category)}<small>${sub} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${inn?' style="color:#1f9d6b"':''}>${inn?'+':''}${baht(r.amount)}</div>${act?'<div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>':''}</div>`; };
+  const actions=act?(dep?'<div class="act"><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>':'<div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>'):'';
+  return `<div class="rc" data-id="${esc(r.id)}"><div class="ico" style="background:${c[1]}55">${ic('icons/cat/'+c[2]+'.png',c[0])}</div><div class="n">${esc(r.description||r.category)}<small>${sub} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${(inn||dep)?' style="color:#1f9d6b"':''}>${(inn||dep)?'+':''}${baht(r.amount)}</div>${actions}</div>`; };
 function renderRecent(all){
   all=all||allRows(); const rec=[...all].reverse().sort((a,b)=>b.date.localeCompare(a.date));
   $('#recent').innerHTML=rec.length?rec.slice(0,100).map(r=>rcHtml(r)).join(''):empty('ยังไม่มีรายการ');
@@ -685,7 +740,8 @@ async function syncAccs(){
   }
 }
 const RWBACC=[['#e10600','#a30000'],['#111111','#3a3a3a'],['#4a4a4a','#7c7c7c'],['#7a0000','#c40000']];
-const ac=(a,i)=>document.documentElement.dataset.theme==='rwb'?RWBACC[i%RWBACC.length]:[a.c1,a.c2];
+const PINK_ACC=['#D98FA8','#B98AAE','#9D8DBB','#C47F98','#A9799B','#D5A0B2'];
+const ac=(a,i)=>document.documentElement.dataset.theme==='rwb'?RWBACC[i%RWBACC.length]:document.documentElement.dataset.theme==='ai'?[PINK_ACC[i%PINK_ACC.length],PINK_ACC[i%PINK_ACC.length]]:[a.c1,a.c2];
 function renderStreak(every){
   const days=new Set(every.map(r=>r.date)); let n=0; const d=new Date();
   if(!days.has(ymd(d))) d.setDate(d.getDate()-1);
@@ -698,15 +754,16 @@ $('#eye').onclick=()=>setEye(!document.body.classList.contains('hide-amt'));
 function accBal(a,every){ let s=a.b0||0;
   every.forEach(r=>{ const m=Number(r.amount);
     if(r.type==='transfer'){ if(r.account===a.n) s-=m; if(r.to_account===a.n) s+=m; }
-    else if(r.account===a.n) s+=r.type==='in'?m:-m; });
+    else if(r.account===a.n) s+=(r.type==='in'||r.type==='deposit')?m:-m; });
   return s; }
 function renderBal(every,key){
   let tot=ACCS.reduce((s,a)=>s+(a.b0||0),0), inM=0, outM=0;
   every.forEach(r=>{ const m=Number(r.amount); if(r.type==='transfer') return;
+    if(r.type==='deposit'){ tot+=m; return; }
     tot+=r.type==='in'?m:-m;
-    if(r.date.startsWith(key)){ if(r.type==='in') inM+=m; else outM+=m; } });
+    if(r.date.startsWith(key)){ if(r.type==='in') inM+=m; else if(r.type==='out') outM+=m; } });
   $('#balTotal').textContent=(tot<0?'-':'')+baht(Math.abs(tot)); $('#balIn').textContent=baht(inM); $('#balOut').textContent=baht(outM);
-  $('#accs').innerHTML=ACCS.map((a,i)=>`<button type="button" class="ac" data-i="${i}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>แตะเพื่อแก้ไข</small><span>${baht(accBal(a,every))}</span></button>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
+  $('#accs').innerHTML=ACCS.map((a,i)=>`<div class="ac" data-i="${i}" role="button" tabindex="0" aria-label="จัดการ ${esc(a.n)}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>แตะเพื่อจัดการบัญชี</small><span>${baht(accBal(a,every))}</span><button type="button" class="ac-fund" data-fund="${i}">＋ เติมเงิน</button></div>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
 }
 function setAccMode(tp){
   const o=ACCS.map(a=>`<option value="${esc(a.n)}">${esc(a.n)}</option>`).join(''), tr=tp==='transfer';
@@ -729,7 +786,19 @@ function editAcc(i){
     if(b.trim()==='ลบ'){ if(ACCS.length<=1){ alert('ต้องมีอย่างน้อย 1 บัญชี'); return; } ACCS.splice(i,1); } else a.b0=Number(b.replace(/,/g,''))||0; }
   saveAccs(); fillAccSel(); render();
 }
-$('#accs').onclick=e=>{ const b=e.target.closest('.ac'); if(b) editAcc(+b.dataset.i); };
+async function addFunds(i){
+  const a=ACCS[i]; if(!a) return;
+  const raw=prompt('เติมเงินเข้าบัญชี '+a.n+' จำนวนเท่าไร (บาท)','');
+  if(raw===null) return;
+  const amount=Number(String(raw).replace(/,/g,'').trim());
+  if(!Number.isFinite(amount)||amount<=0||!/^\d{1,9}(?:\.\d{1,2})?$/.test(String(raw).replace(/,/g,'').trim())){ alert('กรุณากรอกจำนวนเงินให้ถูกต้อง (ทศนิยมไม่เกิน 2 ตำแหน่ง)'); return; }
+  const note=(prompt('หมายเหตุ (ไม่บังคับ)','เติมเงินเข้าบัญชี')||'เติมเงินเข้าบัญชี').trim();
+  const item={id:crypto.randomUUID(),user,type:'deposit',date:ymd(new Date()),amount:String(amount),category:DEPCAT,description:note||DEPCAT,account:a.n,to_account:''};
+  const q=readQueue(); q.push(item); save(QUEUE_KEY,q);
+  showStatus('กำลังบันทึกเงินเข้าบัญชี…'); render(); flush();
+}
+$('#accs').onclick=e=>{ const f=e.target.closest('.ac-fund'); if(f){ addFunds(+f.dataset.fund); return; } const b=e.target.closest('.ac'); if(b) editAcc(+b.dataset.i); };
+$('#accs').onkeydown=e=>{ if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.ac-fund')){ const b=e.target.closest('.ac[role=button]'); if(b){ e.preventDefault(); editAcc(+b.dataset.i); } } };
 $('#fab').onclick=()=>document.querySelector('nav button[data-page=add]').click();
 document.querySelectorAll('nav button[data-page]').forEach(b=>b.addEventListener('click',()=>$('#fab').classList.toggle('hide',b.dataset.page!=='home')));
 $('#prev').onclick=()=>{monthOff--;render();}; $('#next').onclick=()=>{monthOff++;render();};
@@ -827,7 +896,7 @@ function openDay(d){
   const list=allRows().filter(r=>r.date===d).sort((a,b)=>b.amount-a.amount);
   const dt=new Date(d+'T00:00:00'), isToday=d===ymd(new Date());
   $('#dayTitle').textContent=(isToday?'วันนี้ · ':'')+dt.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
-  const total=list.filter(r=>r.type!=='in'&&r.type!=='transfer').reduce((s,r)=>s+r.amount,0);
+  const total=list.filter(r=>r.type!=='in'&&r.type!=='transfer'&&r.type!=='deposit').reduce((s,r)=>s+r.amount,0);
   $('#dayTotal').textContent=list.length?`รวม ${baht(total)} · ${list.length} รายการ`:'';
   $('#dayList').innerHTML=list.length?list.map(r=>`<div class="rc"><div class="ico" style="background:${icoOf(r.category)[1]}55">${ic('icons/cat/'+icoOf(r.category)[2]+'.png',icoOf(r.category)[0])}</div><div class="n">${esc(r.description||r.category)}<small>${esc(r.category)}</small></div><div class="a">${baht(r.amount)}</div></div>`).join(''):empty(isToday?'วันนี้ยังไม่มีรายจ่าย':'วันนี้ไม่มีรายจ่าย');
   dayModal.classList.remove('hide');
@@ -844,7 +913,7 @@ document.querySelectorAll('nav button[data-page]').forEach(b=>b.onclick=()=>{
   const pg=b.dataset.page;
   document.querySelectorAll('nav button[data-page]').forEach(x=>x.classList.toggle('on',x===b));
   document.querySelectorAll('.pg').forEach(x=>x.classList.toggle('hide',x.id!=='p-'+pg));
-  $('#sub').textContent=SUBS[pg];
+  /* คงชื่อโปรไฟล์ของผู้ใช้ไว้ ไม่เปลี่ยนเป็นชื่อหน้ารายรับ/รายจ่าย */
   if(document.activeElement) document.activeElement.blur();
   if(pg==='list') renderRecent();
   if(pg==='home') playHome();
@@ -864,7 +933,8 @@ const loadProfile=()=>({...BASE[0],theme:'rwb',...(load(uk('profile'),null)||{})
 function applyProfile(p){
   document.documentElement.dataset.theme=p.theme;
   $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
-  document.title=p.name||'รายรับรายจ่าย';
+  document.title=p.name||'บัญชีของฉัน';
+  $('#sub').textContent='โปรไฟล์ · '+(p.name||'บัญชีของฉัน');
   document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
 }
 const squarePhoto=f=>new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>{
@@ -952,7 +1022,7 @@ async function enterApp(sessionUser){
     const p=curProf=loadProfile();
     cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0; loadAccs(); await syncAccs(); fillAccSel();
     applyProfile(p);
-    $('#sub').textContent=sessionUser.email||'บัญชีของฉัน';
+    $('#sub').textContent='โปรไฟล์ · '+(p.name||'บัญชีของฉัน');
     form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
     const homeButton=document.querySelector('nav button[data-page=home]');
     if(!homeButton) throw new Error('ไม่พบปุ่มหน้าหลักในหน้าเว็บ');
@@ -973,7 +1043,7 @@ async function leaveApp(){
   if(supabaseClient) await supabaseClient.auth.signOut();
   authUser=null; user=null; curProf=null; enteringUserId=null; enteredUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
   $('#who').classList.remove('hide');
-  $('#sub').textContent='ภาพรวมการใช้จ่าย';
+  $('#sub').textContent='เข้าสู่ระบบเพื่อใช้งาน';
 }
 if(supabaseClient){
   // การเข้าสู่ระบบเรียก enterApp จาก submit โดยตรง ส่วน listener นี้ดูแลการออกจากระบบเท่านั้น
