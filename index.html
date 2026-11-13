@@ -636,30 +636,187 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 #fundModal #fundDel:disabled{opacity:.4;cursor:default}
 #fundModal .fund-danger p{margin:0;font:500 .72rem var(--cute);color:var(--mute);text-align:center}
 
-/* ===== ธีมขาว-ดำ-แดง: หน้าบันทึกรายการ แซมสีตามประเภท (แดง=จ่าย / ม่วง=รับ / ดำ=โอน) ===== */
-:root[data-theme=rwb] #p-add{background-image:radial-gradient(#11111418 1px,transparent 1.2px);background-size:14px 14px}
-:root[data-theme=rwb] #expense{--ty:#d71920;--ty2:#7b3fa0;--ty-soft:#fdecee;--edge:#d71920;position:relative;padding-top:20px;background:linear-gradient(180deg,#fff 55%,#faf6fc 100%);box-shadow:4px 4px 0 #111,8px 8px 0 var(--edge)}
-:root[data-theme=rwb] #expense:has(input[name=type][value=in]:checked){--ty:#7b3fa0;--ty2:#d71920;--ty-soft:#f3eafa;--edge:#7b3fa0}
-:root[data-theme=rwb] #expense:has(input[name=type][value=transfer]:checked){--ty:#1b1722;--ty2:#7b3fa0;--ty-soft:#efedf2;--edge:#d71920}
-:root[data-theme=rwb] #expense::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;border-radius:10px 10px 0 0;background:linear-gradient(100deg,var(--ty) 0 68%,#111 68% 76%,var(--ty2) 76% 100%)}
-:root[data-theme=rwb] #typeSeg{gap:8px}
-:root[data-theme=rwb] #typeSeg span{border:2px solid #111;border-radius:10px;background:#fff;box-shadow:2px 2px 0 #111;transition:transform .12s,box-shadow .12s}
-:root[data-theme=rwb] #typeSeg input:checked+span{color:#fff;border-color:#111;transform:translate(2px,2px);box-shadow:0 0 0 #111}
-:root[data-theme=rwb] #typeSeg label:nth-child(1) input:checked+span{background:#d71920}
-:root[data-theme=rwb] #typeSeg label:nth-child(2) input:checked+span{background:#7b3fa0}
-:root[data-theme=rwb] #typeSeg label:nth-child(3) input:checked+span{background:#1b1722}
-:root[data-theme=rwb] #expense .slipbtn{border:2px dashed var(--ty);color:#111;background:linear-gradient(100deg,var(--ty-soft),#fff);border-radius:10px}
-:root[data-theme=rwb] #expense input[type=text],:root[data-theme=rwb] #expense input[type=date],:root[data-theme=rwb] #expense select,:root[data-theme=rwb] #expense textarea{border:2px solid #111;border-radius:10px;background:#fff}
-:root[data-theme=rwb] #expense input:focus,:root[data-theme=rwb] #expense select:focus,:root[data-theme=rwb] #expense textarea:focus{border-color:var(--ty);box-shadow:3px 3px 0 var(--ty);outline:0}
-:root[data-theme=rwb] #expense input.amt{color:var(--ty);background:var(--ty-soft)}
-:root[data-theme=rwb] #expense .cats label{border:2px solid #111;border-radius:10px;background:#fff;transition:transform .12s,box-shadow .12s}
-:root[data-theme=rwb] #expense .cats .ico{filter:grayscale(1);transition:filter .15s}
-:root[data-theme=rwb] #expense .cats input:checked+label{border-color:var(--ty);background:var(--ty-soft);color:var(--ty);box-shadow:3px 3px 0 var(--ty);transform:translate(-1px,-1px)}
-:root[data-theme=rwb] #expense .cats input:checked+label .ico{filter:none}
-:root[data-theme=rwb] #expense .chips button{background:#fff;border:1.5px solid #111;border-radius:8px;box-shadow:2px 2px 0 var(--ty2)}
-:root[data-theme=rwb] #expense .go{background:linear-gradient(100deg,var(--ty) 0 72%,var(--ty2) 72% 100%)!important;color:#fff!important;border:2px solid #111!important;border-radius:10px;box-shadow:4px 4px 0 #111;letter-spacing:.03em;transition:transform .1s,box-shadow .1s}
-:root[data-theme=rwb] #expense .go:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #111}
-@media (prefers-reduced-motion:reduce){:root[data-theme=rwb] #typeSeg span,:root[data-theme=rwb] #expense .cats label,:root[data-theme=rwb] #expense .go{transition:none}}
+/* ===== ธีมขาว-ดำ-แดง: หน้าบันทึกรายการ ไม่มีสีม่วง ===== */
+
+:root[data-theme=rwb] #p-add {
+  background-image: radial-gradient(#11111418 1px, transparent 1.2px);
+  background-size: 14px 14px;
+}
+
+/* กล่องบันทึกรายการ */
+:root[data-theme=rwb] #expense {
+  --ty: #d71920;
+  --ty2: #111111;
+  --ty-soft: #fdecee;
+  --edge: #d71920;
+
+  position: relative;
+  padding-top: 20px;
+  background: linear-gradient(180deg, #fff 55%, #fff8f8 100%);
+  box-shadow: 4px 4px 0 #111, 8px 8px 0 var(--edge);
+}
+
+/* รายรับ: ใช้สีแดงเหมือนรายจ่าย */
+:root[data-theme=rwb] #expense:has(input[name=type][value=in]:checked) {
+  --ty: #d71920;
+  --ty2: #111111;
+  --ty-soft: #fdecee;
+  --edge: #d71920;
+}
+
+/* โอนเงิน: ใช้สีดำ */
+:root[data-theme=rwb] #expense:has(input[name=type][value=transfer]:checked) {
+  --ty: #1b1722;
+  --ty2: #d71920;
+  --ty-soft: #efedf2;
+  --edge: #d71920;
+}
+
+/* แถบสีด้านบน */
+:root[data-theme=rwb] #expense::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 7px;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(
+    100deg,
+    var(--ty) 0 68%,
+    #111 68% 100%
+  );
+}
+
+/* ปุ่มเลือกประเภท */
+:root[data-theme=rwb] #typeSeg {
+  gap: 8px;
+}
+
+:root[data-theme=rwb] #typeSeg span {
+  border: 2px solid #111;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 2px 2px 0 #111;
+  transition: transform .12s, box-shadow .12s;
+}
+
+:root[data-theme=rwb] #typeSeg input:checked + span {
+  color: #fff;
+  border-color: #111;
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 #111;
+}
+
+/* รายจ่าย = แดง */
+:root[data-theme=rwb] #typeSeg label:nth-child(1) input:checked + span {
+  background: #d71920;
+}
+
+/* รายรับ = แดง */
+:root[data-theme=rwb] #typeSeg label:nth-child(2) input:checked + span {
+  background: #d71920;
+}
+
+/* โอนเงิน = ดำ */
+:root[data-theme=rwb] #typeSeg label:nth-child(3) input:checked + span {
+  background: #1b1722;
+}
+
+/* ปุ่มแนบสลิป */
+:root[data-theme=rwb] #expense .slipbtn {
+  border: 2px dashed var(--ty);
+  color: #111;
+  background: linear-gradient(100deg, var(--ty-soft), #fff);
+  border-radius: 10px;
+}
+
+/* ช่องกรอกข้อมูล */
+:root[data-theme=rwb] #expense input[type=text],
+:root[data-theme=rwb] #expense input[type=date],
+:root[data-theme=rwb] #expense select,
+:root[data-theme=rwb] #expense textarea {
+  border: 2px solid #111;
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* สีตอนคลิกช่องกรอก */
+:root[data-theme=rwb] #expense input:focus,
+:root[data-theme=rwb] #expense select:focus,
+:root[data-theme=rwb] #expense textarea:focus {
+  border-color: var(--ty);
+  box-shadow: 3px 3px 0 var(--ty);
+  outline: 0;
+}
+
+/* ช่องจำนวนเงิน */
+:root[data-theme=rwb] #expense input.amt {
+  color: var(--ty);
+  background: var(--ty-soft);
+}
+
+/* หมวดหมู่ */
+:root[data-theme=rwb] #expense .cats label {
+  border: 2px solid #111;
+  border-radius: 10px;
+  background: #fff;
+  transition: transform .12s, box-shadow .12s;
+}
+
+/* ไอคอนหมวดหมู่ */
+:root[data-theme=rwb] #expense .cats .ico {
+  filter: grayscale(1);
+  transition: filter .15s;
+}
+
+/* หมวดหมู่ที่เลือก */
+:root[data-theme=rwb] #expense .cats input:checked + label {
+  border-color: var(--ty);
+  background: var(--ty-soft);
+  color: var(--ty);
+  box-shadow: 3px 3px 0 var(--ty);
+  transform: translate(-1px, -1px);
+}
+
+:root[data-theme=rwb] #expense .cats input:checked + label .ico {
+  filter: none;
+}
+
+/* ปุ่มตัวเลือกด่วน */
+:root[data-theme=rwb] #expense .chips button {
+  background: #fff;
+  border: 1.5px solid #111;
+  border-radius: 8px;
+  box-shadow: 2px 2px 0 #d71920;
+}
+
+/* ปุ่มบันทึก: สีแดงล้วน */
+:root[data-theme=rwb] #expense .go {
+  background: #d71920 !important;
+  color: #fff !important;
+  border: 2px solid #111 !important;
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 #111;
+  letter-spacing: .03em;
+  transition: transform .1s, box-shadow .1s;
+}
+
+/* เอฟเฟกต์ตอนกดปุ่มบันทึก */
+:root[data-theme=rwb] #expense .go:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 #111;
+}
+
+/* ลดการเคลื่อนไหวตามการตั้งค่าของผู้ใช้ */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme=rwb] #typeSeg span,
+  :root[data-theme=rwb] #expense .cats label,
+  :root[data-theme=rwb] #expense .go {
+    transition: none;
+  }
+}
+
 </style>
 </head>
 <body>
