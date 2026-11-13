@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="th" data-theme="rwb">
+<html lang="th" data-theme="fin">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -263,7 +263,23 @@ nav button:active span{transform:scale(.85)}
     :root[data-theme=rwb] .month button{background:#f7f0f8;color:#684078}
     :root[data-theme=rwb] .brand img#face{border-color:#d71920}
     :root[data-theme=rwb] :focus-visible{outline-color:#8a55a2}
-  </style>
+  :root[data-theme=fin]{--ink:#1f2a44;--mute:#7b869f;--cream:#f2f5fb;--line:#e3e8f3;--green:#3b6cd4;--soft:#e8eefc;--field:#fff;--glow:#cfdcff;--glow2:#d4f1ec;--navbg:#fffffff2;--on:#fff}
+:root[data-theme=fin] .card{box-shadow:0 6px 20px #3b6cd414}
+:root[data-theme=fin] .cats input:checked+label{background:var(--soft)}
+.seg{grid-template-columns:repeat(3,1fr)}
+.bal{flex:none;border-radius:22px;padding:14px 14px 0;text-align:center;color:#fff;background:linear-gradient(135deg,#6a7fdb,#2fb5a5);box-shadow:0 8px 22px #3b6cd433;overflow:hidden}
+.bal small{display:block;letter-spacing:.08em;font-size:.72rem;opacity:.9}
+.bal>b{display:block;font:700 1.9rem var(--cute);margin:2px 0 10px}
+.bal .ie{display:flex;justify-content:space-around;gap:8px;background:#fff;color:#1f2a44;margin:0 -14px;padding:9px 6px;font-size:.78rem}
+.sec{margin:6px 2px 0;font:700 .78rem var(--cute);letter-spacing:.06em;color:var(--mute)}
+.accs{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;flex:none;margin:0 -16px;padding:2px 16px 8px}
+.accs::-webkit-scrollbar{display:none}
+.ac{flex:none;width:132px;border:0;border-radius:16px;padding:10px 12px;color:#fff;text-align:left;font-family:inherit;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 6px 14px #0002}
+.ac b{display:block;font-size:1rem}.ac small{display:block;opacity:.85;font-size:.64rem}.ac span{display:block;margin-top:10px;font:700 .95rem var(--cute)}
+.ac.add{display:grid;place-items:center;width:84px;background:var(--soft);color:var(--mute);border:2px dashed var(--line);box-shadow:none;font-size:1.4rem}
+#fab{position:absolute;left:50%;transform:translateX(-50%);bottom:10px;z-index:5;border:0;border-radius:999px;padding:12px 22px;background:#2fb57f;color:#fff;font:700 .95rem var(--cute);box-shadow:0 8px 20px #2fb57f66;white-space:nowrap}
+#p-home{padding-bottom:70px}
+</style>
 </head>
 <body>
 <div id="app">
@@ -271,6 +287,9 @@ nav button:active span{transform:scale(.85)}
   <main>
     <section id="p-home" class="pg">
       <div class="month"><button id="prev" aria-label="เดือนก่อน">‹</button><b id="month"></b><button id="next" aria-label="เดือนถัดไป">›</button></div>
+      <div class="bal"><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>🟢 รายรับ <b id="balIn">฿0</b></span><span>🔴 รายจ่าย <b id="balOut">฿0</b></span></div></div>
+      <div class="sec">บัญชีของฉัน</div><div class="accs" id="accs"></div>
+      <div class="card"><h2>รายการล่าสุด 🧾</h2><div id="recentHome"></div></div>
       <div class="stats" id="stats"></div>
       <div class="card sum" id="sum"></div>
       <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
@@ -278,7 +297,7 @@ nav button:active span{transform:scale(.85)}
     </section>
     <section id="p-add" class="pg hide">
       <form id="expense" class="card">
-        <div class="seg" id="typeSeg"><label><input type="radio" name="type" value="out" checked><span>💸 รายจ่าย</span></label><label><input type="radio" name="type" value="in"><span>💰 รายรับ</span></label></div>
+        <div class="seg" id="typeSeg"><label><input type="radio" name="type" value="out" checked><span>💸 รายจ่าย</span></label><label><input type="radio" name="type" value="in"><span>💰 รายรับ</span></label><label><input type="radio" name="type" value="transfer"><span>🔁 โอน</span></label></div>
         <button type="button" class="slipbtn" id="slipBtn">📷 อ่านจากสลิปโอนเงิน</button><input type="file" id="slipFile" accept="image/*" hidden>
         <div id="slipReview" class="card hide" style="padding:10px 12px;font-size:.8rem;gap:6px">
           <b id="slipReviewTitle">ผลตรวจสลิป</b>
@@ -290,6 +309,7 @@ nav button:active span{transform:scale(.85)}
           <label class="f">จำนวนเงิน (บาท)<input class="amt" name="amount" type="text" inputmode="decimal" maxlength="12" pattern="[0-9]{1,9}([.][0-9]{1,2})?" placeholder="0.00" required></label>
           <label class="f">วันที่<input name="date" type="date" required></label>
         </div>
+        <div class="row2"><label class="f">บัญชี<select name="account" id="accSel"></select></label><label class="f" id="toWrap" hidden>ไปยังบัญชี<select name="to_account" id="toSel"></select></label></div>
         <div class="f">หมวดหมู่<div class="cats" id="cats"></div></div>
         <div class="f">รายละเอียด (ไม่บังคับ)
           <textarea name="description" maxlength="300" rows="2"></textarea>
@@ -301,6 +321,7 @@ nav button:active span{transform:scale(.85)}
       </form>
     </section>
     <section id="p-list" class="pg hide"><div class="card"><h2>รายการล่าสุด 🧾</h2><div id="recent"></div></div></section>
+  <button id="fab" type="button">＋ บันทึกรายการใหม่</button>
   </main>
   <nav>
     <button data-page="home" class="on"><span>🏠</span>ภาพรวม</button>
@@ -392,7 +413,11 @@ let authUser=null, authMode='signin', enteringUserId=null, enteredUserId=null;
 const CATS={'อาหาร':['🍜','#ffb36b','food'],'เดินทาง':['🚌','#7cc4f0','travel'],'ช้อปปิ้ง':['🛍️','#f59ac0','shop'],
   'ที่พักและบิล':['🏠','#b7a2f0','bill'],'สุขภาพ':['💊','#7fd8a6','health'],'อื่น ๆ':['✨','#f2d36b','other']};
 const ICATS={'เงินเดือน':['💼','#7fd8a6','inc-salary'],'ธุรกิจ/ขาย':['🏪','#7cc4f0','inc-biz'],'โอนเข้า/ของขวัญ':['🎁','#f59ac0','inc-gift'],'อื่น ๆ (รับ)':['✨','#f2d36b','inc-other']};
-const CATS_ALL=Object.assign({},CATS,ICATS);
+const TCATS={'โอนระหว่างบัญชี':['🔁','#7cc4f0','transfer']};
+const CATS_ALL=Object.assign({},CATS,ICATS,TCATS);
+const PAL=[['#1e6fd9','#2a8be8'],['#2fa35a','#4cc07a'],['#6c4bb6','#8a66d6'],['#f0a030','#ffb84d'],['#d9455f','#f06a82'],['#1d9aa6','#3cc0cc']];
+const DEF_ACC=['KBank','SCB','Krungsri','Cash'].map((n,i)=>({n,c1:PAL[i][0],c2:PAL[i][1],b0:0}));
+let ACCS=[];
 const O=(c,l)=>l.split('|').map(x=>{const [k,e,t]=x.split(',');return {k:c+'-'+k,e,t};});
 const OPTS={
  food:O('food','rice,🍛,อาหารจานเดียว|noodle,🍜,ก๋วยเตี๋ยว|isan,🥗,ส้มตำ/อาหารอีสาน|curry,🍲,ต้ม/แกง/กับข้าว|bbq,🍖,ปิ้งย่าง/หมูกระทะ|fastfood,🍔,ฟาสต์ฟู้ด|japanese,🍣,ชาบู/อาหารญี่ปุ่น|delivery,🛵,สั่งเดลิเวอรี่|coffee,☕,กาแฟ|tea,🧋,ชานม/ชาไข่มุก|drink,🥤,น้ำ/เครื่องดื่ม|dessert,🍰,ขนม/ของหวาน|snack,🍿,ของกินเล่น|fruit,🍉,ผลไม้|market,🥬,ตลาด/วัตถุดิบ|alcohol,🍺,เบียร์/แอลกอฮอล์'),
@@ -443,9 +468,10 @@ async function api(payload){
 }
 async function refresh(){
   if(!user) return; const u=user;
-  const n=new Date(), from=ymd(new Date(n.getFullYear(),n.getMonth()-5,1));
+  const from='2000-01-01';
   try{ const r=await api({action:'list',from,user:u}); if(u!==user) return;
     if(r.ok){ rows=r.rows; save(uk('expense-rows'),rows); rows.forEach(x=>remember(x.category,x.description)); }
+    else showStatus(r.error||'ดึงข้อมูลจากชีตไม่สำเร็จ',true);
   }catch{}
   render(); renderChips();
 }
@@ -475,14 +501,14 @@ async function flush(){
 
 /* ---------- Overview ---------- */
 function render(){
-  const every=allRows(), all=every.filter(r=>r.type!=='in'), now=new Date();
+  const every=allRows(), all=every.filter(r=>r.type!=='in'&&r.type!=='transfer'), now=new Date();
   const m=new Date(now.getFullYear(),now.getMonth()+monthOff,1), key=ymd(m).slice(0,7);
   $('#month').textContent=m.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
   $('#next').disabled=monthOff>=0; $('#prev').disabled=monthOff<=-5;
   const by={}; let total=0;
   all.filter(r=>r.date.startsWith(key)).forEach(r=>{by[r.category]=(by[r.category]||0)+r.amount; total+=r.amount;});
   const ents=Object.entries(by).sort((a,b)=>b[1]-a[1]);
-  countUp($('#total'),total); renderStats(all,m,key,total,ents); renderSum(every,key,total);
+  countUp($('#total'),total); renderStats(all,m,key,total,ents); renderSum(every,key,total); renderBal(every,key);
   let off=25, segs='<circle r="15.9155" cx="21" cy="21" fill="none" style="stroke:var(--line)" stroke-width="6"/>';
   ents.forEach(([c,a])=>{ const p=a/total*100, len=Math.max(p-(ents.length>1?.8:0),.1);
     segs+=`<circle r="15.9155" cx="21" cy="21" fill="none" stroke="${icoOf(c)[1]}" stroke-width="6" stroke-dasharray="${len} ${100-len}" stroke-dashoffset="${off}"/>`; off-=p; });
@@ -523,18 +549,52 @@ function renderStats(all,m,key,total,ents){
   const SK=['avg','max','day','top','count','trend'];
   $('#stats').innerHTML=cards.map(([e,l,v,s,c],i)=>`<div class="st"><small><span class="oi">${ic('icons/stat/'+SK[i]+'.png',e)}</span> ${l}</small><b class="${c}">${typeof v==='object'?v.h:esc(v)}</b><span>${esc(s)}</span></div>`).join('');
 }
+const rcHtml=(r,act=true)=>{ const tr=r.type==='transfer', inn=r.type==='in', c=icoOf(r.category);
+  const sub=tr?`${esc(r.account||'?')} → ${esc(r.to_account||'?')}`:`${esc(r.category)}${r.account?' · '+esc(r.account):''}`;
+  return `<div class="rc" data-id="${esc(r.id)}"><div class="ico" style="background:${c[1]}55">${ic('icons/cat/'+c[2]+'.png',c[0])}</div><div class="n">${esc(r.description||r.category)}<small>${sub} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${inn?' style="color:#1f9d6b"':''}>${inn?'+':''}${baht(r.amount)}</div>${act?'<div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>':''}</div>`; };
 function renderRecent(all){
-  all=all||allRows(); const box=$('#recent');
-  const rec=[...all].reverse().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,100);
-  box.innerHTML=rec.length?rec.map(r=>`<div class="rc" data-id="${esc(r.id)}"><div class="ico" style="background:${icoOf(r.category)[1]}55">${ic('icons/cat/'+icoOf(r.category)[2]+'.png',icoOf(r.category)[0])}</div><div class="n">${esc(r.description||r.category)}<small>${esc(r.category)} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${r.type==='in'?' style="color:var(--green)"':''}>${r.type==='in'?'+':''}${baht(r.amount)}</div><div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div></div>`).join(''):empty('ยังไม่มีรายการ');
+  all=all||allRows(); const rec=[...all].reverse().sort((a,b)=>b.date.localeCompare(a.date));
+  $('#recent').innerHTML=rec.length?rec.slice(0,100).map(r=>rcHtml(r)).join(''):empty('ยังไม่มีรายการ');
+  $('#recentHome').innerHTML=rec.length?rec.slice(0,5).map(r=>rcHtml(r,false)).join(''):empty('ยังไม่มีรายการ');
 }
+/* ---------- บัญชี / ยอดคงเหลือ ---------- */
+const loadAccs=()=>{ ACCS=load(uk('accounts'),DEF_ACC); };
+const saveAccs=()=>save(uk('accounts'),ACCS);
+function accBal(a,every){ let s=a.b0||0;
+  every.forEach(r=>{ const m=Number(r.amount);
+    if(r.type==='transfer'){ if(r.account===a.n) s-=m; if(r.to_account===a.n) s+=m; }
+    else if(r.account===a.n) s+=r.type==='in'?m:-m; });
+  return s; }
+function renderBal(every,key){
+  let tot=ACCS.reduce((s,a)=>s+(a.b0||0),0), inM=0, outM=0;
+  every.forEach(r=>{ const m=Number(r.amount); if(r.type==='transfer') return;
+    tot+=r.type==='in'?m:-m;
+    if(r.date.startsWith(key)){ if(r.type==='in') inM+=m; else outM+=m; } });
+  $('#balTotal').textContent=(tot<0?'-':'')+baht(Math.abs(tot)); $('#balIn').textContent=baht(inM); $('#balOut').textContent=baht(outM);
+  $('#accs').innerHTML=ACCS.map((a,i)=>`<button type="button" class="ac" data-i="${i}" style="--c1:${a.c1};--c2:${a.c2}"><b>${esc(a.n)}</b><small>แตะเพื่อแก้ไข</small><span>${baht(accBal(a,every))}</span></button>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
+}
+function fillAccSel(){ const o=ACCS.map(a=>`<option>${esc(a.n)}</option>`).join('');
+  $('#accSel').innerHTML=o+'<option value="">ไม่ระบุบัญชี</option>'; $('#toSel').innerHTML=o; if(ACCS[1]) $('#toSel').selectedIndex=1; $('#toWrap').hidden=true; }
+function editAcc(i){
+  if(i<0){ const n=(prompt('ชื่อบัญชีใหม่ (เช่น กรุงไทย, ออมสิน)','')||'').trim().slice(0,20); if(!n) return;
+    if(ACCS.some(x=>x.n===n)){ alert('มีบัญชีชื่อนี้แล้ว'); return; }
+    const b=prompt('ยอดเงินเริ่มต้นของบัญชีนี้ (บาท)','0'); if(b===null) return;
+    const p=PAL[ACCS.length%PAL.length]; ACCS.push({n,c1:p[0],c2:p[1],b0:Number(String(b).replace(/,/g,''))||0});
+  } else { const a=ACCS[i];
+    const b=prompt('ยอดเงินเริ่มต้นของ '+a.n+' (บาท)\nพิมพ์ ลบ เพื่อลบบัญชีนี้ (รายการเก่าไม่หาย)',String(a.b0||0)); if(b===null) return;
+    if(b.trim()==='ลบ') ACCS.splice(i,1); else a.b0=Number(b.replace(/,/g,''))||0; }
+  saveAccs(); fillAccSel(); render();
+}
+$('#accs').onclick=e=>{ const b=e.target.closest('.ac'); if(b) editAcc(+b.dataset.i); };
+$('#fab').onclick=()=>document.querySelector('nav button[data-page=add]').click();
+document.querySelectorAll('nav button[data-page]').forEach(b=>b.addEventListener('click',()=>$('#fab').classList.toggle('hide',b.dataset.page!=='home')));
 $('#prev').onclick=()=>{monthOff--;render();}; $('#next').onclick=()=>{monthOff++;render();};
 
 /* ---------- Entry ---------- */
-function drawCats(tp){ $('#cats').innerHTML=Object.entries(tp==='in'?ICATS:CATS).map(([c,[e,col,k]],i)=>`<input type="radio" name="category" id="c${i}" value="${esc(c)}" required>
+function drawCats(tp){ $('#cats').innerHTML=Object.entries(tp==='in'?ICATS:tp==='transfer'?TCATS:CATS).map(([c,[e,col,k]],i)=>`<input type="radio" name="category" id="c${i}" value="${esc(c)}" required${tp==='transfer'?' checked':''}>
   <label for="c${i}"><span class="ico" style="background:${col}55">${ic('icons/cat/'+k+'.png',e)}</span>${esc(c)}</label>`).join(''); }
 drawCats('out');
-$('#typeSeg').addEventListener('change',()=>{ drawCats(form.elements.type.value); renderChips(); });
+$('#typeSeg').addEventListener('change',()=>{ drawCats(form.elements.type.value); $('#toWrap').hidden=form.elements.type.value!=='transfer'; renderChips(); });
 function chipList(c){ const base=OPTS[(CATS[c]||[])[2]]||[], names=new Set(base.map(o=>o.t));
   return base.concat((descs[c]||[]).filter(t=>!names.has(t)).slice(0,8).map(t=>({t,k:'',e:'🕘'}))); }
 function renderChips(){
@@ -565,7 +625,7 @@ form.addEventListener('submit',e=>{
 /* ---------- Edit / delete ---------- */
 const modal=$('#modal'), ed=$('#editForm'), delBox=$('#delBox'), est=$('#est'), dst=$('#dst');
 let curId=null, busy=false;
-const catOpts=tp=>Object.entries(tp==='in'?ICATS:CATS).map(([c,v])=>`<option value="${esc(c)}">${v[0]} ${esc(c)}</option>`).join('');
+const catOpts=tp=>Object.entries(tp==='in'?ICATS:tp==='transfer'?TCATS:CATS).map(([c,v])=>`<option value="${esc(c)}">${v[0]} ${esc(c)}</option>`).join('');
 const findRow=id=>allRows().find(r=>r.id===id);
 const srvErr=m=>Object.assign(new Error(m),{srv:true});
 const say=(el,m,err=false)=>{el.textContent=m;el.dataset.error=String(err);};
@@ -585,7 +645,7 @@ modal.addEventListener('click',e=>{ if(e.target===modal||e.target.closest('[data
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!modal.classList.contains('hide')) closeModal(); });
 ed.addEventListener('submit',async e=>{
   e.preventDefault(); if(busy) return; const id=curId, u=user;
-  const f=Object.fromEntries(new FormData(ed)); f.amount=f.amount.trim(); f.description=f.description.trim(); f.type=(findRow(id)||{}).type||'out';
+  const f=Object.fromEntries(new FormData(ed)); f.amount=f.amount.trim(); f.description=f.description.trim(); { const r0=findRow(id)||{}; f.type=r0.type||'out'; f.account=r0.account||''; f.to_account=r0.to_account||''; }
   if(!/^\d{1,9}([.]\d{1,2})?$/.test(f.amount)||!(Number(f.amount)>0)){ say(est,'กรุณากรอกจำนวนเงินมากกว่า 0 บาท (ทศนิยมไม่เกิน 2 ตำแหน่ง)',true); return; }
   if(!f.date){ say(est,'กรุณาเลือกวันที่',true); return; }
   const q=readQueue(), qi=q.findIndex(x=>x.id===id);
@@ -620,7 +680,7 @@ function openDay(d){
   const list=allRows().filter(r=>r.date===d).sort((a,b)=>b.amount-a.amount);
   const dt=new Date(d+'T00:00:00'), isToday=d===ymd(new Date());
   $('#dayTitle').textContent=(isToday?'วันนี้ · ':'')+dt.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
-  const total=list.filter(r=>r.type!=='in').reduce((s,r)=>s+r.amount,0);
+  const total=list.filter(r=>r.type!=='in'&&r.type!=='transfer').reduce((s,r)=>s+r.amount,0);
   $('#dayTotal').textContent=list.length?`รวม ${baht(total)} · ${list.length} รายการ`:'';
   $('#dayList').innerHTML=list.length?list.map(r=>`<div class="rc"><div class="ico" style="background:${icoOf(r.category)[1]}55">${ic('icons/cat/'+icoOf(r.category)[2]+'.png',icoOf(r.category)[0])}</div><div class="n">${esc(r.description||r.category)}<small>${esc(r.category)}</small></div><div class="a">${baht(r.amount)}</div></div>`).join(''):empty(isToday?'วันนี้ยังไม่มีรายจ่าย':'วันนี้ไม่มีรายจ่าย');
   dayModal.classList.remove('hide');
@@ -645,15 +705,15 @@ document.querySelectorAll('nav button[data-page]').forEach(b=>b.onclick=()=>{
 });
 window.addEventListener('online',()=>{flush();refresh();});
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden){ readQueue().length?flush():refresh(); } });
-const BASE=[{id:'tang',name:'Naaaaaaaaaa',theme:'rwb',face:'face-tang.png'}];
+const BASE=[{id:'tang',name:'Naaaaaaaaaa',theme:'fin',face:'face-tang.png'}];
 let PROFILES=load('profiles-v2',BASE);
 const emFace=e=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="68" font-size="56" text-anchor="middle">${e}</text></svg>`);
 const faceOf=p=>p.face||emFace(p.emoji||'🙂');
-const THEMES={rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'ชมพูหวาน',a:'#ff8fb5',b:'#fff0f5'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
+const THEMES={fin:{n:'ฟินแทรค (ฟ้า)',a:'#3b6cd4',b:'#f2f5fb'},rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'ชมพูหวาน',a:'#ff8fb5',b:'#fff0f5'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
 const TH=k=>THEMES[k]||THEMES.tang;
 /* ---------- โปรไฟล์ (แยกตามบัญชีที่ล็อกอิน เก็บในเครื่อง) ---------- */
 let curProf=null, pendingFace='', pendingTheme='rwb';
-const loadProfile=()=>({...BASE[0],theme:'rwb',...(load(uk('profile'),null)||{})});
+const loadProfile=()=>({...BASE[0],theme:'fin',...(load(uk('profile'),null)||{})});
 function applyProfile(p){
   document.documentElement.dataset.theme=p.theme;
   $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
@@ -743,7 +803,7 @@ async function enterApp(sessionUser){
     // ซ่อนหน้าล็อกอินทันทีเมื่อได้รับบัญชีที่ยืนยันแล้ว
     $('#who').classList.add('hide');
     const p=curProf=loadProfile();
-    cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0;
+    cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0; loadAccs(); fillAccSel();
     applyProfile(p);
     $('#sub').textContent=sessionUser.email||'บัญชีของฉัน';
     form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
