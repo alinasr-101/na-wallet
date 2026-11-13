@@ -332,7 +332,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
           <label class="f">จำนวนเงิน (บาท)<input class="amt" name="amount" type="text" inputmode="decimal" maxlength="12" pattern="[0-9]{1,9}([.][0-9]{1,2})?" placeholder="0.00" required></label>
           <label class="f">วันที่<input name="date" type="date" required></label>
         </div>
-        <div class="row2"><label class="f" id="accLbl">บัญชีที่ใช้ (ไม่บังคับ)<select name="account" id="accSel"></select></label><label class="f" id="toWrap" hidden>ไปยังบัญชี<select name="to_account" id="toSel"></select></label></div>
+        <div class="row2"><label class="f" id="accLbl">บัญชีที่ใช้จ่าย<select name="account" id="accSel" required></select></label><label class="f" id="toWrap" hidden>ไปยังบัญชี<select name="to_account" id="toSel"></select></label></div>
         <div class="f">หมวดหมู่<div class="cats" id="cats"></div></div>
         <div class="f">รายละเอียด (ไม่บังคับ)
           <textarea name="description" maxlength="300" rows="2"></textarea>
@@ -585,7 +585,25 @@ function renderRecent(all){
 }
 /* ---------- บัญชี / ยอดคงเหลือ ---------- */
 const loadAccs=()=>{ ACCS=load(uk('accounts'),DEF_ACC); };
-const saveAccs=()=>save(uk('accounts'),ACCS);
+const saveAccs=()=>{
+  save(uk('accounts'),ACCS);
+  if(user) api({action:'accounts_save',accounts:ACCS}).then(r=>{
+    if(!r.ok) showStatus(r.error||'บันทึกข้อมูลบัญชีไม่สำเร็จ',true);
+  }).catch(()=>{});
+};
+// โหลดบัญชีจากชีตกลางตาม UUID ผู้ใช้ หากยังไม่มีให้ย้ายบัญชีเดิมจากเครื่องนี้ขึ้นไป
+async function syncAccs(){
+  const local=load(uk('accounts'),DEF_ACC);
+  const r=await api({action:'accounts_get'});
+  if(!r.ok) throw new Error(r.error||'โหลดบัญชีไม่สำเร็จ');
+  if(Array.isArray(r.accounts)&&r.accounts.length) ACCS=r.accounts;
+  else ACCS=local;
+  save(uk('accounts'),ACCS);
+  if(!Array.isArray(r.accounts)||!r.accounts.length){
+    const w=await api({action:'accounts_save',accounts:ACCS});
+    if(!w.ok) throw new Error(w.error||'ย้ายข้อมูลบัญชีขึ้นชีตไม่สำเร็จ');
+  }
+}
 const RWBACC=[['#e10600','#a30000'],['#111111','#3a3a3a'],['#4a4a4a','#7c7c7c'],['#7a0000','#c40000']];
 const ac=(a,i)=>document.documentElement.dataset.theme==='rwb'?RWBACC[i%RWBACC.length]:[a.c1,a.c2];
 function renderStreak(every){
@@ -610,9 +628,16 @@ function renderBal(every,key){
   $('#balTotal').textContent=(tot<0?'-':'')+baht(Math.abs(tot)); $('#balIn').textContent=baht(inM); $('#balOut').textContent=baht(outM);
   $('#accs').innerHTML=ACCS.map((a,i)=>`<button type="button" class="ac" data-i="${i}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>แตะเพื่อแก้ไข</small><span>${baht(accBal(a,every))}</span></button>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
 }
-function setAccMode(tp){ const o=ACCS.map(a=>`<option>${esc(a.n)}</option>`).join(''), tr=tp==='transfer';
-  $('#accSel').innerHTML=(tr?'':'<option value="">ไม่ระบุบัญชี</option>')+o; $('#toSel').innerHTML=o; if(ACCS[1]) $('#toSel').selectedIndex=1;
-  $('#toWrap').hidden=!tr; $('#accLbl').firstChild.nodeValue=tr?'จากบัญชี':'บัญชีที่ใช้ (ไม่บังคับ)'; }
+function setAccMode(tp){
+  const o=ACCS.map(a=>`<option value="${esc(a.n)}">${esc(a.n)}</option>`).join(''), tr=tp==='transfer';
+  $('#accSel').innerHTML=o;
+  $('#toSel').innerHTML=o;
+  if(ACCS[1]) $('#toSel').selectedIndex=1;
+  $('#toWrap').hidden=!tr;
+  $('#accLbl').firstChild.nodeValue=tr?'จากบัญชี':tp==='in'?'เงินเข้าบัญชี':'บัญชีที่ใช้จ่าย';
+  $('#accSel').required=true;
+  $('#toSel').required=tr;
+}
 const fillAccSel=()=>setAccMode(form.elements.type.value);
 function editAcc(i){
   if(i<0){ const n=(prompt('ชื่อบัญชีใหม่ (เช่น กรุงไทย, ออมสิน)','')||'').trim().slice(0,20); if(!n) return;
@@ -621,7 +646,7 @@ function editAcc(i){
     const p=PAL[ACCS.length%PAL.length]; ACCS.push({n,c1:p[0],c2:p[1],b0:Number(String(b).replace(/,/g,''))||0});
   } else { const a=ACCS[i];
     const b=prompt('ยอดเงินเริ่มต้นของ '+a.n+' (บาท)\nพิมพ์ ลบ เพื่อลบบัญชีนี้ (รายการเก่าไม่หาย)',String(a.b0||0)); if(b===null) return;
-    if(b.trim()==='ลบ') ACCS.splice(i,1); else a.b0=Number(b.replace(/,/g,''))||0; }
+    if(b.trim()==='ลบ'){ if(ACCS.length<=1){ alert('ต้องมีอย่างน้อย 1 บัญชี'); return; } ACCS.splice(i,1); } else a.b0=Number(b.replace(/,/g,''))||0; }
   saveAccs(); fillAccSel(); render();
 }
 $('#accs').onclick=e=>{ const b=e.target.closest('.ac'); if(b) editAcc(+b.dataset.i); };
@@ -653,12 +678,13 @@ form.addEventListener('submit',e=>{
   if(!(Number(f.amount)>0)){ showStatus('กรุณากรอกจำนวนเงินมากกว่า 0 บาท',true); form.elements.amount.focus(); return; }
   if(slipScanMeta && !$('#slipConfirm').checked){ showStatus('กรุณาตรวจยอดเงินและวันที่จากภาพ แล้วติ๊กยืนยันก่อนบันทึก',true); $('#slipConfirm').focus(); return; }
   f.description=f.description.trim();
+  if(!f.account){ showStatus(f.type==='in'?'กรุณาเลือกบัญชีที่เงินเข้า':'กรุณาเลือกบัญชีที่ใช้จ่าย',true); $('#accSel').focus(); return; }
   if(f.type!=='transfer') f.to_account='';
-  else if(!f.account||f.account===f.to_account){ showStatus('เลือกบัญชีต้นทางและปลายทางให้ต่างกัน',true); return; }
+  else if(!f.to_account||f.account===f.to_account){ showStatus('เลือกบัญชีต้นทางและปลายทางให้ต่างกัน',true); return; }
   if(slipScanMeta){ f.slipRef=slipScanMeta.slipRef||''; f.slipHash=slipScanMeta.slipHash||''; }
   const q=readQueue(); q.push({...f,id:crypto.randomUUID(),user}); save(QUEUE_KEY,q);
   remember(f.category,f.description); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
-  const keep=f.date,kt=f.type; form.reset(); form.elements.date.value=keep; form.elements.type.value=kt;
+  const keep=f.date,kt=f.type; form.reset(); form.elements.date.value=keep; form.elements.type.value=kt; setAccMode(kt); drawCats(kt);
   showStatus('กำลังส่ง…'); renderChips(); render(); document.activeElement&&document.activeElement.blur(); burst(); navigator.vibrate&&navigator.vibrate(18); flush();
 });
 
@@ -844,7 +870,7 @@ async function enterApp(sessionUser){
     // ซ่อนหน้าล็อกอินทันทีเมื่อได้รับบัญชีที่ยืนยันแล้ว
     $('#who').classList.add('hide');
     const p=curProf=loadProfile();
-    cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0; loadAccs(); fillAccSel();
+    cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0; loadAccs(); await syncAccs(); fillAccSel();
     applyProfile(p);
     $('#sub').textContent=sessionUser.email||'บัญชีของฉัน';
     form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
