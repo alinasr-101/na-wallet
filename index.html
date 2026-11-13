@@ -621,6 +621,45 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 :root[data-theme=ai] select:focus,:root[data-theme=ai] input:focus,:root[data-theme=ai] textarea:focus{border-color:#e3a3b9;outline:3px solid #fdeab699}
 :root[data-theme=ai] .rc{border-top-color:#f3e6cd}
 :root[data-theme=ai] :focus-visible{outline-color:#e3a3b9}
+
+/* ===== การ์ดบัญชี: แตะตรงไหนก็เปิด popup เติมเงิน (ใช้สีเดิมของแต่ละธีม) ===== */
+.ac:not(.add){position:relative;min-height:112px;padding-bottom:40px;cursor:pointer}
+.ac-fund{position:absolute;left:9px;right:9px;bottom:8px;border:1px solid #ffffff80;border-radius:999px;padding:5px 6px;background:#ffffff30;color:#fff;font:600 .68rem var(--cute);text-align:center;pointer-events:none}
+#fundModal{--fd-danger:#c0392b}
+:root:is([data-theme=night],[data-theme=violet],[data-theme=graphite]) #fundModal{--fd-danger:#ff7084}
+:root[data-theme=ai] #fundModal{--fd-danger:#b75d78}
+:root[data-theme=rwb] #fundModal{--fd-danger:#d71920}
+#fundModal .fund-danger{display:grid;gap:6px;justify-items:center;margin-top:-2px;padding-top:12px;border-top:1px dashed var(--fd-bd)}
+#fundModal #fundDel{width:100%;height:44px;border-radius:14px;cursor:pointer;background:transparent;color:var(--fd-danger);border:2px dashed var(--fd-danger);font:700 .85rem var(--cute);padding:0 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:transform .12s}
+#fundModal #fundDel:active{transform:scale(.97)}
+#fundModal #fundDel.armed{background:var(--fd-danger);color:#fff;border-style:solid}
+#fundModal #fundDel:disabled{opacity:.4;cursor:default}
+#fundModal .fund-danger p{margin:0;font:500 .72rem var(--cute);color:var(--mute);text-align:center}
+
+/* ===== ธีมขาว-ดำ-แดง: หน้าบันทึกรายการ แซมสีตามประเภท (แดง=จ่าย / ม่วง=รับ / ดำ=โอน) ===== */
+:root[data-theme=rwb] #p-add{background-image:radial-gradient(#11111418 1px,transparent 1.2px);background-size:14px 14px}
+:root[data-theme=rwb] #expense{--ty:#d71920;--ty2:#7b3fa0;--ty-soft:#fdecee;--edge:#d71920;position:relative;padding-top:20px;background:linear-gradient(180deg,#fff 55%,#faf6fc 100%);box-shadow:4px 4px 0 #111,8px 8px 0 var(--edge)}
+:root[data-theme=rwb] #expense:has(input[name=type][value=in]:checked){--ty:#7b3fa0;--ty2:#d71920;--ty-soft:#f3eafa;--edge:#7b3fa0}
+:root[data-theme=rwb] #expense:has(input[name=type][value=transfer]:checked){--ty:#1b1722;--ty2:#7b3fa0;--ty-soft:#efedf2;--edge:#d71920}
+:root[data-theme=rwb] #expense::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;border-radius:10px 10px 0 0;background:linear-gradient(100deg,var(--ty) 0 68%,#111 68% 76%,var(--ty2) 76% 100%)}
+:root[data-theme=rwb] #typeSeg{gap:8px}
+:root[data-theme=rwb] #typeSeg span{border:2px solid #111;border-radius:10px;background:#fff;box-shadow:2px 2px 0 #111;transition:transform .12s,box-shadow .12s}
+:root[data-theme=rwb] #typeSeg input:checked+span{color:#fff;border-color:#111;transform:translate(2px,2px);box-shadow:0 0 0 #111}
+:root[data-theme=rwb] #typeSeg label:nth-child(1) input:checked+span{background:#d71920}
+:root[data-theme=rwb] #typeSeg label:nth-child(2) input:checked+span{background:#7b3fa0}
+:root[data-theme=rwb] #typeSeg label:nth-child(3) input:checked+span{background:#1b1722}
+:root[data-theme=rwb] #expense .slipbtn{border:2px dashed var(--ty);color:#111;background:linear-gradient(100deg,var(--ty-soft),#fff);border-radius:10px}
+:root[data-theme=rwb] #expense input[type=text],:root[data-theme=rwb] #expense input[type=date],:root[data-theme=rwb] #expense select,:root[data-theme=rwb] #expense textarea{border:2px solid #111;border-radius:10px;background:#fff}
+:root[data-theme=rwb] #expense input:focus,:root[data-theme=rwb] #expense select:focus,:root[data-theme=rwb] #expense textarea:focus{border-color:var(--ty);box-shadow:3px 3px 0 var(--ty);outline:0}
+:root[data-theme=rwb] #expense input.amt{color:var(--ty);background:var(--ty-soft)}
+:root[data-theme=rwb] #expense .cats label{border:2px solid #111;border-radius:10px;background:#fff;transition:transform .12s,box-shadow .12s}
+:root[data-theme=rwb] #expense .cats .ico{filter:grayscale(1);transition:filter .15s}
+:root[data-theme=rwb] #expense .cats input:checked+label{border-color:var(--ty);background:var(--ty-soft);color:var(--ty);box-shadow:3px 3px 0 var(--ty);transform:translate(-1px,-1px)}
+:root[data-theme=rwb] #expense .cats input:checked+label .ico{filter:none}
+:root[data-theme=rwb] #expense .chips button{background:#fff;border:1.5px solid #111;border-radius:8px;box-shadow:2px 2px 0 var(--ty2)}
+:root[data-theme=rwb] #expense .go{background:linear-gradient(100deg,var(--ty) 0 72%,var(--ty2) 72% 100%)!important;color:#fff!important;border:2px solid #111!important;border-radius:10px;box-shadow:4px 4px 0 #111;letter-spacing:.03em;transition:transform .1s,box-shadow .1s}
+:root[data-theme=rwb] #expense .go:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #111}
+@media (prefers-reduced-motion:reduce){:root[data-theme=rwb] #typeSeg span,:root[data-theme=rwb] #expense .cats label,:root[data-theme=rwb] #expense .go{transition:none}}
 </style>
 </head>
 <body>
@@ -710,6 +749,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
       <label class="f" for="fundNote"><span>หมายเหตุ <span class="fund-opt">(ไม่บังคับ)</span></span><input id="fundNote" name="note" type="text" maxlength="100" placeholder="เช่น เติมเงินสดเข้าบัญชี"></label>
       <div id="fundError" role="status"></div>
       <div class="fund-actions"><button type="button" id="fundCancel">ยกเลิก</button><button type="submit" id="fundSave">＋ ยืนยันเติมเงิน</button></div>
+      <div class="fund-danger"><button type="button" id="fundDel">🗑️ ลบบัญชีนี้</button><p>ลบแค่บัญชี ประวัติรายการเก่ายังอยู่</p></div>
     </form>
   </div>
 </div>
@@ -972,7 +1012,7 @@ function renderBal(every,key){
     tot+=r.type==='in'?m:-m;
     if(r.date.startsWith(key)){ if(r.type==='in') inM+=m; else if(r.type==='out') outM+=m; } });
   $('#balTotal').textContent=(tot<0?'-':'')+baht(Math.abs(tot)); $('#balIn').textContent=baht(inM); $('#balOut').textContent=baht(outM);
-  $('#accs').innerHTML=ACCS.map((a,i)=>`<div class="ac" data-i="${i}" role="button" tabindex="0" aria-label="จัดการ ${esc(a.n)}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>แตะเพื่อจัดการบัญชี</small><span>${baht(accBal(a,every))}</span><button type="button" class="ac-fund" data-fund="${i}">＋ เติมเงิน</button></div>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
+  $('#accs').innerHTML=ACCS.map((a,i)=>`<div class="ac" data-i="${i}" role="button" tabindex="0" aria-label="เติมเงิน ${esc(a.n)}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>แตะเพื่อเติมเงิน</small><span>${baht(accBal(a,every))}</span><span class="ac-fund" aria-hidden="true">＋ เติมเงิน</span></div>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
 }
 function setAccMode(tp){
   const o=ACCS.map(a=>`<option value="${esc(a.n)}">${esc(a.n)}</option>`).join(''), tr=tp==='transfer';
@@ -1003,10 +1043,20 @@ function openFundModal(i){
   $('#fundAccountName').textContent=a.n;
   $('#fundAmount').value=''; $('#fundNote').value=''; $('#fundError').textContent='';
   $('#fundSave').disabled=false; $('#fundSave').textContent='＋ ยืนยันเติมเงิน';
+  resetFundDel();
   $('#fundModal').classList.remove('hide');
   setTimeout(()=>$('#fundAmount').focus(),60);
 }
-function closeFundModal(){ $('#fundModal').classList.add('hide'); fundAccountIndex=-1; }
+function closeFundModal(){ clearTimeout(fundDelTimer); $('#fundModal').classList.add('hide'); fundAccountIndex=-1; }
+let fundDelTimer=0;
+function resetFundDel(){ clearTimeout(fundDelTimer); const b=$('#fundDel'); b.classList.remove('armed'); b.textContent='🗑️ ลบบัญชีนี้'; b.disabled=ACCS.length<=1; }
+$('#fundDel').onclick=()=>{
+  const i=fundAccountIndex, a=ACCS[i]; if(!a) return;
+  if(ACCS.length<=1){ $('#fundError').textContent='ต้องมีอย่างน้อย 1 บัญชี'; return; }
+  const b=$('#fundDel');
+  if(!b.classList.contains('armed')){ b.classList.add('armed'); b.textContent='แตะอีกครั้งเพื่อยืนยันลบ “'+a.n+'”'; clearTimeout(fundDelTimer); fundDelTimer=setTimeout(resetFundDel,4000); return; }
+  ACCS.splice(i,1); saveAccs(); fillAccSel(); closeFundModal(); render();
+};
 $('#fundClose').onclick=closeFundModal;
 $('#fundCancel').onclick=closeFundModal;
 $('#fundModal').addEventListener('click',e=>{if(e.target===$('#fundModal'))closeFundModal();});
@@ -1023,8 +1073,8 @@ $('#fundForm').addEventListener('submit',async e=>{
   closeFundModal(); showStatus('กำลังบันทึกเงินเข้าบัญชี…'); render(); flush();
 });
 async function addFunds(i){openFundModal(i);}
-$('#accs').onclick=e=>{ const f=e.target.closest('.ac-fund'); if(f){ addFunds(+f.dataset.fund); return; } const b=e.target.closest('.ac'); if(b) editAcc(+b.dataset.i); };
-$('#accs').onkeydown=e=>{ if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.ac-fund')){ const b=e.target.closest('.ac[role=button]'); if(b){ e.preventDefault(); editAcc(+b.dataset.i); } } };
+$('#accs').onclick=e=>{ const b=e.target.closest('.ac'); if(!b) return; const i=+b.dataset.i; if(i<0) editAcc(-1); else addFunds(i); };
+$('#accs').onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ const b=e.target.closest('.ac[role=button]'); if(b){ e.preventDefault(); addFunds(+b.dataset.i); } } };
 $('#fab').onclick=()=>document.querySelector('nav button[data-page=add]').click();
 document.querySelectorAll('nav button[data-page]').forEach(b=>b.addEventListener('click',()=>$('#fab').classList.toggle('hide',b.dataset.page!=='home')));
 $('#prev').onclick=()=>{monthOff--;render();}; $('#next').onclick=()=>{monthOff++;render();};
@@ -1158,7 +1208,7 @@ let curProf=null, pendingFace='', pendingTheme='rwb';
 const loadProfile=()=>({...BASE[0],theme:'rwb',...(load(uk('profile'),null)||{})});
 function applyProfile(p){
   document.documentElement.dataset.theme=p.theme;
-  $('#face').src=faceOf(p); $('#ttl').textContent=p.name||'บัญชีของฉัน';
+  $('#face').src=faceOf(p);
   document.title=p.name||'บัญชีของฉัน';
   $('#sub').textContent='โปรไฟล์ · '+(p.name||'บัญชีของฉัน');
   document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
