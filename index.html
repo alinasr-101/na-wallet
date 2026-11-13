@@ -434,77 +434,193 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 
 
 
-/* ===== Fund popup: solid pastel surface, readable in every theme ===== */
+/* ===== Fund popup: ใช้ตัวแปรสีของธีมที่ผู้ใช้เลือก (เปลี่ยนตามธีมอัตโนมัติ) ===== */
 #fundModal.modal{
-  background:rgba(28,18,30,.62)!important;
-  -webkit-backdrop-filter:blur(5px);
-  backdrop-filter:blur(5px);
-  align-items:center!important;
-  padding:18px;
-  box-sizing:border-box;
+  background:rgba(20,16,24,.55);
+  -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  align-items:center;padding:18px;
 }
 #fundModal .fund-sheet{
-  width:min(100%,440px);
-  max-height:min(88dvh,760px);
-  overflow-y:auto;
-  background:#fff0f6!important;
-  background-image:linear-gradient(145deg,#fff7fb 0%,#ffeaf3 100%)!important;
-  color:#382532!important;
-  border:1px solid #f4cbdc;
-  border-radius:28px;
-  box-shadow:0 24px 70px rgba(35,12,27,.30);
-  opacity:1!important;
-  isolation:isolate;
+  --fd-h:54px;                      /* ความสูงเท่ากันทุกช่อง/ทุกปุ่ม */
+  --fd-bg:var(--card,#fff);
+  --fd-bd:var(--line);
+  --fd-head:var(--soft);
+  --fd-head-ink:var(--ink);
+  --fd-head-sub:var(--mute);
+  --fd-accent:var(--green);
+  --fd-on:var(--on,#fff);
+  position:relative;display:flex;flex-direction:column;overflow:hidden;
+  width:min(100%,440px);max-height:min(88dvh,720px);
+  background:var(--fd-bg);color:var(--ink);
+  border:1px solid var(--fd-bd);border-radius:26px;
+  box-shadow:0 24px 70px rgba(10,6,14,.35);
+  animation:fdIn .2s ease-out;
 }
+@supports (color:color-mix(in srgb,red,blue)){
+  #fundModal .fund-sheet{
+    --fd-bd:color-mix(in srgb,var(--ink) 16%,var(--line));
+    --fd-head:color-mix(in srgb,var(--green) 14%,var(--fd-bg));
+  }
+}
+@keyframes fdIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* หัว popup */
 #fundModal .fund-top{
-  background:#fbd9e8!important;
-  color:#382532!important;
-  padding:20px 22px 17px;
-  border-bottom:1px solid #f1c4d7;
+  position:relative;flex:none;
+  padding:18px 58px 16px 20px;
+  background:var(--fd-head);color:var(--fd-head-ink);
+  border-bottom:1px solid var(--fd-bd);
 }
-#fundModal .fund-top h2,
-#fundModal .fund-top p,
-#fundModal .fund-body,
-#fundModal .fund-body label,
-#fundModal .fund-account,
-#fundModal .fund-account small,
-#fundModal .fund-account b{color:#382532!important;opacity:1!important}
-#fundModal .fund-top p{color:#765466!important}
-#fundModal .fund-mark{background:#fff!important;box-shadow:0 4px 12px #a84d7730}
-#fundModal .fund-body{background:#fff0f6!important;padding:20px 22px 22px}
-#fundModal .fund-account{
-  background:#fff!important;
-  border:1px solid #f0ccdc!important;
-  border-radius:17px;
-  padding:12px 14px;
+#fundModal .fund-topline{display:flex;align-items:center;gap:12px;min-width:0}
+#fundModal .fund-topline>div:last-child{min-width:0}
+#fundModal .fund-mark{
+  flex:none;width:46px;height:46px;border-radius:50%;
+  display:grid;place-items:center;font-size:1.35rem;line-height:1;
+  background:var(--fd-bg);border:1px solid var(--fd-bd);
 }
-#fundModal .fund-account small{color:#896b7a!important}
-#fundModal .fund-amount-wrap input,
-#fundModal .fund-body input{
-  background:#fff!important;
-  color:#30202a!important;
-  border:1.5px solid #e8bfd1!important;
-  caret-color:#a83e70;
-  opacity:1!important;
-}
-#fundModal .fund-body input::placeholder{color:#a58b98!important;opacity:1}
-#fundModal .fund-baht{color:#765466!important}
-#fundModal .fund-actions button:first-child{
-  background:#f8dce8!important;color:#59394a!important;border:1px solid #edc2d4!important;
-}
-#fundModal .fund-actions button:last-child{
-  background:linear-gradient(110deg,#d95791,#b94d83)!important;
-  color:#fff!important;border:0!important;
-  box-shadow:0 5px 14px #b94d8338;
-}
-#fundModal #fundError{color:#b4234d!important}
-@media(max-width:520px){
-  #fundModal.modal{align-items:flex-end!important;padding:10px 10px max(10px,env(safe-area-inset-bottom))}
-  #fundModal .fund-sheet{width:100%;max-height:88dvh;border-radius:26px}
-  #fundModal .fund-top{padding:18px 18px 15px}
-  #fundModal .fund-body{padding:18px}
+#fundModal .fund-top h2{margin:0;font:700 1.12rem/1.25 var(--cute);color:inherit}
+#fundModal .fund-top p{margin:2px 0 0;font:500 .8rem/1.3 var(--cute);color:var(--fd-head-sub)}
+#fundModal #fundClose{
+  position:absolute;top:14px;right:14px;width:34px;height:34px;padding:0;
+  display:grid;place-items:center;border-radius:50%;cursor:pointer;
+  border:1px solid var(--fd-bd);background:var(--fd-bg);color:var(--ink);
+  font:700 .9rem/1 var(--cute);
 }
 
+/* เนื้อหา: ทุกแถวกว้างเท่ากัน ช่องไฟเท่ากัน */
+#fundModal .fund-body{
+  display:grid;gap:16px;min-height:0;margin:0;overflow-y:auto;
+  padding:18px 20px calc(20px + env(safe-area-inset-bottom));
+  background:var(--fd-bg);
+}
+#fundModal .fund-field,
+#fundModal .fund-body .f{display:grid;gap:7px;min-width:0;font:600 .85rem/1.3 var(--cute);color:var(--ink)}
+#fundModal .fund-opt{font-weight:400;color:var(--mute)}
+
+/* ช่องบัญชี + ช่องกรอก + ปุ่ม สูงเท่ากัน มุมโค้งเท่ากัน */
+#fundModal .fund-account,
+#fundModal .fund-body input,
+#fundModal .fund-actions button{
+  box-sizing:border-box;height:var(--fd-h);min-height:var(--fd-h);border-radius:14px;
+}
+#fundModal .fund-account{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:0 14px;background:var(--field);border:2px solid var(--fd-bd);
+}
+#fundModal .fund-account>div{min-width:0}
+#fundModal .fund-account small{display:block;font:500 .68rem/1.1 var(--cute);color:var(--mute)}
+#fundModal .fund-account b{display:block;margin-top:2px;font:700 .98rem/1.2 var(--cute);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#fundModal .fund-account>span{flex:none;font-size:1.3rem;line-height:1}
+
+#fundModal .fund-body input{
+  display:block;width:100%;max-width:100%;min-width:0;margin:0;padding:0 14px;
+  font:500 16px/normal var(--cute);color:var(--ink);background:var(--field);
+  border:2px solid var(--fd-bd);outline:0;
+  -webkit-appearance:none;appearance:none;
+}
+#fundModal .fund-body input::placeholder{color:var(--mute);opacity:.7}
+#fundModal .fund-body input:focus{border-color:var(--fd-accent);box-shadow:0 0 0 3px var(--glow)}
+#fundModal .fund-amount-wrap{position:relative}
+#fundModal .fund-amount-wrap input{padding-right:62px;font-weight:700;font-size:1.3rem}
+#fundModal .fund-baht{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  font:700 .95rem var(--cute);color:var(--mute);pointer-events:none;
+}
+
+#fundModal #fundError{margin:-4px 0 0;font:600 .82rem/1.4 var(--cute);color:#d63a4f}
+#fundModal #fundError:empty{display:none}
+
+/* ปุ่ม */
+#fundModal .fund-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+#fundModal .fund-actions button{
+  width:100%;margin:0;padding:0 10px;cursor:pointer;
+  font:700 .95rem var(--cute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  border:2px solid transparent;transition:transform .12s,filter .12s;
+}
+#fundModal #fundCancel{background:var(--soft);color:var(--ink);border-color:var(--fd-bd)}
+#fundModal #fundSave{background:var(--fd-accent);color:var(--fd-on);border-color:var(--fd-accent)}
+#fundModal .fund-actions button:hover{filter:brightness(.96)}
+#fundModal .fund-actions button:active,#fundModal #fundClose:active{transform:scale(.97)}
+#fundModal .fund-actions button:disabled{opacity:.55;cursor:default}
+#fundModal #fundClose:focus-visible,#fundModal .fund-actions button:focus-visible{outline:2px solid var(--fd-accent);outline-offset:2px}
+
+/* ธีมที่มีลายเฉพาะตัว */
+/* Pink Cloud: ชมพูนวล แซมเหลืองเนยอ่อน */
+:root[data-theme=ai] #fundModal .fund-sheet{
+  --fd-accent:#c87998;--fd-bg:#fffcf6;--fd-bd:#f0e0da;
+  --fd-head:linear-gradient(100deg,#fde4ed 0%,#fff3d3 100%);
+  --fd-head-ink:#7a4a5f;--fd-head-sub:#a8858f;
+  border-radius:28px;border-color:#f3e2dc;
+}
+:root[data-theme=ai] #fundModal .fund-top{border-bottom-color:#f5e3c4}
+:root[data-theme=ai] #fundModal .fund-mark{background:#fff7de;border-color:#f3e0ae}
+:root[data-theme=ai] #fundModal .fund-account{background:#fff7e0;border-color:#f3e3b8}
+:root[data-theme=ai] #fundModal .fund-body input{background:#fffdf9;border-color:#f0e0da}
+:root[data-theme=ai] #fundModal .fund-body input:focus{border-color:#e3a3b9;box-shadow:0 0 0 3px #fdeab6}
+:root[data-theme=ai] #fundModal #fundCancel{background:#fff2d1;color:#8a6a3d;border-color:#f3e0ae}
+:root[data-theme=ai] #fundModal #fundSave{background:linear-gradient(100deg,#d98ca8,#c87998);border-color:#c87998}
+:root[data-theme=rwb] #fundModal .fund-sheet{
+  --fd-head:var(--ink);--fd-head-ink:#fff;--fd-head-sub:#cfcfcf;
+  border:2px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--green);
+}
+:root[data-theme=rwb] #fundModal .fund-top{border-bottom:3px solid var(--green)}
+:root[data-theme=rwb] #fundModal .fund-mark{filter:grayscale(1)}
+:root[data-theme=rwb] #fundModal #fundClose{background:transparent;color:#fff;border-color:#ffffff66}
+
+@media(max-width:520px){
+  #fundModal.modal{align-items:flex-end;padding:0}
+  #fundModal .fund-sheet,
+  :root[data-theme=ai] #fundModal .fund-sheet{width:100%;max-height:90dvh;border-radius:24px 24px 0 0;border-bottom:0}
+  :root[data-theme=rwb] #fundModal .fund-sheet{border-radius:18px 18px 0 0;box-shadow:none}
+  #fundModal .fund-top{padding:16px 56px 14px 18px}
+  #fundModal .fund-body{padding:16px 18px calc(18px + env(safe-area-inset-bottom))}
+}
+@media(prefers-reduced-motion:reduce){#fundModal .fund-sheet{animation:none}}
+
+/* ===== Pink Cloud: ชมพูนวล แซมเหลืองเนยอ่อนทั้งแอป (ไม่ให้ชมพูจ๋า) ===== */
+:root[data-theme=ai]{--glow2:#fff1c9;--butter:#fff3d3;--butter2:#fff8e4;--butter-bd:#f3e3b8;--butter-ink:#8a6a3d}
+:root[data-theme=ai] body{
+  background:#fff9f6!important;
+  background-image:radial-gradient(circle at 94% 0,#ffefbf 0,transparent 30%),radial-gradient(circle at 0 100%,#ffe3ec 0,transparent 36%)!important;
+}
+:root[data-theme=ai] .who{
+  background:#fff9f6!important;
+  background-image:radial-gradient(circle at 92% 6%,#fff0c2 0,transparent 34%),radial-gradient(circle at 0 92%,#ffe3ec 0,transparent 40%)!important;
+}
+:root[data-theme=ai] .brand img#face{border-color:#fff0bd}
+:root[data-theme=ai] .brand .petbtn{background:var(--butter);border-color:var(--butter-bd)}
+:root[data-theme=ai] .card{border-color:#f3e2dc;box-shadow:0 6px 18px #c9879c14,0 2px 5px #e9c97a14}
+/* ยอดรวม */
+:root[data-theme=ai] .bal{border-bottom:4px solid #f0cf7f!important}
+:root[data-theme=ai] .bal .ie{background:var(--butter2)}
+/* การ์ดสถิติ: ชมพูอ่อนสลับเหลืองเนย */
+:root[data-theme=ai] .st:nth-child(2),:root[data-theme=ai] .st:nth-child(5){background:var(--butter)!important}
+:root[data-theme=ai] .st:nth-child(3){background:var(--butter2)!important}
+:root[data-theme=ai] .st:nth-child(2),:root[data-theme=ai] .st:nth-child(3),:root[data-theme=ai] .st:nth-child(5){border-color:var(--butter-bd)}
+/* บัญชี / ปุ่มเพิ่ม */
+:root[data-theme=ai] .ac.add{background:var(--butter)!important;color:#98763f;border:1.5px dashed #ebd08a}
+:root[data-theme=ai] #fab{border:2px solid #fff0bd!important}
+/* กราฟ */
+:root[data-theme=ai] .col.today .bar{background:#efcf82!important}
+:root[data-theme=ai] .col.today .d{color:#b08a3a}
+:root[data-theme=ai] .month button{background:var(--butter);color:#98763f}
+:root[data-theme=ai] .tip{background:var(--butter);color:#86683e;border-color:var(--butter-bd)}
+:root[data-theme=ai] .streak{background:var(--butter);color:var(--butter-ink)}
+/* เมนูล่าง */
+:root[data-theme=ai] nav{background:#fffcf7f5;border-top-color:#f3e4c9}
+:root[data-theme=ai] nav button.on{background:#fff0cd!important;color:#b05f7f!important}
+/* ฟอร์ม / รายการ / popup อื่น ๆ */
+:root[data-theme=ai] .sheet{background:#fffcf6;border-color:#f3e2dc}
+:root[data-theme=ai] .acts .cancel,:root[data-theme=ai] .chips button,:root[data-theme=ai] .act button{background:#fff2d1;color:var(--butter-ink)}
+:root[data-theme=ai] .act button[data-act=del],:root[data-theme=ai] .acts .del{background:#fbeaf0;color:#b75d78}
+:root[data-theme=ai] .slipbtn{border-color:#ecd28f;background:#fff8e2;color:#96744a}
+:root[data-theme=ai] .cats label{background:#fffdf9;border-color:#f0e0da}
+:root[data-theme=ai] .cats input:checked+label{border-color:#e3a3b9;background:#fff0f5;color:#a65377;box-shadow:0 3px 9px #efb7c622}
+:root[data-theme=ai] .sw.on{background:#fff6dc}
+:root[data-theme=ai] select,:root[data-theme=ai] input[type=text],:root[data-theme=ai] input[type=date],:root[data-theme=ai] textarea{border-color:#f0e0da;background:#fffdf9}
+:root[data-theme=ai] select:focus,:root[data-theme=ai] input:focus,:root[data-theme=ai] textarea:focus{border-color:#e3a3b9;outline:3px solid #fdeab699}
+:root[data-theme=ai] .rc{border-top-color:#f3e6cd}
+:root[data-theme=ai] :focus-visible{outline-color:#e3a3b9}
 </style>
 </head>
 <body>
@@ -587,9 +703,11 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
     </div>
     <form id="fundForm" class="fund-body" novalidate>
       <div class="fund-account"><div><small>บัญชีที่เลือก</small><b id="fundAccountName">—</b></div><span>👛</span></div>
-      <label class="f fund-amount-label" for="fundAmount">จำนวนเงินที่ต้องการเติม</label>
-      <div class="fund-amount-wrap"><input id="fundAmount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" maxlength="12"><span class="fund-baht">บาท</span></div>
-      <label class="f" for="fundNote">หมายเหตุ <span style="font-weight:400;color:#a78a98">(ไม่บังคับ)</span><input id="fundNote" name="note" type="text" maxlength="100" placeholder="เช่น เติมเงินสดเข้าบัญชี"></label>
+      <div class="fund-field">
+        <label class="f fund-amount-label" for="fundAmount">จำนวนเงินที่ต้องการเติม</label>
+        <div class="fund-amount-wrap"><input id="fundAmount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" maxlength="12"><span class="fund-baht">บาท</span></div>
+      </div>
+      <label class="f" for="fundNote"><span>หมายเหตุ <span class="fund-opt">(ไม่บังคับ)</span></span><input id="fundNote" name="note" type="text" maxlength="100" placeholder="เช่น เติมเงินสดเข้าบัญชี"></label>
       <div id="fundError" role="status"></div>
       <div class="fund-actions"><button type="button" id="fundCancel">ยกเลิก</button><button type="submit" id="fundSave">＋ ยืนยันเติมเงิน</button></div>
     </form>
