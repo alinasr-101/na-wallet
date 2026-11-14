@@ -984,6 +984,9 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 :root[data-theme=violet] .swap::before{content:'';position:absolute;left:0;right:0;top:-11px;height:17px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 18' preserveAspectRatio='none'%3E%3Cpath d='M4 18L5 2Q5.5 0 7.5 1.2L20 11Z' fill='%237a4cc4' stroke='white' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M40 18L39 2Q38.5 0 36.5 1.2L24 11Z' fill='%237a4cc4' stroke='white' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7.2 14L7.6 5.5L14 10.6Z' fill='%23f4bfe3'/%3E%3Cpath d='M36.8 14L36.4 5.5L30 10.6Z' fill='%23f4bfe3'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none}
 :root[data-theme=violet] .brand img#face{border:3px solid #fff;box-shadow:0 0 0 2px #d1b6f1,0 5px 14px #5b3d9955}
 :root[data-theme=ai] .brand img#face{box-shadow:0 0 0 2px #f5c7d6,0 0 0 4px #fff,0 5px 12px #d98da744}
+/* ชื่อโปรไฟล์ยาวเกินให้ตัดด้วย … */
+.brand>div{min-width:0}
+.brand h1#ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -1630,7 +1633,8 @@ function applyProfile(p){
   document.documentElement.dataset.theme=themeKey(p.theme);
   $('#face').src=faceOf(p);
   document.title=p.name||'บัญชีของฉัน';
-  $('#sub').textContent='โปรไฟล์ · '+(p.name||'บัญชีของฉัน');
+  $('#ttl').textContent=p.name||'บัญชีของฉัน';
+  $('#sub').textContent='รายรับ-รายจ่าย';
   document.querySelector('meta[name=theme-color]').content=TH(p.theme).m||TH(p.theme).b;
 }
 const squarePhoto=f=>new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>{
@@ -1718,7 +1722,6 @@ async function enterApp(sessionUser){
     const p=curProf=loadProfile();
     cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0; loadAccs(); await syncAccs(); fillAccSel();
     applyProfile(p);
-    $('#sub').textContent='โปรไฟล์ · '+(p.name||'บัญชีของฉัน');
     form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
     const homeButton=document.querySelector('nav button[data-page=home]');
     if(!homeButton) throw new Error('ไม่พบปุ่มหน้าหลักในหน้าเว็บ');
@@ -1739,7 +1742,7 @@ async function leaveApp(){
   if(supabaseClient) await supabaseClient.auth.signOut();
   authUser=null; user=null; curProf=null; enteringUserId=null; enteredUserId=null; rows=[]; descs={}; slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
   $('#who').classList.remove('hide');
-  $('#sub').textContent='เข้าสู่ระบบเพื่อใช้งาน';
+  $('#ttl').textContent='รายรับ-รายจ่าย'; $('#sub').textContent='เข้าสู่ระบบเพื่อใช้งาน';
 }
 if(supabaseClient){
   // การเข้าสู่ระบบเรียก enterApp จาก submit โดยตรง ส่วน listener นี้ดูแลการออกจากระบบเท่านั้น
