@@ -186,14 +186,14 @@ nav button:active span{transform:scale(.85)}
 .who .row{flex-wrap:wrap}.pick{max-width:150px;min-width:110px}
 .slipbtn{width:100%;border:2px dashed var(--line);background:var(--field);border-radius:14px;padding:10px;font:600 .9rem var(--cute);color:var(--ink)}
 :root[data-theme=night]{--ink:#e8ecf5;--mute:#8b93a7;--cream:#0e1220;--line:#232a40;--green:#19d3a2;--soft:#1a2036;--field:#151b2e;--glow:#1d3a6b;--glow2:#0b3b3a;--navbg:#0e1220f2;--card:#161c30;--on:#04221a}
-:root[data-theme=violet]{--ink:#efe9ff;--mute:#9a8fc0;--cream:#130f24;--line:#332a57;--green:#b46bff;--soft:#2a2148;--field:#181330;--glow:#4b2a8f;--glow2:#12324a;--navbg:#130f24f2;--card:#1d1733;--on:#14081f}
+:root[data-theme=violet]{--ink:#33224f;--mute:#8470a6;--cream:#f3ebfd;--line:#e3d6f6;--green:#8f5fd1;--soft:#f1e7ff;--field:#ffffff;--glow:#d9c4f7;--glow2:#f6d3ec;--navbg:#fffdffe6;--card:#ffffff;--on:#ffffff}
 :root[data-theme=graphite]{--ink:#eeeeee;--mute:#9a9a9a;--cream:#15151a;--line:#2d2d36;--green:#ff7a1a;--soft:#25252d;--field:#1b1b22;--glow:#4a2a0e;--glow2:#2a2a33;--navbg:#15151af2;--card:#1e1e25;--on:#1a0d00}
 :root[data-theme=ocean]{--cream:#eaf4ff;--line:#d3e6fa;--green:#1e7fd8;--soft:#d9ebff;--field:#f7fbff;--glow:#a9d4ff;--glow2:#c9f0f2;--navbg:#f7fbfff2}
 :root[data-theme=forest]{--cream:#eef7f0;--line:#d6e8da;--green:#1f8a5b;--soft:#dcefe2;--field:#f8fcf9;--glow:#bfe6cd;--glow2:#f0f2c9;--navbg:#f8fcf9f2}
 :root[data-theme]:not([data-theme=tang]):not([data-theme=ai]) .st{background:var(--soft)}
 :root[data-theme]:not([data-theme=tang]):not([data-theme=ai]) nav button.on,:root[data-theme]:not([data-theme=tang]):not([data-theme=ai]) .cats input:checked+label{background:var(--soft)}
-:root:is([data-theme=night],[data-theme=violet],[data-theme=graphite]){color-scheme:dark}
-:root:is([data-theme=night],[data-theme=violet],[data-theme=graphite]) .val{color:var(--ink)}
+:root:is([data-theme=night],[data-theme=graphite]){color-scheme:dark}
+:root:is([data-theme=night],[data-theme=graphite]) .val{color:var(--ink)}
 .themes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .sw{display:grid;justify-items:center;gap:4px;padding:8px 2px;border:2px solid var(--line);border-radius:14px;background:var(--field);font:600 .72rem var(--cute);color:var(--ink)}
 .sw i{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--b) 50%,var(--a) 50%);border:2px solid #0002}
@@ -623,10 +623,10 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 :root[data-theme=ai] :focus-visible{outline-color:#e3a3b9}
 
 /* ===== การ์ดบัญชี: แตะตรงไหนก็เปิด popup เติมเงิน (ใช้สีเดิมของแต่ละธีม) ===== */
-.ac:not(.add){position:relative;min-height:112px;padding-bottom:40px;cursor:pointer}
+.ac:not(.add){position:relative;min-height:124px;padding-bottom:52px;cursor:pointer}
 .ac-fund{position:absolute;left:9px;right:9px;bottom:8px;border:1px solid #ffffff80;border-radius:999px;padding:5px 6px;background:#ffffff30;color:#fff;font:600 .68rem var(--cute);text-align:center;pointer-events:none}
 #fundModal{--fd-danger:#c0392b}
-:root:is([data-theme=night],[data-theme=violet],[data-theme=graphite]) #fundModal{--fd-danger:#ff7084}
+:root:is([data-theme=night],[data-theme=graphite]) #fundModal{--fd-danger:#ff7084}
 :root[data-theme=ai] #fundModal{--fd-danger:#b75d78}
 :root[data-theme=rwb] #fundModal{--fd-danger:#d71920}
 #fundModal .fund-danger{display:grid;gap:6px;justify-items:center;margin-top:-2px;padding-top:12px;border-top:1px dashed var(--fd-bd)}
@@ -832,6 +832,60 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .ord-item button:disabled{opacity:.35}
 .ord-item.drag{transform:scale(1.03);box-shadow:0 8px 18px #0004;position:relative;z-index:2}
 :root[data-theme=ai] .ord-item{background:var(--c1)}
+
+/* ===== Borahae: ลาเวนเดอร์ไล่ชมพู แบบโปสเตอร์ BTS (ม่วงบน -> ชมพูอมม่วงล่าง) เส้นขาว ก้อนเมฆ ===== */
+:root[data-theme=violet]{color-scheme:light}
+:root[data-theme=violet] body,:root[data-theme=violet] .who{background-color:#c79be5!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Cpath d='M18 40H82C94 40 98 26 86 23C88 10 70 6 63 17C57 5 36 7 35 21C23 18 10 30 18 40Z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E"),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Cpath d='M18 40H82C94 40 98 26 86 23C88 10 70 6 63 17C57 5 36 7 35 21C23 18 10 30 18 40Z' fill='none' stroke='white' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E"),linear-gradient(180deg,#a37ae0 0%,#b58be3 30%,#d3a8e4 66%,#eebfe0 100%)!important;background-repeat:no-repeat,no-repeat,no-repeat!important;background-position:86% 74px,10% 34px,0 0!important;background-size:112px auto,84px auto,100% 100%!important;background-attachment:fixed!important}
+:root[data-theme=violet] .brand h1{color:#fff;text-shadow:0 1px 8px #5b3d9955}
+:root[data-theme=violet] .brand small{color:#f4eaff}
+:root[data-theme=violet] .brand img#face{border:3px solid #fff;box-shadow:0 4px 14px #5b3d9955}
+:root[data-theme=violet] .brand .petbtn{background:#ffffff40;border:1px solid #ffffffaa;border-radius:50%}
+:root[data-theme=violet] .sec{color:#3f2575}
+:root[data-theme=violet] .card{background:#ffffffe6;border:1px solid #ffffffcc;border-radius:18px;box-shadow:0 8px 22px #6f45b52b}
+:root[data-theme=violet] .bal{background:linear-gradient(135deg,#7a4cc4 0%,#9d6ae0 58%,#c47ad8 100%)!important;border:1px solid #ffffffb0;border-bottom:4px solid #f0bfe3;box-shadow:0 10px 24px #6f45b54d}
+:root[data-theme=violet] .bal .ie{background:#fbf7ff;color:#4b3475}
+:root[data-theme=violet] .bal .ie span:last-child b{color:#b0487f}
+:root[data-theme=violet] .st{border:1px solid #ffffffcc;border-radius:16px;box-shadow:0 4px 12px #6f45b51f}
+:root[data-theme=violet] .st:nth-child(1),:root[data-theme=violet] .st:nth-child(4){background:#f1e7ff!important}
+:root[data-theme=violet] .st:nth-child(2),:root[data-theme=violet] .st:nth-child(5){background:#fbe8f4!important}
+:root[data-theme=violet] .st:nth-child(3){background:#ffffff!important}
+:root[data-theme=violet] .st:nth-child(6){background:#6c42b0!important;color:#fff}
+:root[data-theme=violet] .st:nth-child(6) small,:root[data-theme=violet] .st:nth-child(6) span{color:#efe4ff}
+:root[data-theme=violet] .st .up{color:#b0487f}
+:root[data-theme=violet] .st .down{color:#6f45b5}
+:root[data-theme=violet] .ac{border:1px solid #ffffffb3;border-radius:18px;box-shadow:0 6px 16px #6f45b53d;color:#fff}
+:root[data-theme=violet] .ac small{color:#fff;opacity:.88}
+:root[data-theme=violet] .ac.add{background:#ffffff8c!important;color:#6f45b5;border:1.5px dashed #ffffffe6;box-shadow:none}
+:root[data-theme=violet] #fab{background:linear-gradient(100deg,#8f5fd1,#c27bd8)!important;border:2px solid #fff;box-shadow:0 8px 20px #8f5fd155}
+:root[data-theme=violet] nav{background:#fffdfff2;border-top:1px solid #ffffff;box-shadow:0 -6px 20px #6f45b524}
+:root[data-theme=violet] nav button{color:#9a86bd}
+:root[data-theme=violet] nav button.on{background:#efe4ff!important;color:#6f45b5!important;border-radius:16px}
+:root[data-theme=violet] .bar{background:linear-gradient(180deg,#bd94ea,#8f5fd1)!important}
+:root[data-theme=violet] .col.today .bar{background:linear-gradient(180deg,#efb3de,#d77bbf)!important}
+:root[data-theme=violet] .col.today .d{color:#b0487f}
+:root[data-theme=violet] .val{color:#5b3d99}
+:root[data-theme=violet] .month button{background:#efe4ff;color:#6f45b5}
+:root[data-theme=violet] .tip,:root[data-theme=violet] .streak{background:#f4ecff;color:#6b5890;border:1px solid #e3d4f8}
+:root[data-theme=violet] .sheet{background:#fbf8ff;border:1px solid #e6d9f7;box-shadow:0 -8px 30px #6f45b52e}
+:root[data-theme=violet] .sheet h2,:root[data-theme=violet] .auth-card h1{color:#5b3d99}
+:root[data-theme=violet] .auth-card{background:#ffffffee;border:1px solid #ffffff;border-radius:24px;box-shadow:0 12px 34px #6f45b538}
+:root[data-theme=violet] select,:root[data-theme=violet] input[type=text],:root[data-theme=violet] input[type=date],:root[data-theme=violet] textarea{background:#fff;border-color:#dccdf3}
+:root[data-theme=violet] select:focus,:root[data-theme=violet] input:focus,:root[data-theme=violet] textarea:focus{border-color:#9f72dc;outline:3px solid #d9c4f77a}
+:root[data-theme=violet] .cats label{background:#fff;border-color:#e6d9f7;border-radius:18px}
+:root[data-theme=violet] .cats input:checked+label{border-color:#9f72dc;background:#f1e7ff;color:#5b3d99;box-shadow:0 3px 10px #9f72dc2b}
+:root[data-theme=violet] .acts .go,:root[data-theme=violet] .go{background:linear-gradient(100deg,#8f5fd1,#b96fd0)!important;color:#fff!important;border:0;border-radius:15px}
+:root[data-theme=violet] .acts .cancel,:root[data-theme=violet] .chips button,:root[data-theme=violet] .act button{background:#efe4ff;color:#5b3d99;border-radius:15px}
+:root[data-theme=violet] .acts .del,:root[data-theme=violet] .act button[data-act=del]{background:#fbe6f1;color:#b0487f;border-radius:15px}
+:root[data-theme=violet] .slipbtn{border-color:#cdb4ee;background:#f6efff;color:#6f45b5}
+:root[data-theme=violet] .rc{border-top:1px dashed #e6d9f7}
+:root[data-theme=violet] .sw{border-color:#e6d9f7;background:#fff;border-radius:16px}
+:root[data-theme=violet] .sw.on{border-color:#9f72dc;background:#f1e7ff;box-shadow:0 3px 10px #9f72dc2b}
+:root[data-theme=violet] :focus-visible{outline-color:#9f72dc}
+:root[data-theme=violet] #fundModal{--fd-danger:#b0487f}
+:root[data-theme=violet] #fundModal #fundSave{background:linear-gradient(100deg,#8f5fd1,#b96fd0);border-color:transparent}
+:root[data-theme=violet] #fundModal .fund-mark{color:#8f5fd1}
+/* การ์ดบัญชี: เว้นที่ให้ปุ่ม "เติมเงิน" ไม่ทับยอดเงิน (ทุกธีม) */
+.ac:not(.add){position:relative;min-height:124px;padding-bottom:52px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -1176,7 +1230,8 @@ async function syncAccs(){
 }
 const RWBACC=[['#e10600','#a30000'],['#111111','#3a3a3a'],['#4a4a4a','#7c7c7c'],['#7a0000','#c40000']];
 const PINK_ACC=['#D98FA8','#B98AAE','#9D8DBB','#C47F98','#A9799B','#D5A0B2'];
-const ac=(a,i)=>document.documentElement.dataset.theme==='rwb'?RWBACC[i%RWBACC.length]:document.documentElement.dataset.theme==='ai'?[PINK_ACC[i%PINK_ACC.length],PINK_ACC[i%PINK_ACC.length]]:[a.c1,a.c2];
+const VIOLET_ACC=[['#8a55d6','#b27be8'],['#a367d9','#d08fe0'],['#7a4cc4','#9d74e0'],['#b277d8','#e2a0d8']];
+const ac=(a,i)=>document.documentElement.dataset.theme==='violet'?VIOLET_ACC[i%VIOLET_ACC.length]:document.documentElement.dataset.theme==='rwb'?RWBACC[i%RWBACC.length]:document.documentElement.dataset.theme==='ai'?[PINK_ACC[i%PINK_ACC.length],PINK_ACC[i%PINK_ACC.length]]:[a.c1,a.c2];
 function renderStreak(every){
   const days=new Set(every.map(r=>r.date)); let n=0; const d=new Date();
   if(!days.has(ymd(d))) d.setDate(d.getDate()-1);
@@ -1443,17 +1498,18 @@ const BASE=[{id:'tang',name:'Naaaaaaaaaa',theme:'rwb',face:'face-tang.png'}];
 let PROFILES=load('profiles-v2',BASE);
 const emFace=e=>'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50" y="68" font-size="56" text-anchor="middle">${e}</text></svg>`);
 const faceOf=p=>p.face||emFace(p.emoji||'🙂');
-const THEMES={rwb:{n:'แดงขาวดำ',a:'#e10600',b:'#ffffff'},fin:{n:'ฟินแทรค (ฟ้า)',a:'#3b6cd4',b:'#f2f5fb'},tang:{n:'เหลืองสดใส',a:'#ffb347',b:'#fff8e7'},ai:{n:'Pink Cloud ☁️',a:'#f28caf',b:'#fff0bd'},night:{n:'ไซเบอร์ไนท์',a:'#19d3a2',b:'#0e1220'},violet:{n:'ม่วงนีออน',a:'#b46bff',b:'#130f24'},graphite:{n:'กราไฟต์ส้ม',a:'#ff7a1a',b:'#15151a'},ocean:{n:'ฟ้าทะเล',a:'#1e7fd8',b:'#eaf4ff'},forest:{n:'เขียวป่า',a:'#1f8a5b',b:'#eef7f0'}};
-const TH=k=>THEMES[k]||THEMES.tang;
+const THEMES={ai:{n:'Pink Cloud ☁️',a:'#f28caf',b:'#fff0bd'},rwb:{n:'Devil',a:'#e10600',b:'#ffffff'},violet:{n:'Borahae',a:'#9b6bd9',b:'#e9b7dc',m:'#a77ee0'}};
+const TH=k=>THEMES[k]||THEMES.rwb;
+const themeKey=k=>THEMES[k]?k:'rwb'; /* ธีมเก่าที่ถูกเอาออก -> Devil */
 /* ---------- โปรไฟล์ (แยกตามบัญชีที่ล็อกอิน เก็บในเครื่อง) ---------- */
 let curProf=null, pendingFace='', pendingTheme='rwb';
-const loadProfile=()=>({...BASE[0],theme:'rwb',...(load(uk('profile'),null)||{})});
+const loadProfile=()=>{ const p={...BASE[0],theme:'rwb',...(load(uk('profile'),null)||{})}; p.theme=themeKey(p.theme); return p; };
 function applyProfile(p){
-  document.documentElement.dataset.theme=p.theme;
+  document.documentElement.dataset.theme=themeKey(p.theme);
   $('#face').src=faceOf(p);
   document.title=p.name||'บัญชีของฉัน';
   $('#sub').textContent='โปรไฟล์ · '+(p.name||'บัญชีของฉัน');
-  document.querySelector('meta[name=theme-color]').content=TH(p.theme).b;
+  document.querySelector('meta[name=theme-color]').content=TH(p.theme).m||TH(p.theme).b;
 }
 const squarePhoto=f=>new Promise((ok,no)=>{ const im=new Image(); im.onload=()=>{
   const m=Math.min(im.width,im.height),c=document.createElement('canvas'); c.width=c.height=256;
