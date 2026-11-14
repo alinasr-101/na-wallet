@@ -301,7 +301,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .eye .gi{width:18px;height:18px;color:#fff}
 .hide-amt #balTotal,.hide-amt #balIn,.hide-amt #balOut,.hide-amt .ac span{filter:blur(7px);user-select:none}
 /* ปุ่มตา: เบลอกราฟและข้อมูลสำคัญทั้งหมดด้วย */
-.hide-amt #balEx,.hide-amt #total,.hide-amt #legend,.hide-amt #donut,.hide-amt #bars,.hide-amt #tip,.hide-amt #stats,.hide-amt #sum,.hide-amt #lsSum,.hide-amt .rc .a,.hide-amt .dayhd span,.hide-amt #dayTotal,.hide-amt #dayList .a{filter:blur(8px);user-select:none;-webkit-user-select:none}
+.hide-amt #total,.hide-amt #legend,.hide-amt #donut,.hide-amt #bars,.hide-amt #tip,.hide-amt #stats,.hide-amt #sum,.hide-amt #lsSum,.hide-amt .rc .a,.hide-amt .dayhd span,.hide-amt #dayTotal,.hide-amt #dayList .a{filter:blur(8px);user-select:none;-webkit-user-select:none}
 .hide-amt #bars{pointer-events:none}
 .streak{font:700 .7rem var(--cute);letter-spacing:0;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--ink);white-space:nowrap}
 .ac{transition:transform .2s}.ac:active{transform:perspective(500px) rotateX(8deg) scale(.96)}
@@ -1035,7 +1035,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
   <main>
     <section id="p-home" class="pg">
       <div class="month"><button id="prev" aria-label="เดือนก่อน">‹</button><b id="month"></b><button id="next" aria-label="เดือนถัดไป">›</button></div>
-      <div class="bal"><button type="button" class="eye" id="eye" aria-label="ซ่อนหรือแสดงยอดเงิน"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><small class="exnote" id="balEx" hidden></small><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
+      <div class="bal"><button type="button" class="eye" id="eye" aria-label="ซ่อนหรือแสดงยอดเงิน"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
       <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;gap:8px;align-items:center">บัญชีของฉัน<button type="button" id="ordBtn" class="ordbtn" aria-label="จัดลำดับบัญชี">⇅ จัดลำดับ</button><button type="button" id="rstBtn" class="rstbtn" aria-label="รีเซ็ตยอด">↺ รีเซ็ตยอด</button></span><span class="streak" id="streak" hidden></span></div><div class="accs" id="accs"></div>
       <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
       <div class="card"><h2>รายการล่าสุด</h2><div id="recentHome"></div></div>
@@ -1443,13 +1443,12 @@ function accBal(a,every){ let s=a.b0||0;
     else if(r.account===a.n) s+=(r.type==='in'||r.type==='deposit')?m:-m; });
   return s; }
 function renderBal(every,key){
-  let tot=0, exTot=0, inM=0, outM=0;
-  ACCS.forEach(a=>{ const v=accBal(a,every); if(isEx(a.n)) exTot+=v; else tot+=v; });
+  let tot=0, inM=0, outM=0;
+  ACCS.forEach(a=>{ if(!isEx(a.n)) tot+=accBal(a,every); });
   every.forEach(r=>{ if(isExRow(r)||!r.date.startsWith(key)) return; const m=Number(r.amount);
     if(r.type==='in') inM+=m; else if(r.type==='out') outM+=m; });
-  tot=r2(tot); exTot=r2(exTot);
+  tot=r2(tot);
   $('#balTotal').textContent=(tot<0?'-':'')+baht(Math.abs(tot)); $('#balIn').textContent=baht(inM); $('#balOut').textContent=baht(outM);
-  const ex=$('#balEx'); ex.hidden=!ACCS.some(a=>isEx(a.n)); ex.textContent='ไม่รวมบัญชีเงินเก็บ ('+(exTot<0?'-':'')+baht(Math.abs(exTot))+')';
   $('#accs').innerHTML=ACCS.map((a,i)=>`<div class="ac" data-i="${i}" role="button" tabindex="0" aria-label="เติมเงิน ${esc(a.n)}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>${isEx(a.n)?'เงินเก็บ · ไม่นับรวม':'แตะเพื่อเติมเงิน'}</small><span>${baht(accBal(a,every))}</span><span class="ac-fund" aria-hidden="true">＋ เติมเงิน</span></div>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
 }
 function setAccMode(tp){
