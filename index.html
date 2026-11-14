@@ -300,6 +300,9 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .eye{position:absolute;top:8px;right:8px;z-index:2;width:30px;height:30px;border:0;border-radius:50%;background:#ffffff26;display:grid;place-items:center;padding:0}
 .eye .gi{width:18px;height:18px;color:#fff}
 .hide-amt #balTotal,.hide-amt #balIn,.hide-amt #balOut,.hide-amt .ac span{filter:blur(7px);user-select:none}
+/* ปุ่มตา: เบลอกราฟและข้อมูลสำคัญทั้งหมดด้วย */
+.hide-amt #balEx,.hide-amt #total,.hide-amt #legend,.hide-amt #donut,.hide-amt #bars,.hide-amt #tip,.hide-amt #stats,.hide-amt #sum,.hide-amt #lsSum,.hide-amt .rc .a,.hide-amt .dayhd span,.hide-amt #dayTotal,.hide-amt #dayList .a{filter:blur(8px);user-select:none;-webkit-user-select:none}
+.hide-amt #bars{pointer-events:none}
 .streak{font:700 .7rem var(--cute);letter-spacing:0;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--ink);white-space:nowrap}
 .ac{transition:transform .2s}.ac:active{transform:perspective(500px) rotateX(8deg) scale(.96)}
 @keyframes rcIn{from{opacity:0;transform:translateY(8px)}}
@@ -984,10 +987,29 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 :root[data-theme=violet] .swap::before{content:'';position:absolute;left:0;right:0;top:-11px;height:17px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 18' preserveAspectRatio='none'%3E%3Cpath d='M4 18L5 2Q5.5 0 7.5 1.2L20 11Z' fill='%237a4cc4' stroke='white' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M40 18L39 2Q38.5 0 36.5 1.2L24 11Z' fill='%237a4cc4' stroke='white' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7.2 14L7.6 5.5L14 10.6Z' fill='%23f4bfe3'/%3E%3Cpath d='M36.8 14L36.4 5.5L30 10.6Z' fill='%23f4bfe3'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none}
 :root[data-theme=violet] .brand img#face{border:3px solid #fff;box-shadow:0 0 0 2px #d1b6f1,0 5px 14px #5b3d9955}
 :root[data-theme=ai] .brand img#face{box-shadow:0 0 0 2px #f5c7d6,0 0 0 4px #fff,0 5px 12px #d98da744}
-/* หน้ารายการแบ่งรายวัน */
-.dayhd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:16px 2px 6px;padding-bottom:5px;border-bottom:1px dashed var(--line);font:700 .88rem var(--cute);color:var(--ink)}
+/* หน้ารายการ: ตัวกรองเดือน/วัน + แบ่งรายวัน (ดีไซน์เดียวกับธีมเดวิล) */
+.lsf{display:grid;gap:10px;margin:2px 0 12px}
+.lsm{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;margin:0 -2px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.lsm::-webkit-scrollbar{display:none}
+.lsm button{flex:none;scroll-snap-align:start;min-height:40px;padding:0 15px;border-radius:10px;border:2px solid var(--ink);background:var(--soft);color:var(--ink);font:700 .82rem var(--cute);letter-spacing:.02em;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.lsm button.on{background:var(--green);color:#fff;box-shadow:2px 2px 0 var(--ink)}
+.lsm button:active{transform:translate(1px,1px)}
+.lsd{display:flex;align-items:center;gap:8px;min-width:0}
+.lsd label{flex:none;font:700 .82rem var(--cute);color:var(--ink);letter-spacing:.02em}
+.lsd input[type=date]{flex:1 1 auto;min-width:0;width:auto;min-height:44px;border:2px solid var(--ink);border-radius:10px;background:var(--field);font-weight:700}
+.lsd button{flex:none;min-height:44px;padding:0 13px;border-radius:10px;border:2px solid var(--ink);background:var(--green);color:#fff;font:700 .8rem var(--cute);cursor:pointer}
+.lsd button[hidden]{display:none}
+.lss{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0 0 6px;border-radius:12px;background:#17121a;color:#fff;border-bottom:4px solid var(--green);overflow:hidden}
+.lss[hidden]{display:none}
+.lss .t{grid-column:1/-1;padding:9px 12px 0;font:700 .78rem var(--cute);letter-spacing:.06em;color:#ffffffb3}
+.lss div.c{padding:6px 12px 11px;min-width:0}
+.lss small{display:block;font:600 .66rem var(--cute);letter-spacing:.1em;opacity:.75}
+.lss b{display:block;margin-top:1px;font:900 .98rem 'Orbitron','Chakra Petch',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lss .c:nth-child(2) b{color:#ff6b73}
+.dayhd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:14px 0 8px;padding:7px 10px;border:2px solid var(--ink);border-left:6px solid var(--green);border-radius:10px;background:var(--soft);font:700 .86rem var(--cute);color:var(--ink)}
 #recent .dayhd:first-child{margin-top:2px}
-.dayhd span{font-weight:600;font-size:.76rem;color:var(--mute);text-align:right}
+.dayhd b{min-width:0;font-weight:700}
+.dayhd span{flex:none;font:700 .72rem var(--cute);color:var(--green);text-align:right}
 .rc.exr{opacity:.6}
 /* รีเซ็ตยอด / เงินเก็บ */
 .rstbtn{border:0;border-radius:999px;padding:3px 10px;background:var(--soft);color:var(--mute);font:700 .72rem var(--cute);letter-spacing:0}
@@ -999,7 +1021,9 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .rst-err:empty{display:none}
 .exnote{display:block;margin-top:2px;font-size:.7rem;opacity:.85}
 #fundModal .fund-ex{display:flex;align-items:center;gap:10px;font:600 .82rem/1.35 var(--cute);color:var(--ink);cursor:pointer}
-#fundModal .fund-body .fund-ex input{width:20px;height:20px;min-width:20px;padding:0;margin:0;accent-color:var(--fd-accent)}
+#fundModal .fund-body label.fund-ex input#fundEx{flex:none;display:inline-block;box-sizing:border-box;width:24px;height:24px;min-width:24px;min-height:24px;max-width:24px;padding:0;margin:0;border-radius:7px;border:2px solid var(--fd-accent);background:#fff center/16px 16px no-repeat;box-shadow:none;cursor:pointer}
+#fundModal .fund-body label.fund-ex input#fundEx:checked{background-color:var(--fd-accent);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+#fundModal .fund-body label.fund-ex input#fundEx:focus-visible{box-shadow:0 0 0 3px var(--glow)}
 /* ชื่อโปรไฟล์ยาวเกินให้ตัดด้วย … */
 .brand>div{min-width:0}
 .brand h1#ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1044,7 +1068,11 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
         <p id="status" role="status"></p>
       </form>
     </section>
-    <section id="p-list" class="pg hide"><div class="card"><h2>รายการล่าสุด</h2><div id="recent"></div></div></section>
+    <section id="p-list" class="pg hide"><div class="card"><h2>รายการล่าสุด</h2>
+      <div class="lsf"><div class="lsm" id="lsMonths" role="group" aria-label="เลือกเดือน"></div>
+      <div class="lsd"><label for="lsDate">📅 เลือกวัน</label><input type="date" id="lsDate"><button type="button" id="lsClear" hidden>✕ ล้าง</button></div></div>
+      <div class="lss" id="lsSum" hidden></div>
+      <div id="recent"></div></div></section>
   <button id="fab" type="button">＋ บันทึกรายการใหม่</button>
   </main>
   <nav>
@@ -1332,18 +1360,43 @@ const rcHtml=(r,act=true)=>{ const tr=r.type==='transfer', inn=r.type==='in', de
   const sub=tr?`${esc(r.account||'?')} → ${esc(r.to_account||'?')}`:`${esc(r.category)}${r.account?' · '+esc(r.account):''}${isExRow(r)?' · ไม่นับรวม':''}`;
   const actions=act?'<div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>':'';
   return `<div class="rc${isExRow(r)?' exr':''}" data-id="${esc(r.id)}"><div class="ico" style="background:${c[1]}55">${ic('icons/cat/'+c[2]+'.png',c[0])}</div><div class="n">${esc(r.description||r.category)}<small>${sub} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${(inn||dep)?' style="color:#1f9d6b"':''}>${(inn||dep)?'+':''}${baht(r.amount)}</div>${actions}</div>`; };
+let lsMonth='';
 function renderRecent(all){
-  all=all||allRows(); const rec=[...all].reverse().sort((a,b)=>b.date.localeCompare(a.date));
-  const todayS=ymd(new Date()), yd=new Date(); yd.setDate(yd.getDate()-1); const ydS=ymd(yd), g=[];
-  rec.slice(0,300).forEach(r=>{ const l=g[g.length-1]; if(l&&l.d===r.date) l.r.push(r); else g.push({d:r.date,r:[r]}); });
+  all=all||allRows(); const recAll=[...all].reverse().sort((a,b)=>b.date.localeCompare(a.date));
+  const todayS=ymd(new Date()), yd=new Date(); yd.setDate(yd.getDate()-1); const ydS=ymd(yd), dsel=$('#lsDate').value;
+  /* ชิปเลือกเดือน (เฉพาะเดือนที่มีรายการ + เดือนนี้) */
+  const ms=[...new Set([todayS.slice(0,7),...recAll.map(r=>r.date.slice(0,7))])].sort().reverse();
+  if(lsMonth&&!ms.includes(lsMonth)) lsMonth='';
+  const mEl=$('#lsMonths'), sl=mEl.scrollLeft;
+  const chip=(v,l,on)=>`<button type="button" data-m="${v}" class="${on?'on':''}" aria-pressed="${on}">${l}</button>`;
+  mEl.innerHTML=chip('','ทั้งหมด',!dsel&&!lsMonth)+chip('__today','วันนี้',dsel===todayS)+ms.map(k=>chip(k,new Date(k+'-01T00:00:00').toLocaleDateString('th-TH',{month:'short',year:'2-digit'}),!dsel&&lsMonth===k)).join('');
+  mEl.scrollLeft=sl; const on=mEl.querySelector('button.on'); if(on&&on.dataset.m!==''&&mEl.scrollWidth>mEl.clientWidth){ const l=on.offsetLeft-12; if(Math.abs(mEl.scrollLeft-l)>mEl.clientWidth/2) mEl.scrollLeft=l; }
+  $('#lsClear').hidden=!(dsel||lsMonth);
+  /* กรองรายการ */
+  const filtered=!!(dsel||lsMonth);
+  const rec=dsel?recAll.filter(r=>r.date===dsel):lsMonth?recAll.filter(r=>r.date.startsWith(lsMonth)):recAll;
+  const g=[]; rec.slice(0,filtered?2000:300).forEach(r=>{ const l=g[g.length-1]; if(l&&l.d===r.date) l.r.push(r); else g.push({d:r.date,r:[r]}); });
+  const sumBox=$('#lsSum');
+  if(filtered){
+    const cnt=rec.filter(x=>!isExRow(x)&&x.type!=='transfer'&&x.type!=='deposit');
+    const out=rec.filter(x=>x.type==='out'&&!isExRow(x)).reduce((t,x)=>t+Number(x.amount),0), inc=rec.filter(x=>x.type==='in'&&!isExRow(x)).reduce((t,x)=>t+Number(x.amount),0);
+    const ttl=dsel?new Date(dsel+'T00:00:00').toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):new Date(lsMonth+'-01T00:00:00').toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+    sumBox.innerHTML=`<div class="t">${ttl}</div><div class="c"><small>▼ ใช้ไป</small><b>${baht(out)}</b></div><div class="c"><small>▲ รับ</small><b>${baht(inc)}</b></div><div class="c"><small>รายการ</small><b>${rec.length}</b></div>`;
+    sumBox.hidden=false;
+  } else sumBox.hidden=true;
   $('#recent').innerHTML=g.length?g.map(({d,r})=>{
     const out=r.filter(x=>x.type==='out'&&!isExRow(x)).reduce((t,x)=>t+Number(x.amount),0), inc=r.filter(x=>x.type==='in'&&!isExRow(x)).reduce((t,x)=>t+Number(x.amount),0);
     const dt=new Date(d+'T00:00:00'), lb=(d===todayS?'วันนี้ · ':d===ydS?'เมื่อวาน · ':'')+dt.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
     const sm=[out?'ใช้ไป '+baht(out):'',inc?'รับ +'+baht(inc):''].filter(Boolean).join(' · ')||(r.length+' รายการ');
     return `<div class="dayhd"><b>${lb}</b><span>${sm}</span></div>`+r.map(x=>rcHtml(x)).join('');
-  }).join(''):empty('ยังไม่มีรายการ');
-  $('#recentHome').innerHTML=rec.length?rec.slice(0,5).map(r=>rcHtml(r,false)).join(''):empty('ยังไม่มีรายการ');
+  }).join(''):empty(filtered?'ไม่มีรายการในช่วงที่เลือก':'ยังไม่มีรายการ');
+  $('#recentHome').innerHTML=recAll.length?recAll.slice(0,5).map(r=>rcHtml(r,false)).join(''):empty('ยังไม่มีรายการ');
 }
+$('#lsMonths').onclick=e=>{ const b=e.target.closest('button[data-m]'); if(!b) return; const m=b.dataset.m;
+  if(m==='__today'){ lsMonth=''; $('#lsDate').value=ymd(new Date()); } else { lsMonth=m; $('#lsDate').value=''; }
+  renderRecent(); };
+$('#lsDate').onchange=()=>{ lsMonth=''; renderRecent(); };
+$('#lsClear').onclick=()=>{ lsMonth=''; $('#lsDate').value=''; renderRecent(); };
 /* ---------- บัญชี / ยอดคงเหลือ ---------- */
 const r2=n=>Math.round(n*100)/100;
 let EXS=new Set();
