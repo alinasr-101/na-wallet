@@ -984,6 +984,22 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 :root[data-theme=violet] .swap::before{content:'';position:absolute;left:0;right:0;top:-11px;height:17px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 18' preserveAspectRatio='none'%3E%3Cpath d='M4 18L5 2Q5.5 0 7.5 1.2L20 11Z' fill='%237a4cc4' stroke='white' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M40 18L39 2Q38.5 0 36.5 1.2L24 11Z' fill='%237a4cc4' stroke='white' stroke-width='1.4' stroke-linejoin='round'/%3E%3Cpath d='M7.2 14L7.6 5.5L14 10.6Z' fill='%23f4bfe3'/%3E%3Cpath d='M36.8 14L36.4 5.5L30 10.6Z' fill='%23f4bfe3'/%3E%3C/svg%3E") no-repeat center/100% 100%;pointer-events:none}
 :root[data-theme=violet] .brand img#face{border:3px solid #fff;box-shadow:0 0 0 2px #d1b6f1,0 5px 14px #5b3d9955}
 :root[data-theme=ai] .brand img#face{box-shadow:0 0 0 2px #f5c7d6,0 0 0 4px #fff,0 5px 12px #d98da744}
+/* หน้ารายการแบ่งรายวัน */
+.dayhd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:16px 2px 6px;padding-bottom:5px;border-bottom:1px dashed var(--line);font:700 .88rem var(--cute);color:var(--ink)}
+#recent .dayhd:first-child{margin-top:2px}
+.dayhd span{font-weight:600;font-size:.76rem;color:var(--mute);text-align:right}
+.rc.exr{opacity:.6}
+/* รีเซ็ตยอด / เงินเก็บ */
+.rstbtn{border:0;border-radius:999px;padding:3px 10px;background:var(--soft);color:var(--mute);font:700 .72rem var(--cute);letter-spacing:0}
+.rst-tip{margin:0;font:500 .8rem/1.45 var(--cute);color:var(--mute)}
+.rst-row{display:grid;grid-template-columns:1fr 130px;gap:10px;align-items:center}
+.rst-row b{font:700 .9rem var(--cute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rst-row input{width:100%;box-sizing:border-box;height:42px;border-radius:12px;border:1.5px solid var(--line);padding:0 10px;font:700 1rem var(--cute);text-align:right;background:var(--card,#fff);color:var(--ink)}
+.rst-err{margin:0;color:#d63a4f;font:600 .82rem var(--cute)}
+.rst-err:empty{display:none}
+.exnote{display:block;margin-top:2px;font-size:.7rem;opacity:.85}
+#fundModal .fund-ex{display:flex;align-items:center;gap:10px;font:600 .82rem/1.35 var(--cute);color:var(--ink);cursor:pointer}
+#fundModal .fund-body .fund-ex input{width:20px;height:20px;min-width:20px;padding:0;margin:0;accent-color:var(--fd-accent)}
 /* ชื่อโปรไฟล์ยาวเกินให้ตัดด้วย … */
 .brand>div{min-width:0}
 .brand h1#ttl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -995,8 +1011,8 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
   <main>
     <section id="p-home" class="pg">
       <div class="month"><button id="prev" aria-label="เดือนก่อน">‹</button><b id="month"></b><button id="next" aria-label="เดือนถัดไป">›</button></div>
-      <div class="bal"><button type="button" class="eye" id="eye" aria-label="ซ่อนหรือแสดงยอดเงิน"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
-      <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;gap:8px;align-items:center">บัญชีของฉัน<button type="button" id="ordBtn" class="ordbtn" aria-label="จัดลำดับบัญชี">⇅ จัดลำดับ</button></span><span class="streak" id="streak" hidden></span></div><div class="accs" id="accs"></div>
+      <div class="bal"><button type="button" class="eye" id="eye" aria-label="ซ่อนหรือแสดงยอดเงิน"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><small class="exnote" id="balEx" hidden></small><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
+      <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;gap:8px;align-items:center">บัญชีของฉัน<button type="button" id="ordBtn" class="ordbtn" aria-label="จัดลำดับบัญชี">⇅ จัดลำดับ</button><button type="button" id="rstBtn" class="rstbtn" aria-label="รีเซ็ตยอด">↺ รีเซ็ตยอด</button></span><span class="streak" id="streak" hidden></span></div><div class="accs" id="accs"></div>
       <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
       <div class="card"><h2>รายการล่าสุด</h2><div id="recentHome"></div></div>
       <div class="stats" id="stats"></div>
@@ -1060,6 +1076,16 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
     <div class="acts two"><button type="button" class="cancel" data-close>ยกเลิก</button><button type="button" class="del" id="delGo">ลบเลย</button></div>
   </div>
 </div></div>
+<div id="rstModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
+  <div class="box">
+    <h2>รีเซ็ตยอดรอบใหม่ ↺</h2>
+    <p class="rst-tip">ใส่ยอดที่ต้องการให้แต่ละบัญชีเริ่มต้นใหม่ (ช่องจะแสดงยอดปัจจุบันไว้ให้) เช่น วันเงินเดือนเข้า ประวัติรายการเก่ายังอยู่ครบ แค่ปรับยอดบัญชีให้ตรง</p>
+    <div id="rstList" style="display:grid;gap:8px"></div>
+    <p class="rst-err" id="rstErr" role="status"></p>
+    <button type="button" class="cancel" id="rstZero">ตั้งทุกบัญชีเป็น 0</button>
+    <div class="acts two"><button type="button" class="cancel" id="rstCancel">ยกเลิก</button><button type="button" class="go" id="rstSave">ยืนยันรีเซ็ต</button></div>
+  </div>
+</div></div>
 <div id="ordModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
   <div class="box">
     <h2>จัดลำดับบัญชี ⇅</h2>
@@ -1092,6 +1118,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
       <label class="f" for="fundNote"><span>หมายเหตุ <span class="fund-opt">(ไม่บังคับ)</span></span><input id="fundNote" name="note" type="text" maxlength="100" placeholder="เช่น เติมเงินสดเข้าบัญชี"></label>
       <div id="fundError" role="status"></div>
       <div class="fund-actions"><button type="button" id="fundCancel">ยกเลิก</button><button type="submit" id="fundSave">＋ ยืนยันเติมเงิน</button></div>
+      <label class="fund-ex"><input type="checkbox" id="fundEx"><span>บัญชีเงินเก็บ — ไม่นับรวมในยอดรวมและค่าใช้จ่าย</span></label>
       <div class="fund-danger"><button type="button" id="fundDel">🗑️ ลบบัญชีนี้</button><p>ลบแค่บัญชี ประวัติรายการเก่ายังอยู่</p></div>
     </form>
   </div>
@@ -1253,14 +1280,14 @@ async function flush(){
 
 /* ---------- Overview ---------- */
 function render(){
-  const every=allRows(), all=every.filter(r=>r.type!=='in'&&r.type!=='transfer'&&r.type!=='deposit'), now=new Date();
+  const every=allRows(), vis=every.filter(r=>!isExRow(r)), all=vis.filter(r=>r.type!=='in'&&r.type!=='transfer'&&r.type!=='deposit'), now=new Date();
   const m=new Date(now.getFullYear(),now.getMonth()+monthOff,1), key=ymd(m).slice(0,7);
   $('#month').textContent=m.toLocaleDateString('th-TH',{month:'long',year:'numeric'});
   $('#next').disabled=monthOff>=0; $('#prev').disabled=monthOff<=-5;
   const by={}; let total=0;
   all.filter(r=>r.date.startsWith(key)).forEach(r=>{by[r.category]=(by[r.category]||0)+r.amount; total+=r.amount;});
   const ents=Object.entries(by).sort((a,b)=>b[1]-a[1]);
-  countUp($('#total'),total); renderStats(all,m,key,total,ents); renderSum(every,key,total); renderBal(every,key); renderStreak(every);
+  countUp($('#total'),total); renderStats(all,m,key,total,ents); renderSum(vis,key,total); renderBal(every,key); renderStreak(every);
   let off=25, segs='<circle r="15.9155" cx="21" cy="21" fill="none" style="stroke:var(--line)" stroke-width="6"/>';
   ents.forEach(([c,a])=>{ const p=a/total*100, len=Math.max(p-(ents.length>1?.8:0),.1);
     segs+=`<circle r="15.9155" cx="21" cy="21" fill="none" stroke="${icoOf(c)[1]}" stroke-width="6" stroke-dasharray="${len} ${100-len}" stroke-dashoffset="${off}"/>`; off-=p; });
@@ -1302,16 +1329,29 @@ function renderStats(all,m,key,total,ents){
   $('#stats').innerHTML=cards.map(([e,l,v,s,c],i)=>`<div class="st"><small><span class="oi">${ic('icons/stat/'+SK[i]+'.png',e)}</span> ${l}</small><b class="${c}">${typeof v==='object'?v.h:esc(v)}</b><span>${esc(s)}</span></div>`).join('');
 }
 const rcHtml=(r,act=true)=>{ const tr=r.type==='transfer', inn=r.type==='in', dep=r.type==='deposit', c=icoOf(r.category);
-  const sub=tr?`${esc(r.account||'?')} → ${esc(r.to_account||'?')}`:`${esc(r.category)}${r.account?' · '+esc(r.account):''}`;
+  const sub=tr?`${esc(r.account||'?')} → ${esc(r.to_account||'?')}`:`${esc(r.category)}${r.account?' · '+esc(r.account):''}${isExRow(r)?' · ไม่นับรวม':''}`;
   const actions=act?'<div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>':'';
-  return `<div class="rc" data-id="${esc(r.id)}"><div class="ico" style="background:${c[1]}55">${ic('icons/cat/'+c[2]+'.png',c[0])}</div><div class="n">${esc(r.description||r.category)}<small>${sub} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${(inn||dep)?' style="color:#1f9d6b"':''}>${(inn||dep)?'+':''}${baht(r.amount)}</div>${actions}</div>`; };
+  return `<div class="rc${isExRow(r)?' exr':''}" data-id="${esc(r.id)}"><div class="ico" style="background:${c[1]}55">${ic('icons/cat/'+c[2]+'.png',c[0])}</div><div class="n">${esc(r.description||r.category)}<small>${sub} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${(inn||dep)?' style="color:#1f9d6b"':''}>${(inn||dep)?'+':''}${baht(r.amount)}</div>${actions}</div>`; };
 function renderRecent(all){
   all=all||allRows(); const rec=[...all].reverse().sort((a,b)=>b.date.localeCompare(a.date));
-  $('#recent').innerHTML=rec.length?rec.slice(0,100).map(r=>rcHtml(r)).join(''):empty('ยังไม่มีรายการ');
+  const todayS=ymd(new Date()), yd=new Date(); yd.setDate(yd.getDate()-1); const ydS=ymd(yd), g=[];
+  rec.slice(0,300).forEach(r=>{ const l=g[g.length-1]; if(l&&l.d===r.date) l.r.push(r); else g.push({d:r.date,r:[r]}); });
+  $('#recent').innerHTML=g.length?g.map(({d,r})=>{
+    const out=r.filter(x=>x.type==='out'&&!isExRow(x)).reduce((t,x)=>t+Number(x.amount),0), inc=r.filter(x=>x.type==='in'&&!isExRow(x)).reduce((t,x)=>t+Number(x.amount),0);
+    const dt=new Date(d+'T00:00:00'), lb=(d===todayS?'วันนี้ · ':d===ydS?'เมื่อวาน · ':'')+dt.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
+    const sm=[out?'ใช้ไป '+baht(out):'',inc?'รับ +'+baht(inc):''].filter(Boolean).join(' · ')||(r.length+' รายการ');
+    return `<div class="dayhd"><b>${lb}</b><span>${sm}</span></div>`+r.map(x=>rcHtml(x)).join('');
+  }).join(''):empty('ยังไม่มีรายการ');
   $('#recentHome').innerHTML=rec.length?rec.slice(0,5).map(r=>rcHtml(r,false)).join(''):empty('ยังไม่มีรายการ');
 }
 /* ---------- บัญชี / ยอดคงเหลือ ---------- */
-const loadAccs=()=>{ ACCS=load(uk('accounts'),DEF_ACC); };
+const r2=n=>Math.round(n*100)/100;
+let EXS=new Set();
+const loadEx=()=>{ EXS=new Set([...load(uk('acc-ex'),[]),...ACCS.filter(a=>a.ex).map(a=>a.n)]); };
+const isEx=n=>!!n&&EXS.has(n);
+const isExRow=r=>r.type!=='transfer'&&isEx(r.account);
+function setEx(n,on){ on?EXS.add(n):EXS.delete(n); save(uk('acc-ex'),[...EXS]); ACCS.forEach(a=>{ if(a.n===n) a.ex=on; }); }
+const loadAccs=()=>{ ACCS=load(uk('accounts'),DEF_ACC); loadEx(); };
 const saveAccs=()=>{
   save(uk('accounts'),ACCS);
   if(user) api({action:'accounts_save',accounts:ACCS}).then(r=>{
@@ -1325,7 +1365,7 @@ async function syncAccs(){
   if(!r.ok) throw new Error(r.error||'โหลดบัญชีไม่สำเร็จ');
   if(Array.isArray(r.accounts)&&r.accounts.length) ACCS=r.accounts;
   else ACCS=local;
-  save(uk('accounts'),ACCS);
+  loadEx(); save(uk('accounts'),ACCS);
   if(!Array.isArray(r.accounts)||!r.accounts.length){
     const w=await api({action:'accounts_save',accounts:ACCS});
     if(!w.ok) throw new Error(w.error||'ย้ายข้อมูลบัญชีขึ้นชีตไม่สำเร็จ');
@@ -1350,13 +1390,14 @@ function accBal(a,every){ let s=a.b0||0;
     else if(r.account===a.n) s+=(r.type==='in'||r.type==='deposit')?m:-m; });
   return s; }
 function renderBal(every,key){
-  let tot=ACCS.reduce((s,a)=>s+(a.b0||0),0), inM=0, outM=0;
-  every.forEach(r=>{ const m=Number(r.amount); if(r.type==='transfer') return;
-    if(r.type==='deposit'){ tot+=m; return; }
-    tot+=r.type==='in'?m:-m;
-    if(r.date.startsWith(key)){ if(r.type==='in') inM+=m; else if(r.type==='out') outM+=m; } });
+  let tot=0, exTot=0, inM=0, outM=0;
+  ACCS.forEach(a=>{ const v=accBal(a,every); if(isEx(a.n)) exTot+=v; else tot+=v; });
+  every.forEach(r=>{ if(isExRow(r)||!r.date.startsWith(key)) return; const m=Number(r.amount);
+    if(r.type==='in') inM+=m; else if(r.type==='out') outM+=m; });
+  tot=r2(tot); exTot=r2(exTot);
   $('#balTotal').textContent=(tot<0?'-':'')+baht(Math.abs(tot)); $('#balIn').textContent=baht(inM); $('#balOut').textContent=baht(outM);
-  $('#accs').innerHTML=ACCS.map((a,i)=>`<div class="ac" data-i="${i}" role="button" tabindex="0" aria-label="เติมเงิน ${esc(a.n)}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>แตะเพื่อเติมเงิน</small><span>${baht(accBal(a,every))}</span><span class="ac-fund" aria-hidden="true">＋ เติมเงิน</span></div>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
+  const ex=$('#balEx'); ex.hidden=!ACCS.some(a=>isEx(a.n)); ex.textContent='ไม่รวมบัญชีเงินเก็บ ('+(exTot<0?'-':'')+baht(Math.abs(exTot))+')';
+  $('#accs').innerHTML=ACCS.map((a,i)=>`<div class="ac" data-i="${i}" role="button" tabindex="0" aria-label="เติมเงิน ${esc(a.n)}" style="--c1:${ac(a,i)[0]};--c2:${ac(a,i)[1]}"><b>${esc(a.n)}</b><small>${isEx(a.n)?'เงินเก็บ · ไม่นับรวม':'แตะเพื่อเติมเงิน'}</small><span>${baht(accBal(a,every))}</span><span class="ac-fund" aria-hidden="true">＋ เติมเงิน</span></div>`).join('')+'<button type="button" class="ac add" data-i="-1" aria-label="เพิ่มบัญชี">＋</button>';
 }
 function setAccMode(tp){
   const o=ACCS.map(a=>`<option value="${esc(a.n)}">${esc(a.n)}</option>`).join(''), tr=tp==='transfer';
@@ -1381,7 +1422,6 @@ function editAcc(i){
   saveAccs(); fillAccSel(); render();
 }
 let fundAccountIndex=-1, fundMode='add';
-const r2=n=>Math.round(n*100)/100;
 function setFundMode(m){
   fundMode=m; const set=m==='set', a=ACCS[fundAccountIndex];
   $('#fundModeAdd').classList.toggle('on',!set); $('#fundModeSet').classList.toggle('on',set);
@@ -1401,10 +1441,12 @@ function openFundModal(i){
   $('#fundAccountName').textContent=a.n;
   $('#fundAmount').value=''; $('#fundNote').value=''; $('#fundError').textContent='';
   $('#fundSave').disabled=false; $('#fundSave').textContent='＋ ยืนยันเติมเงิน';
+  $('#fundEx').checked=isEx(a.n);
   resetFundDel(); setFundMode('add');
   $('#fundModal').classList.remove('hide');
   setTimeout(()=>$('#fundAmount').focus(),60);
 }
+$('#fundEx').onchange=e=>{ const a=ACCS[fundAccountIndex]; if(!a) return; setEx(a.n,e.target.checked); saveAccs(); render(); };
 function closeFundModal(){ clearTimeout(fundDelTimer); $('#fundModal').classList.add('hide'); fundAccountIndex=-1; }
 let fundDelTimer=0;
 function resetFundDel(){ clearTimeout(fundDelTimer); const b=$('#fundDel'); b.classList.remove('armed'); b.textContent='🗑️ ลบบัญชีนี้'; b.disabled=ACCS.length<=1; }
@@ -1439,6 +1481,26 @@ $('#fundForm').addEventListener('submit',async e=>{
   closeFundModal(); showStatus('กำลังบันทึกเงินเข้าบัญชี…'); render(); flush();
 });
 async function addFunds(i){openFundModal(i);}
+/* ---------- รีเซ็ตยอด ---------- */
+const fmtN=n=>String(r2(n));
+function openRst(){
+  const every=allRows();
+  $('#rstList').innerHTML=ACCS.map((a,i)=>`<div class="rst-row"><b>${esc(a.n)}${isEx(a.n)?' 🔒':''}</b><input type="text" inputmode="text" autocomplete="off" data-i="${i}" value="${fmtN(accBal(a,every))}" aria-label="ยอดใหม่ของ ${esc(a.n)}"></div>`).join('');
+  $('#rstErr').textContent=''; $('#rstModal').classList.remove('hide');
+}
+const closeRst=()=>$('#rstModal').classList.add('hide');
+$('#rstBtn').onclick=openRst;
+$('#rstCancel').onclick=closeRst;
+$('#rstModal').addEventListener('click',e=>{ if(e.target===$('#rstModal')) closeRst(); });
+$('#rstZero').onclick=()=>{ $('#rstList').querySelectorAll('input').forEach(x=>x.value='0'); };
+$('#rstSave').onclick=()=>{
+  const every=allRows(), ins=[...$('#rstList').querySelectorAll('input')], upd=[];
+  for(const x of ins){ const raw=x.value.replace(/,/g,'').trim();
+    if(!/^-?\d{1,9}(?:\.\d{1,2})?$/.test(raw)){ $('#rstErr').textContent='กรุณากรอกยอดให้ถูกต้อง (ทศนิยมไม่เกิน 2 ตำแหน่ง)'; x.focus(); return; }
+    upd.push([ACCS[+x.dataset.i],Number(raw)]); }
+  upd.forEach(([a,t])=>{ if(!a) return; const diff=r2(t-accBal(a,every)); if(diff!==0) a.b0=r2((a.b0||0)+diff); });
+  saveAccs(); fillAccSel(); closeRst(); render(); showStatus('รีเซ็ตยอดรอบใหม่แล้ว');
+};
 $('#accs').onclick=e=>{ const b=e.target.closest('.ac'); if(!b) return; const i=+b.dataset.i; if(i<0) editAcc(-1); else addFunds(i); };
 $('#accs').onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ const b=e.target.closest('.ac[role=button]'); if(b){ e.preventDefault(); addFunds(+b.dataset.i); } } };
 /* ---------- จัดลำดับบัญชี ---------- */
@@ -1591,7 +1653,7 @@ $('#delGo').onclick=async()=>{
 /* ---------- popup รายการของวัน ---------- */
 const dayModal=$('#dayModal');
 function openDay(d){
-  const list=allRows().filter(r=>r.date===d).sort((a,b)=>b.amount-a.amount);
+  const list=allRows().filter(r=>r.date===d&&!isExRow(r)).sort((a,b)=>b.amount-a.amount);
   const dt=new Date(d+'T00:00:00'), isToday=d===ymd(new Date());
   $('#dayTitle').textContent=(isToday?'วันนี้ · ':'')+dt.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
   const total=list.filter(r=>r.type!=='in'&&r.type!=='transfer'&&r.type!=='deposit').reduce((s,r)=>s+r.amount,0);
