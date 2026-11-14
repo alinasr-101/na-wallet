@@ -626,6 +626,9 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 /* ===== การ์ดบัญชี: แตะตรงไหนก็เปิด popup เติมเงิน (ใช้สีเดิมของแต่ละธีม) ===== */
 .ac:not(.add){position:relative;min-height:124px;padding-bottom:52px;cursor:pointer}
 .ac-fund{position:absolute;left:9px;right:9px;bottom:8px;border:1px solid #ffffff80;border-radius:999px;padding:5px 6px;background:#ffffff30;color:#fff;font:600 .68rem var(--cute);text-align:center;pointer-events:none}
+#fundModal .fund-mode{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:14px;background:var(--soft)}
+#fundModal .fund-mode button{height:40px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--ink);font:700 .8rem var(--cute);cursor:pointer;padding:0 6px}
+#fundModal .fund-mode button.on{background:var(--fd-accent);color:var(--fd-on)}
 #fundModal{--fd-danger:#c0392b}
 :root:is([data-theme=night],[data-theme=graphite]) #fundModal{--fd-danger:#ff7084}
 :root[data-theme=ai] #fundModal{--fd-danger:#b75d78}
@@ -1077,9 +1080,11 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
     </div>
     <form id="fundForm" class="fund-body" novalidate>
       <div class="fund-account"><div><small>บัญชีที่เลือก</small><b id="fundAccountName">—</b></div><span>👛</span></div>
+      <div class="fund-mode" role="group" aria-label="โหมด"><button type="button" id="fundModeAdd" class="on">＋ เติมเงิน</button><button type="button" id="fundModeSet">✎ ปรับยอดให้ตรงธนาคาร</button></div>
       <div class="fund-field">
-        <label class="f fund-amount-label" for="fundAmount">จำนวนเงินที่ต้องการเติม</label>
-        <div class="fund-amount-wrap"><input id="fundAmount" name="amount" type="text" inputmode="decimal" autocomplete="off" placeholder="0.00" maxlength="12"><span class="fund-baht">บาท</span></div>
+        <label class="f fund-amount-label" id="fundAmtLbl" for="fundAmount">จำนวนเงินที่ต้องการเติม</label>
+        <div class="fund-amount-wrap"><input id="fundAmount" name="amount" type="text" inputmode="text" autocomplete="off" placeholder="0.00" maxlength="12"><span class="fund-baht">บาท</span></div>
+        <small id="fundHint" style="color:var(--mute);font-weight:500"></small>
       </div>
       <label class="f" for="fundNote"><span>หมายเหตุ <span class="fund-opt">(ไม่บังคับ)</span></span><input id="fundNote" name="note" type="text" maxlength="100" placeholder="เช่น เติมเงินสดเข้าบัญชี"></label>
       <div id="fundError" role="status"></div>
@@ -1372,14 +1377,28 @@ function editAcc(i){
     if(b.trim()==='ลบ'){ if(ACCS.length<=1){ alert('ต้องมีอย่างน้อย 1 บัญชี'); return; } ACCS.splice(i,1); } else a.b0=Number(b.replace(/,/g,''))||0; }
   saveAccs(); fillAccSel(); render();
 }
-let fundAccountIndex=-1;
+let fundAccountIndex=-1, fundMode='add';
+const r2=n=>Math.round(n*100)/100;
+function setFundMode(m){
+  fundMode=m; const set=m==='set', a=ACCS[fundAccountIndex];
+  $('#fundModeAdd').classList.toggle('on',!set); $('#fundModeSet').classList.toggle('on',set);
+  $('#fundTitle').textContent=set?'ปรับยอดให้ตรงธนาคาร':'เติมเงินเข้าบัญชี';
+  $('#fundAmtLbl').textContent=set?'ยอดคงเหลือจริงในธนาคาร':'จำนวนเงินที่ต้องการเติม';
+  $('#fundSave').textContent=set?'✓ ยืนยันปรับยอด':'＋ ยืนยันเติมเงิน';
+  $('#fundNote').closest('label').hidden=set;
+  $('#fundHint').textContent=set&&a?'ยอดในแอปตอนนี้ '+(()=>{const v=accBal(a,allRows());return (v<0?'-':'')+baht(Math.abs(v));})()+' — ใส่ยอดจริง แอปจะปรับส่วนต่างให้เอง (ไม่นับเป็นรายรับ/รายจ่าย)':'';
+  $('#fundError').textContent=''; $('#fundAmount').value='';
+  $('#fundAmount').focus();
+}
+$('#fundModeAdd').onclick=()=>setFundMode('add');
+$('#fundModeSet').onclick=()=>setFundMode('set');
 function openFundModal(i){
   const a=ACCS[i]; if(!a) return;
   fundAccountIndex=i;
   $('#fundAccountName').textContent=a.n;
   $('#fundAmount').value=''; $('#fundNote').value=''; $('#fundError').textContent='';
   $('#fundSave').disabled=false; $('#fundSave').textContent='＋ ยืนยันเติมเงิน';
-  resetFundDel();
+  resetFundDel(); setFundMode('add');
   $('#fundModal').classList.remove('hide');
   setTimeout(()=>$('#fundAmount').focus(),60);
 }
@@ -1401,6 +1420,14 @@ $('#fundForm').addEventListener('submit',async e=>{
   e.preventDefault();
   const a=ACCS[fundAccountIndex]; if(!a){closeFundModal();return;}
   const raw=$('#fundAmount').value.replace(/,/g,'').trim();
+  if(fundMode==='set'){
+    const t=Number(raw);
+    if(!/^-?\d{1,9}(?:\.\d{1,2})?$/.test(raw)||!Number.isFinite(t)){$('#fundError').textContent='กรุณากรอกยอดคงเหลือให้ถูกต้อง (ทศนิยมไม่เกิน 2 ตำแหน่ง)';$('#fundAmount').focus();return;}
+    const diff=r2(t-accBal(a,allRows()));
+    a.b0=r2((a.b0||0)+diff); saveAccs(); fillAccSel(); closeFundModal(); render();
+    showStatus(diff===0?'ยอดตรงกับธนาคารอยู่แล้ว':'ปรับยอด '+a.n+' แล้ว ('+(diff>0?'+':'-')+baht(Math.abs(diff))+')');
+    return;
+  }
   const amount=Number(raw);
   if(!/^\d{1,9}(?:\.\d{1,2})?$/.test(raw)||!Number.isFinite(amount)||amount<=0){$('#fundError').textContent='กรุณากรอกจำนวนเงินให้ถูกต้อง (ทศนิยมไม่เกิน 2 ตำแหน่ง)';$('#fundAmount').focus();return;}
   const note=$('#fundNote').value.trim()||'เติมเงินเข้าบัญชี';
