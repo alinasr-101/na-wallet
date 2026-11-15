@@ -301,7 +301,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .eye .gi{width:18px;height:18px;color:#fff}
 .hide-amt #balTotal,.hide-amt #balIn,.hide-amt #balOut,.hide-amt .ac span{filter:blur(7px);user-select:none}
 /* ปุ่มตา: เบลอกราฟและข้อมูลสำคัญทั้งหมดด้วย */
-.hide-amt #total,.hide-amt #legend,.hide-amt #donut,.hide-amt #bars,.hide-amt #tip,.hide-amt #stats,.hide-amt #sum,.hide-amt #lsSum,.hide-amt #wkTot,.hide-amt #goalCard .gv,.hide-amt #lsBatch .bi,.hide-amt .rc .a,.hide-amt .dayhd span,.hide-amt #dayTotal,.hide-amt #dayList .a{filter:blur(8px);user-select:none;-webkit-user-select:none}
+.hide-amt #total,.hide-amt #legend,.hide-amt #donut,.hide-amt #bars,.hide-amt #tip,.hide-amt #stats,.hide-amt #sum,.hide-amt #lsSum,.hide-amt #wkTot,.hide-amt #goalCard .gamt,.hide-amt #lsBatch .bi,.hide-amt .rc .a,.hide-amt .dayhd span,.hide-amt #dayTotal,.hide-amt #dayList .a{filter:blur(8px);user-select:none;-webkit-user-select:none}
 .hide-amt #bud .bt span,.hide-amt #bud .bm,.hide-amt #calcRes,.hide-amt .qkl b{filter:blur(8px);user-select:none;-webkit-user-select:none}
 .hide-amt #bars{pointer-events:none}
 .streak{font:700 .7rem var(--cute);letter-spacing:0;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--ink);white-space:nowrap}
@@ -834,10 +834,11 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 #lsBatch button{border:0;border-radius:10px;padding:8px 12px;background:var(--soft);color:var(--ink);font:700 .8rem var(--cute)}#lsBatch button.dg{background:#e5484d;color:#fff}#lsBatch button:disabled{opacity:.45}
 #bMsg{font:600 .76rem var(--cute)}#bMsg:empty{display:none}
 .rc.selrow{cursor:pointer}.rc.selrow.picked{background:var(--soft);border-radius:12px}.rc .pk{flex:none;width:20px;height:20px;accent-color:var(--green);pointer-events:none}body.selmode #fab{display:none}
-#goalCard .g{padding:8px 0;border-top:1px dashed var(--line);cursor:pointer;color:var(--ink)}#goalCard .gh+.g{border-top:0}
-#goalCard .gt{display:flex;justify-content:space-between;gap:8px;font:700 .86rem var(--cute)}#goalCard .gt span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#goalCard .gv{font:600 .76rem var(--cute);color:var(--mute);white-space:nowrap}
-#goalCard .gb{height:8px;margin-top:6px;border-radius:99px;background:var(--line);overflow:hidden}#goalCard .gb i{display:block;height:100%;border-radius:99px;background:var(--green)}#goalCard .g.done .gb i{background:var(--peach)}
+#goalCard .gl{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 8px}#goalCard .gl::-webkit-scrollbar{display:none}
+#goalCard .g{flex:none;width:168px;border-radius:16px;padding:12px;color:#fff;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 6px 14px #0002;cursor:pointer;transition:transform .2s}#goalCard .g:active{transform:scale(.97)}
+#goalCard .gn{display:block;font:700 .95rem var(--cute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#goalCard .gsub{display:block;font-size:.68rem;opacity:.9}#goalCard .gamt{display:block;margin-top:10px;font:700 1.05rem var(--cute)}
+#goalCard .gb{height:8px;margin-top:8px;border-radius:99px;background:#ffffff4d;overflow:hidden}#goalCard .gb i{display:block;height:100%;border-radius:99px;background:#fff}#goalCard .g.done .gb i{background:var(--peach)}
 #goalCard .ge{font-size:.78rem;color:var(--mute);margin:3px 0 0}
 .wknav{display:flex;gap:6px}.wknav button{width:30px;height:28px;border:0;border-radius:9px;background:var(--soft);color:var(--ink);font:700 1rem var(--cute)}.wknav button:disabled{opacity:.35}
 </style>
@@ -1113,12 +1114,12 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
       <div class="bal"><button type="button" class="eye" id="eye" aria-label="ซ่อนหรือแสดงยอดเงิน"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
       <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;gap:8px;align-items:center">บัญชีของฉัน<button type="button" id="ordBtn" class="ordbtn" aria-label="จัดลำดับบัญชี">⇅ จัดลำดับ</button><button type="button" id="rstBtn" class="rstbtn" aria-label="รีเซ็ตยอด">↺ รีเซ็ตยอด</button></span><span class="streak" id="streak" hidden></span></div><div class="accs" id="accs"></div>
       <div class="bud" id="bud"></div>
-      <div class="card" id="goalCard"></div>
       <div class="card" id="recCard"><h2 class="fold" id="recFold" role="button" tabindex="0" aria-expanded="true"><span>รายการล่าสุด</span><span class="chev">▾</span></h2><div id="recentHome"></div></div>
       <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
       <div class="stats" id="stats"></div>
       <div class="card sum" id="sum"></div>
       <div class="card grow"><div class="wkhd"><h2 id="wkTtl">7 วันล่าสุด</h2><div class="wknav"><button type="button" id="wkPrev" aria-label="สัปดาห์ก่อนหน้า">‹</button><button type="button" id="wkNext" aria-label="สัปดาห์ถัดไป">›</button></div></div><div class="plot" id="bars"></div><p class="tip" id="tip"></p><p class="tip" id="wkTot"></p></div>
+      <div id="goalCard"></div>
     </section>
     <section id="p-add" class="pg hide">
       <form id="expense" class="card">
@@ -1950,9 +1951,9 @@ $('#bMove').onclick=async()=>{ if(batchBusy) return; const sel=$('#bCat'), cat=s
 /* ---------- เป้าหมายเงินเก็บ (เก็บในเครื่องนี้) ---------- */
 const saveGoals=()=>save(uk('goals'),GOALS);
 function renderGoals(every){ const el=$('#goalCard'); if(!el) return;
-  const items=GOALS.map((g,i)=>{ const a=g.a&&ACCS.find(x=>x.n===g.a), s=a?Math.max(0,accBal(a,every)):Math.max(0,Number(g.s)||0), t=Number(g.t)||0, p=t>0?Math.min(s/t*100,100):0, done=t>0&&s>=t;
-    return `<div class="g${done?' done':''}" role="button" tabindex="0" data-i="${i}"><div class="gt"><span>${esc(g.n)}${done?' ✅':''}</span><b class="gv">${baht(s)} / ${baht(t)} · ${Math.floor(p)}%</b></div><div class="gb" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.floor(p)}"><i style="width:${p}%"></i></div>${g.a?`<div class="ge">ดึงยอดจากบัญชี ${esc(g.a)}</div>`:''}</div>`; }).join('');
-  el.innerHTML='<div class="gh"><h2>🎯 เป้าหมายเงินเก็บ</h2><button type="button" class="gadd" id="goalAdd">＋ เพิ่ม</button></div>'+(items||'<div class="ge">ตั้งเป้าหมาย เช่น เก็บเงินซื้อของ หรือเงินสำรองฉุกเฉิน</div>'); }
+  const tiles=GOALS.map((g,i)=>{ const a=g.a&&ACCS.find(x=>x.n===g.a), sv=a?Math.max(0,accBal(a,every)):Math.max(0,Number(g.s)||0), t=Number(g.t)||0, p=t>0?Math.min(sv/t*100,100):0, done=t>0&&sv>=t, pl=PAL[i%PAL.length], c=ac({c1:pl[0],c2:pl[1]},i);
+    return `<div class="g${done?' done':''}" role="button" tabindex="0" data-i="${i}" aria-label="เป้าหมาย ${esc(g.n)}" style="--c1:${c[0]};--c2:${c[1]}"><b class="gn">${esc(g.n)}${done?' ✅':''}</b><small class="gsub">${g.a?'ดึงยอดจาก '+esc(g.a):'แตะเพื่อเพิ่มเงินเก็บ'}</small><span class="gamt">${baht(sv)}</span><small class="gsub">เป้า ${baht(t)} · ${Math.floor(p)}%</small><div class="gb" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.floor(p)}"><i style="width:${p}%"></i></div></div>`; }).join('');
+  el.innerHTML='<div class="gh"><h2>🎯 เป้าหมายเงินเก็บ</h2><button type="button" class="gadd" id="goalAdd">＋ เพิ่ม</button></div>'+(tiles?'<div class="gl">'+tiles+'</div>':'<div class="ge">ตั้งเป้าหมาย เช่น เก็บเงินซื้อของ หรือเงินสำรองฉุกเฉิน</div>'); }
 function addGoal(){
   const n=(prompt('ชื่อเป้าหมาย (เช่น ซื้อโน้ตบุ๊ก, เงินสำรองฉุกเฉิน)','')||'').trim().slice(0,30); if(!n) return;
   const t=Number(String(prompt('ยอดเป้าหมาย (บาท)','')||'').replace(/,/g,'')); if(!(t>0)||t>999999999){ alert('ยอดเป้าหมายต้องมากกว่า 0'); return; }
