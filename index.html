@@ -1311,13 +1311,18 @@ function allRows(){
 const readQueue=()=>load(QUEUE_KEY,[]);
 
 /* ---------- API: ส่ง access token ให้ Apps Script ตรวจสอบกับ Supabase ---------- */
+const isNet=e=>(e&&e.name==='AbortError')||/load failed|failed to fetch|networkerror|network request failed|network connection|timed out|aborted/i.test(String((e&&e.message)||e||''));
+const NET_MSG='เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองเช็กอินเทอร์เน็ต ปิด VPN/ตัวบล็อกโฆษณา แล้วลองใหม่อีกครั้ง';
 async function api(payload){
   if(!supabaseClient) return {ok:false,error:'ยังไม่ได้ตั้งค่า Supabase URL และ Publishable/Anon Key'};
   const {data:{session}}=await supabaseClient.auth.getSession();
   if(!session||!session.access_token) return {ok:false,code:'unauthorized',error:'กรุณาเข้าสู่ระบบใหม่'};
-  const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify({...payload,authToken:session.access_token})});
-  return await res.json();
+  const ctl=new AbortController(), tm=setTimeout(()=>ctl.abort(),25000);
+  try{
+    const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},signal:ctl.signal,
+      body:JSON.stringify({...payload,authToken:session.access_token})});
+    return await res.json();
+  }finally{ clearTimeout(tm); }
 }
 async function refresh(){
   if(!user) return; const u=user;
@@ -1325,7 +1330,7 @@ async function refresh(){
   try{ const r=await api({action:'list',from,user:u}); if(u!==user) return;
     if(r.ok){ rows=r.rows; save(uk('expense-rows'),rows); rows.forEach(x=>remember(x.category,x.description)); }
     else showStatus(r.error||'ดึงข้อมูลจากชีตไม่สำเร็จ',true);
-  }catch{}
+  }catch{ if(u===user&&!rows.length) rows=load(uk('expense-rows'),[]); }
   render(); renderChips();
 }
 async function flush(){
@@ -1951,7 +1956,7 @@ $('#authForm').addEventListener('submit',async e=>{
       authMessage('เข้าสู่ระบบสำเร็จ');
       if(data.user) await enterApp(data.user);
     }
-  }catch(err){ authMessage(err.message||'ดำเนินการไม่สำเร็จ',true); }
+  }catch(err){ authMessage(isNet(err)?NET_MSG:(err.message||'ดำเนินการไม่สำเร็จ'),true); }
   finally{$('#authSubmit').disabled=false;}
 });
 
@@ -1964,19 +1969,20 @@ async function enterApp(sessionUser){
     // ซ่อนหน้าล็อกอินทันทีเมื่อได้รับบัญชีที่ยืนยันแล้ว
     $('#who').classList.add('hide');
     const p=curProf=loadProfile();
-    cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0; loadAccs(); await syncAccs(); fillAccSel();
+    cuLast=0; rows=[]; descs=load(uk('expense-desc'),{}); monthOff=0; loadAccs(); let offline=false; try{ await syncAccs(); }catch(e){ if(!isNet(e)) throw e; offline=true; rows=load(uk('expense-rows'),[]); } fillAccSel();
     applyProfile(p);
     form.reset(); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false; drawCats('out'); form.elements.date.value=ymd(new Date()); showStatus('');
     const homeButton=document.querySelector('nav button[data-page=home]');
     if(!homeButton) throw new Error('ไม่พบปุ่มหน้าหลักในหน้าเว็บ');
     homeButton.click();
     await refresh();
+    if(offline) showStatus('ออฟไลน์ · แสดงข้อมูลล่าสุดในเครื่อง ลองรีเฟรชหน้าอีกครั้งเมื่อมีเน็ต',true);
     enteredUserId=sessionUser.id;
     flush();
   }catch(err){
     authUser=null; user=null;
     $('#who').classList.remove('hide');
-    authMessage('เข้าสู่ระบบแล้ว แต่เปิดหน้าหลักไม่สำเร็จ: '+(err.message||err),true);
+    authMessage(isNet(err)?NET_MSG:'เข้าสู่ระบบแล้ว แต่เปิดหน้าหลักไม่สำเร็จ: '+(err.message||err),true);
     throw err;
   }finally{
     if(enteringUserId===sessionUser.id) enteringUserId=null;
