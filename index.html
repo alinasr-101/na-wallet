@@ -994,7 +994,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .bud .bt{display:flex;align-items:center;gap:8px;font:700 .84rem var(--cute);color:var(--ink)}
 .bud .bt span{margin-left:auto;font:700 .78rem var(--cute)}
 .bud .bt button.ft{display:inline-flex;align-items:center;gap:7px;margin:0 auto 0 0;padding:0;min-width:0;min-height:32px;border:0;border-radius:0;background:none;color:var(--ink);font:700 .84rem var(--cute)}
-.bud .bt #budSet{margin-left:8px}
+.bud .bt #budSet{margin-left:8px;display:inline-flex;align-items:center;justify-content:center}
 .bud .bt b+button#budSet{margin-left:auto}
 .chev{display:inline-block;font-size:.8em;line-height:1;transition:transform .2s}
 .ft[aria-expanded=false] .chev,.folded .chev{transform:rotate(-90deg)}
@@ -1012,6 +1012,22 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .bud .track.sm{height:12px}
 .bud>.dy:not(:first-child){padding-top:8px;border-top:2px dashed var(--ink)}
 .bud.over .bm{color:#e0141f;font-weight:700}
+/* แจ้งเตือนเกินงบ + ลูกเล่นเบาๆ */
+#toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 10px);transform:translateX(-50%);z-index:9999;width:min(92vw,420px);box-sizing:border-box;padding:11px 14px;border-radius:12px;background:#17121a;color:#fff;border:2px solid #e0141f;box-shadow:3px 3px 0 #e0141f;font:600 .86rem/1.55 var(--cute);cursor:pointer;animation:tdrop .4s cubic-bezier(.2,.9,.3,1.2) both}
+#toast[hidden]{display:none}
+#toast>b{display:block;font-weight:700;margin-bottom:2px}
+#toast b.n{font:900 .9rem 'Orbitron','Chakra Petch',sans-serif;color:#ff6b73}
+.hide-amt #toast b.n{filter:blur(6px)}
+@keyframes tdrop{from{opacity:0;transform:translate(-50%,-16px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+@keyframes glow{50%{filter:brightness(1.3) saturate(1.2)}}
+#p-home>.bal,#p-home>.bud,#p-home>.card,#p-home>.stats{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+#p-home>.bud{animation-delay:.07s}#p-home>#recCard{animation-delay:.13s}#p-home>.dn{animation-delay:.19s}#p-home>.stats{animation-delay:.25s}#p-home>.sum{animation-delay:.3s}
+.bud.shake{animation:shake .5s}
+.bud.over>.track .fill,.bud .dy.over .fill{animation:glow 1.6s ease-in-out infinite}
+.bud .bt button.ft:active,.card h2.fold:active{opacity:.6}
+@media (prefers-reduced-motion:reduce){#p-home>.bal,#p-home>.bud,#p-home>.card,#p-home>.stats,.bud.shake,.bud .fill,#toast{animation:none!important}}
 /* ใช้บ่อย + เครื่องคิดเลข */
 .qk{display:grid;margin-top:-4px}
 .qk[hidden]{display:none}
@@ -1084,9 +1100,9 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
       <div class="bud" id="bud"></div>
       <div class="card" id="recCard"><h2 class="fold" id="recFold" role="button" tabindex="0" aria-expanded="true"><span>รายการล่าสุด</span><span class="chev">▾</span></h2><div id="recentHome"></div></div>
       <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
+      <div class="stats" id="stats"></div>
       <div class="card sum" id="sum"></div>
       <div class="card grow"><h2>7 วันล่าสุด</h2><div class="plot" id="bars"></div><p class="tip" id="tip"></p></div>
-      <div class="stats" id="stats"></div>
     </section>
     <section id="p-add" class="pg hide">
       <form id="expense" class="card">
@@ -1153,6 +1169,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
     <div class="acts two"><button type="button" class="cancel" data-close>ยกเลิก</button><button type="button" class="del" id="delGo">ลบเลย</button></div>
   </div>
 </div></div>
+<div id="toast" role="status" aria-live="polite" hidden></div>
 <div id="rstModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
   <div class="box">
     <h2>รีเซ็ตยอดรอบใหม่ ↺</h2>
@@ -1165,7 +1182,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 </div></div>
 <div id="budModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
   <div class="box">
-    <h2>🎯 ตั้งงบ</h2>
+    <h2>◆ ตั้งงบ</h2>
     <div class="rst-row" style="grid-template-columns:1fr 140px"><b>ต่อเดือน</b><input type="text" inputmode="decimal" id="budInput" autocomplete="off" placeholder="0" aria-label="งบต่อเดือน (บาท)"></div>
     <div class="rst-row" style="grid-template-columns:1fr 140px"><b>ต่อวัน</b><input type="text" inputmode="decimal" id="budDay" autocomplete="off" placeholder="0" aria-label="งบต่อวัน (บาท)"></div>
     <p class="rst-err" id="budErr" role="status"></p>
@@ -1434,8 +1451,8 @@ $('#recFold').onclick=()=>toggleFold('rec');
 $('#recFold').onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggleFold('rec'); } };
 function renderBud(total,key){
   lastBud={total,key}; const el=$('#bud');
-  if(!BUD&&!DAYB){ el.className='bud'; el.innerHTML='<div class="bt"><b>🎯 งบ</b><button type="button" id="budSet">ตั้งงบ</button></div>'; return; }
-  const now=new Date(), todayS=ymd(now), cur=key===todayS.slice(0,7), btn='<button type="button" id="budSet" aria-label="แก้งบ">✎</button>';
+  if(!BUD&&!DAYB){ el.className='bud'; el.innerHTML='<div class="bt"><b>◆ งบ</b><button type="button" id="budSet">ตั้งงบ</button></div>'; return; }
+  const now=new Date(), todayS=ymd(now), cur=key===todayS.slice(0,7), btn='<button type="button" id="budSet" aria-label="แก้งบ"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4Z"/></svg></button>';
   const ft=(k,t)=>'<button type="button" class="ft" data-f="'+k+'" aria-expanded="'+(!FOLD[k])+'"><span class="chev">▾</span><b>'+t+'</b></button>';
   let first=true, html='', cls='bud';
   if(BUD){
@@ -1444,16 +1461,33 @@ function renderBud(total,key){
     else if(cur){ const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(), rem=dim-now.getDate()+1; note='เหลือ '+baht(left)+' · วันละ '+baht(Math.floor(left/rem))+' · อีก '+rem+' วัน'; }
     else note='เหลือ '+baht(left);
     cls+=!fold&&pct>=100?' over':!fold&&pct>=80?' warn':'';
-    html+='<div class="bt">'+ft('bm','🎯 รายเดือน')+(fold?'':'<span>'+baht(total)+' / '+baht(BUD)+' · '+Math.round(pct)+'%</span>')+(first?btn:'')+'</div>'
-      +(fold?'':'<div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.min(Math.round(pct),100)+'"><div class="fill" style="width:'+Math.min(pct,100)+'%"></div></div><div class="bm">'+note+'</div>');
+    html+='<div class="bt">'+ft('bm','☾ รายเดือน')+(fold?'':'<span>'+baht(total)+' / '+baht(BUD)+' · '+Math.round(pct)+'%</span>')+(first?btn:'')+'</div>'
+      +(fold?'':'<div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.min(Math.round(pct),100)+'"><div class="fill" style="width:0" data-w="'+Math.min(pct,100)+'"></div></div><div class="bm">'+note+'</div>');
     first=false;
   }
   if(DAYB){
     const fold=!!FOLD.bd, spent=allRows().filter(r=>r.type==='out'&&!isExRow(r)&&r.date===todayS).reduce((t,r)=>t+Number(r.amount),0), pct=spent/DAYB*100, left=DAYB-spent;
     html+='<div class="dy'+(!fold&&pct>=100?' over':!fold&&pct>=80?' warn':'')+'"><div class="bt">'+ft('bd','☀ วันนี้')+(fold?'':'<span>'+baht(spent)+' / '+baht(DAYB)+(left<0?' · เกิน '+baht(-left):'')+'</span>')+(first?btn:'')+'</div>'
-      +(fold?'':'<div class="track sm" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.min(Math.round(pct),100)+'"><div class="fill" style="width:'+Math.min(pct,100)+'%"></div></div>')+'</div>';
+      +(fold?'':'<div class="track sm" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.min(Math.round(pct),100)+'"><div class="fill" style="width:0" data-w="'+Math.min(pct,100)+'"></div></div>')+'</div>';
   }
   el.className=cls; el.innerHTML=html;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.querySelectorAll('.fill[data-w]').forEach(f=>{ f.style.width=f.dataset.w+'%'; })));
+}
+/* ---------- แจ้งเตือนเมื่อใช้เกินงบ ---------- */
+const spentToday=()=>allRows().filter(r=>r.type==='out'&&!isExRow(r)&&r.date===ymd(new Date())).reduce((t,r)=>t+Number(r.amount),0);
+const spentMonth=()=>{ const k=ymd(new Date()).slice(0,7); return allRows().filter(r=>r.type==='out'&&!isExRow(r)&&r.date.startsWith(k)).reduce((t,r)=>t+Number(r.amount),0); };
+let toastT;
+function toast(html){ const t=$('#toast'); clearTimeout(toastT); t.hidden=true; void t.offsetWidth; t.innerHTML=html; t.hidden=false; toastT=setTimeout(()=>{ t.hidden=true; },7000); }
+$('#toast').onclick=()=>{ $('#toast').hidden=true; };
+/* f = รายการที่เพิ่งบันทึก (เช็กเฉพาะส่วนที่รายการนั้นกระทบ) ถ้าไม่ส่ง = เช็กทั้งหมด */
+function budAlert(f){
+  const today=ymd(new Date()), msgs=[];
+  if(DAYB&&(!f||f.date===today)){ const o=spentToday()-DAYB; if(o>0) msgs.push('☀ วันนี้เกินงบ <b class="n">'+baht(o)+'</b>'); }
+  if(BUD&&(!f||f.date.startsWith(today.slice(0,7)))){ const o=spentMonth()-BUD; if(o>0) msgs.push('☾ เดือนนี้เกินงบ <b class="n">'+baht(o)+'</b>'); }
+  if(!msgs.length) return;
+  toast('<b>🚨 ใช้เกินงบแล้ว</b>'+msgs.map(m=>'<div>'+m+'</div>').join(''));
+  const bd=$('#bud'); bd.classList.remove('shake'); void bd.offsetWidth; bd.classList.add('shake');
+  navigator.vibrate&&navigator.vibrate([30,40,30]);
 }
 const closeBud=()=>$('#budModal').classList.add('hide');
 $('#bud').onclick=e=>{ const f=e.target.closest('button.ft'); if(f){ toggleFold(f.dataset.f); return; } if(!e.target.closest('#budSet')) return; $('#budInput').value=BUD?String(BUD):''; $('#budDay').value=DAYB?String(DAYB):''; $('#budErr').textContent=''; $('#budModal').classList.remove('hide'); setTimeout(()=>$('#budInput').focus(),60); };
@@ -1775,7 +1809,7 @@ form.addEventListener('submit',e=>{
   const q=readQueue(); q.push({...f,id:crypto.randomUUID(),user}); save(QUEUE_KEY,q);
   remember(f.category,f.description); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
   const keep=f.date,kt=f.type; form.reset(); form.elements.date.value=keep; form.elements.type.value=kt; setAccMode(kt); drawCats(kt); updCalc(); hideCalc();
-  showStatus('กำลังส่ง…'); renderChips(); render(); document.activeElement&&document.activeElement.blur(); burst(); navigator.vibrate&&navigator.vibrate(18); flush();
+  showStatus('กำลังส่ง…'); renderChips(); render(); if(f.type==='out'&&!isEx(f.account)) budAlert(f); document.activeElement&&document.activeElement.blur(); burst(); navigator.vibrate&&navigator.vibrate(18); flush();
 });
 
 
@@ -1993,6 +2027,7 @@ async function enterApp(sessionUser){
     if(!homeButton) throw new Error('ไม่พบปุ่มหน้าหลักในหน้าเว็บ');
     homeButton.click();
     await refresh();
+    { const k='bud-alert-'+ymd(new Date()); try{ if(!sessionStorage.getItem(k)){ sessionStorage.setItem(k,'1'); budAlert(); } }catch(_){ budAlert(); } }
     if(offline) showStatus('ออฟไลน์ · แสดงข้อมูลล่าสุดในเครื่อง ลองรีเฟรชหน้าอีกครั้งเมื่อมีเน็ต',true);
     enteredUserId=sessionUser.id;
     flush();
