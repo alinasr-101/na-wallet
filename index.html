@@ -301,7 +301,7 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .eye .gi{width:18px;height:18px;color:#fff}
 .hide-amt #balTotal,.hide-amt #balIn,.hide-amt #balOut,.hide-amt .ac span{filter:blur(7px);user-select:none}
 /* ปุ่มตา: เบลอกราฟและข้อมูลสำคัญทั้งหมดด้วย */
-.hide-amt #total,.hide-amt #legend,.hide-amt #donut,.hide-amt #bars,.hide-amt #tip,.hide-amt #stats,.hide-amt #sum,.hide-amt #lsSum,.hide-amt .rc .a,.hide-amt .dayhd span,.hide-amt #dayTotal,.hide-amt #dayList .a{filter:blur(8px);user-select:none;-webkit-user-select:none}
+.hide-amt #total,.hide-amt #legend,.hide-amt #donut,.hide-amt #bars,.hide-amt #tip,.hide-amt #stats,.hide-amt #sum,.hide-amt #lsSum,.hide-amt #wkTot,.hide-amt #goalCard .gv,.hide-amt #lsBatch .bi,.hide-amt .rc .a,.hide-amt .dayhd span,.hide-amt #dayTotal,.hide-amt #dayList .a{filter:blur(8px);user-select:none;-webkit-user-select:none}
 .hide-amt #bud .bt span,.hide-amt #bud .bm,.hide-amt #calcRes,.hide-amt .qkl b{filter:blur(8px);user-select:none;-webkit-user-select:none}
 .hide-amt #bars{pointer-events:none}
 .streak{font:700 .7rem var(--cute);letter-spacing:0;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--ink);white-space:nowrap}
@@ -825,6 +825,21 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
   }
 }
 
+/* แก้ไขหลายรายการ · เป้าหมายเงินเก็บ · กราฟ 7 วันเลื่อนสัปดาห์ */
+.lshd,.wkhd,#goalCard .gh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 6px}.lshd h2,.wkhd h2,#goalCard .gh h2{margin:0}
+.selbtn,#goalCard .gadd{border:0;border-radius:999px;padding:5px 12px;background:var(--soft);color:var(--ink);font:700 .76rem var(--cute)}.selbtn.on{background:var(--green);color:#fff}
+#lsBatch{position:sticky;top:0;z-index:6;display:grid;gap:8px;margin:0 0 8px;padding:10px 12px;border-radius:14px;background:var(--card,#fff);border:2px solid var(--green);box-shadow:0 6px 18px #0002}#lsBatch[hidden]{display:none}
+#lsBatch .bi{font:700 .82rem var(--cute);color:var(--ink)}#lsBatch .br{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+#lsBatch select{flex:1 1 130px;min-width:0;border:1px solid var(--line);border-radius:10px;padding:7px 8px;background:var(--field);color:var(--ink);font:600 .8rem var(--cute)}
+#lsBatch button{border:0;border-radius:10px;padding:8px 12px;background:var(--soft);color:var(--ink);font:700 .8rem var(--cute)}#lsBatch button.dg{background:#e5484d;color:#fff}#lsBatch button:disabled{opacity:.45}
+#bMsg{font:600 .76rem var(--cute)}#bMsg:empty{display:none}
+.rc.selrow{cursor:pointer}.rc.selrow.picked{background:var(--soft);border-radius:12px}.rc .pk{flex:none;width:20px;height:20px;accent-color:var(--green);pointer-events:none}body.selmode #fab{display:none}
+#goalCard .g{padding:8px 0;border-top:1px dashed var(--line);cursor:pointer;color:var(--ink)}#goalCard .gh+.g{border-top:0}
+#goalCard .gt{display:flex;justify-content:space-between;gap:8px;font:700 .86rem var(--cute)}#goalCard .gt span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#goalCard .gv{font:600 .76rem var(--cute);color:var(--mute);white-space:nowrap}
+#goalCard .gb{height:8px;margin-top:6px;border-radius:99px;background:var(--line);overflow:hidden}#goalCard .gb i{display:block;height:100%;border-radius:99px;background:var(--green)}#goalCard .g.done .gb i{background:var(--peach)}
+#goalCard .ge{font-size:.78rem;color:var(--mute);margin:3px 0 0}
+.wknav{display:flex;gap:6px}.wknav button{width:30px;height:28px;border:0;border-radius:9px;background:var(--soft);color:var(--ink);font:700 1rem var(--cute)}.wknav button:disabled{opacity:.35}
 </style>
 <style>
 #edToWrap[hidden],#edSwap[hidden],#edCatWrap[hidden]{display:none!important}
@@ -1098,11 +1113,12 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
       <div class="bal"><button type="button" class="eye" id="eye" aria-label="ซ่อนหรือแสดงยอดเงิน"><svg class="gi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><small>ยอดเงินรวม</small><b id="balTotal">฿0</b><div class="ie"><span>▲ รายรับ <b id="balIn">฿0</b></span><span>▼ รายจ่าย <b id="balOut">฿0</b></span></div></div>
       <div class="sec" style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;gap:8px;align-items:center">บัญชีของฉัน<button type="button" id="ordBtn" class="ordbtn" aria-label="จัดลำดับบัญชี">⇅ จัดลำดับ</button><button type="button" id="rstBtn" class="rstbtn" aria-label="รีเซ็ตยอด">↺ รีเซ็ตยอด</button></span><span class="streak" id="streak" hidden></span></div><div class="accs" id="accs"></div>
       <div class="bud" id="bud"></div>
+      <div class="card" id="goalCard"></div>
       <div class="card" id="recCard"><h2 class="fold" id="recFold" role="button" tabindex="0" aria-expanded="true"><span>รายการล่าสุด</span><span class="chev">▾</span></h2><div id="recentHome"></div></div>
       <div class="card grow dn"><div class="dwrap"><svg viewBox="0 0 42 42" id="donut"></svg><div class="center"><small>รวมเดือนนี้</small><b id="total"></b></div></div><div id="legend"></div></div>
       <div class="stats" id="stats"></div>
       <div class="card sum" id="sum"></div>
-      <div class="card grow"><h2>7 วันล่าสุด</h2><div class="plot" id="bars"></div><p class="tip" id="tip"></p></div>
+      <div class="card grow"><div class="wkhd"><h2 id="wkTtl">7 วันล่าสุด</h2><div class="wknav"><button type="button" id="wkPrev" aria-label="สัปดาห์ก่อนหน้า">‹</button><button type="button" id="wkNext" aria-label="สัปดาห์ถัดไป">›</button></div></div><div class="plot" id="bars"></div><p class="tip" id="tip"></p><p class="tip" id="wkTot"></p></div>
     </section>
     <section id="p-add" class="pg hide">
       <form id="expense" class="card">
@@ -1131,12 +1147,13 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
         <p id="status" role="status"></p>
       </form>
     </section>
-    <section id="p-list" class="pg hide"><div class="card"><h2>รายการล่าสุด</h2>
+    <section id="p-list" class="pg hide"><div class="card"><div class="lshd"><h2>รายการล่าสุด</h2><button type="button" id="selBtn" class="selbtn">☑ เลือกหลายรายการ</button></div>
       <div class="lsf"><div class="lsm" id="lsMonths" role="group" aria-label="เลือกเดือน"></div>
       <div class="lsq"><input type="search" id="lsQ" placeholder="🔍 ค้นหา เช่น กาแฟ, ค่าเน็ต" autocomplete="off" enterkeyhint="search" aria-label="ค้นหารายการ"></div>
       <div class="lsx"><select id="lsAcc" aria-label="กรองตามบัญชี"></select><select id="lsCat" aria-label="กรองตามหมวดหมู่"></select></div>
       <div class="lsd"><label for="lsDate">📅 เลือกวัน</label><input type="date" id="lsDate"><button type="button" id="lsClear" hidden>✕ ล้าง</button></div></div>
       <div class="lss" id="lsSum" hidden></div>
+      <div id="lsBatch" hidden><div class="bi" id="bInfo">เลือก 0 รายการ</div><div class="br"><button type="button" id="bAll">เลือกทั้งหมดที่เห็น</button><button type="button" id="bNone">ล้างที่เลือก</button></div><div class="br"><select id="bCat" aria-label="ย้ายไปหมวดหมู่"></select><button type="button" id="bMove">ย้ายหมวด</button></div><div class="br"><button type="button" id="bDel" class="dg">🗑️ ลบที่เลือก</button><button type="button" id="bDone">เสร็จ</button></div><div id="bMsg" aria-live="polite"></div></div>
       <div id="recent"></div></div></section>
   <button id="fab" type="button">＋ บันทึกรายการใหม่</button>
   </main>
@@ -1388,6 +1405,7 @@ async function flush(){
 }
 
 /* ---------- Overview ---------- */
+let wkOff=0, GOALS=[], selMode=false, batchBusy=false; const SEL=new Set();
 function render(){
   const every=allRows(), vis=every.filter(r=>!isExRow(r)), all=vis.filter(r=>r.type!=='in'&&r.type!=='transfer'&&r.type!=='deposit'), now=new Date();
   const m=new Date(now.getFullYear(),now.getMonth()+monthOff,1), key=ymd(m).slice(0,7);
@@ -1402,13 +1420,20 @@ function render(){
     segs+=`<circle r="15.9155" cx="21" cy="21" fill="none" stroke="${icoOf(c)[1]}" stroke-width="6" stroke-dasharray="${len} ${100-len}" stroke-dashoffset="${off}"/>`; off-=p; });
   $('#donut').innerHTML=segs;
   $('#legend').innerHTML=ents.length?ents.map(([c,a])=>`<div class="lg"><span class="oi" style="background:${icoOf(c)[1]}55">${ic('icons/cat/'+icoOf(c)[2]+'.png',icoOf(c)[0])}</span><span class="n">${esc(c)}</span><b>฿${Math.round(a).toLocaleString('th-TH')}</b><small>${Math.round(a/total*100)}%</small></div>`).join(''):empty('ยังไม่มีรายการในเดือนนี้');
-  const days=[...Array(7)].map((_,i)=>{const d=new Date(now);d.setDate(now.getDate()-6+i);return ymd(d);});
+  const wend=new Date(now); wend.setDate(now.getDate()-wkOff*7); const days=[...Array(7)].map((_,i)=>{const d=new Date(wend);d.setDate(wend.getDate()-6+i);return ymd(d);});
   const sums=days.map(d=>all.filter(r=>r.date===d).reduce((s,r)=>s+r.amount,0)), max=Math.max(...sums);
   $('#bars').innerHTML=days.map((d,i)=>{ const s=sums[i], top=max>0&&s===max, dow=new Date(d+'T00:00:00').getDay();
     const h=max?Math.max(s/max*100,s?6:2):2;
-    return `<div class="col${i===6?' today':''}" data-d="${d}" role="button" tabindex="0" aria-label="ดูรายการวันที่ ${+d.slice(8)}"><div class="bw"><div class="bcol" style="--i:${i};height:${h}%"><div class="val">${s?'฿'+short(s):''}</div><div class="bar" style="--c:${DAY_COLORS[dow]};--i:${i}"></div></div></div><div class="d">${DAYS[dow]}</div></div>`; }).join('');
+    return `<div class="col${d===ymd(now)?' today':''}" data-d="${d}" role="button" tabindex="0" aria-label="ดูรายการวันที่ ${+d.slice(8)}"><div class="bw"><div class="bcol" style="--i:${i};height:${h}%"><div class="val">${s?'฿'+short(s):''}</div><div class="bar" style="--c:${DAY_COLORS[dow]};--i:${i}"></div></div></div><div class="d">${DAYS[dow]}</div></div>`; }).join('');
   const ti=sums.indexOf(max);
-  $('#tip').textContent=max>0?`🏆 วัน${DAYS_FULL[new Date(days[ti]+'T00:00:00').getDay()]}ที่ ${+days[ti].slice(8)} ใช้เยอะสุด ${baht(max)}`:'7 วันนี้ยังไม่มีรายจ่าย';
+  $('#tip').textContent=max>0?`🏆 วัน${DAYS_FULL[new Date(days[ti]+'T00:00:00').getDay()]}ที่ ${+days[ti].slice(8)} ใช้เยอะสุด ${baht(max)}`:(wkOff?'สัปดาห์นี้ยังไม่มีรายจ่าย':'7 วันนี้ยังไม่มีรายจ่าย');
+  { const tot=sums.reduce((a,b)=>a+b,0), pe=new Date(wend); pe.setDate(wend.getDate()-7);
+    const pd=[...Array(7)].map((_,i)=>{const d=new Date(pe);d.setDate(pe.getDate()-6+i);return ymd(d);});
+    const pt=all.filter(r=>pd.includes(r.date)).reduce((s,r)=>s+r.amount,0), dm=x=>(+x.slice(8))+'/'+(+x.slice(5,7));
+    $('#wkTtl').textContent=wkOff?dm(days[0])+' – '+dm(days[6]):'7 วันล่าสุด';
+    $('#wkNext').disabled=wkOff<=0; $('#wkPrev').disabled=wkOff>=52;
+    $('#wkTot').textContent='รวม '+baht(tot)+(pt>0?' · '+(tot>=pt?'มากกว่า':'น้อยกว่า')+'สัปดาห์ก่อนหน้า '+Math.round(Math.abs(tot-pt)/pt*100)+'%':' · สัปดาห์ก่อนหน้าไม่มีรายจ่าย'); }
+  renderGoals(every);
   renderRecent(every);
 }
 function renderSum(every,key,spent){
@@ -1444,7 +1469,7 @@ const rcHtml=(r,act=true)=>{ const tr=r.type==='transfer', inn=r.type==='in', de
 /* ---------- งบรายเดือน ---------- */
 let BUD=0, DAYB=0, FOLD={}, lastBud=null;
 /* โหลดค่าตั้งของผู้ใช้หลังล็อกอิน (key ผูกกับ user จึงโหลดตอนเริ่มสคริปต์ไม่ได้) */
-function loadUi(){ BUD=Number(load(uk('budget'),0))||0; DAYB=Number(load(uk('budget-day'),0))||0; FOLD=load(uk('ui-fold'),{})||{}; applyFold(); }
+function loadUi(){ BUD=Number(load(uk('budget'),0))||0; DAYB=Number(load(uk('budget-day'),0))||0; FOLD=load(uk('ui-fold'),{})||{}; GOALS=load(uk('goals'),[]); applyFold(); }
 function applyFold(){ $('#recCard').classList.toggle('folded',!!FOLD.rec); $('#recFold').setAttribute('aria-expanded',String(!FOLD.rec)); }
 function toggleFold(k){ FOLD[k]=!FOLD[k]; save(uk('ui-fold'),FOLD); if(k==='rec') applyFold(); else if(lastBud) renderBud(lastBud.total,lastBud.key); }
 $('#recFold').onclick=()=>toggleFold('rec');
@@ -1571,7 +1596,7 @@ function renderRecent(all){
     const out=r.filter(x=>x.type==='out'&&!exc(x)).reduce((t,x)=>t+Number(x.amount),0), inc=r.filter(x=>x.type==='in'&&!exc(x)).reduce((t,x)=>t+Number(x.amount),0);
     const dt=new Date(d+'T00:00:00'), lb=(d===todayS?'วันนี้ · ':d===ydS?'เมื่อวาน · ':'')+dt.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
     const sm=[out?'ใช้ไป '+baht(out):'',inc?'รับ +'+baht(inc):''].filter(Boolean).join(' · ')||(r.length+' รายการ');
-    return `<div class="dayhd"><b>${lb}</b><span>${sm}</span></div>`+r.map(x=>rcHtml(x)).join('');
+    return `<div class="dayhd"><b>${lb}</b><span>${sm}</span></div>`+r.map(x=>selMode?selRc(x):rcHtml(x)).join('');
   }).join(''):empty(filtered?'ไม่มีรายการในช่วงที่เลือก':'ยังไม่มีรายการ');
   $('#recentHome').innerHTML=recAll.length?recAll.slice(0,5).map(r=>rcHtml(r,false)).join(''):empty('ยังไม่มีรายการ');
 }
@@ -1844,7 +1869,8 @@ $('#edSwap').onclick=()=>{ const a=ed.elements.account.value; ed.elements.accoun
 function openDel(id){ const r=findRow(id); if(!r) return; curId=id; busy=false;
   $('#dmsg').textContent=`${r.description||r.category} · ${baht(r.amount)} (${r.date.slice(8)}/${r.date.slice(5,7)})`; say(dst,'');
   ed.classList.add('hide'); delBox.classList.remove('hide'); modal.classList.remove('hide'); }
-$('#recent').onclick=e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
+$('#recent').onclick=e=>{ if(selMode){ const rc=e.target.closest('.rc'); if(!rc) return; const id=rc.dataset.id, on=!SEL.has(id); on?SEL.add(id):SEL.delete(id); rc.classList.toggle('picked',on); const pk=rc.querySelector('.pk'); if(pk) pk.checked=on; updSel(); return; }
+  const b=e.target.closest('button[data-act]'); if(!b) return;
   const id=b.closest('.rc').dataset.id; b.dataset.act==='edit'?openEdit(id):openDel(id); };
 $('#delBtn').onclick=()=>openDel(curId);
 modal.addEventListener('click',e=>{ if(e.target===modal||e.target.closest('[data-close]')) closeModal(); });
@@ -1887,6 +1913,66 @@ $('#delGo').onclick=async()=>{
   }catch(err){ busy=false; say(dst,err.srv?err.message:'ไม่มีสัญญาณ ลองใหม่อีกครั้ง',true); }
   finally{ $('#delGo').disabled=false; }
 };
+
+/* ---------- แก้ไขหลายรายการ ---------- */
+function selRc(x){ const on=SEL.has(x.id); return rcHtml(x,false).replace('<div class="rc','<div class="rc selrow'+(on?' picked':'')).replace('<div class="ico"','<input type="checkbox" class="pk" tabindex="-1" aria-hidden="true"'+(on?' checked':'')+'><div class="ico"'); }
+const bsay=(t,err)=>{ const m=$('#bMsg'); m.textContent=t; m.style.color=err?'#e5484d':'var(--mute)'; };
+function updSel(){ const rs=allRows().filter(r=>SEL.has(r.id)), net=rs.reduce((t,r)=>t+(r.type==='out'?-1:r.type==='in'?1:0)*Number(r.amount),0);
+  $('#bInfo').textContent='เลือก '+rs.length+' รายการ'+(rs.length?' · สุทธิ '+(net<0?'-':'+')+baht(Math.abs(net)):'');
+  $('#bMove').disabled=$('#bDel').disabled=batchBusy||!rs.length; $('#bAll').disabled=$('#bNone').disabled=$('#bDone').disabled=batchBusy; }
+function setSelMode(on){ selMode=on; if(!on) SEL.clear(); document.body.classList.toggle('selmode',on);
+  $('#selBtn').classList.toggle('on',on); $('#selBtn').textContent=on?'✕ ปิดโหมดเลือก':'☑ เลือกหลายรายการ'; $('#lsBatch').hidden=!on; bsay('');
+  if(on) $('#bCat').innerHTML='<option value="">ย้ายไปหมวด…</option><optgroup label="รายจ่าย">'+catOpts('out')+'</optgroup><optgroup label="รายรับ">'+catOpts('in')+'</optgroup>';
+  renderRecent(); updSel(); }
+$('#selBtn').onclick=()=>setSelMode(!selMode); $('#bDone').onclick=()=>setSelMode(false);
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{ if(selMode) setSelMode(false); }));
+const pickAll=on=>{ $('#recent').querySelectorAll('.rc').forEach(rc=>{ on?SEL.add(rc.dataset.id):SEL.delete(rc.dataset.id); rc.classList.toggle('picked',on); const pk=rc.querySelector('.pk'); if(pk) pk.checked=on; }); updSel(); };
+$('#bAll').onclick=()=>pickAll(true); $('#bNone').onclick=()=>{ SEL.clear(); pickAll(false); };
+$('#bDel').onclick=async()=>{ if(batchBusy) return; const rs=allRows().filter(r=>SEL.has(r.id)); if(!rs.length) return;
+  if(!confirm('ลบ '+rs.length+' รายการที่เลือก? ย้อนกลับไม่ได้')) return;
+  batchBusy=true; updSel(); const u=user; let ok=0, fail=0;
+  for(const r of rs){ if(u!==user) break; bsay('กำลังลบ '+(ok+fail+1)+'/'+rs.length+'…');
+    try{ if(rows.some(x=>x.id===r.id)){ const res=await api({action:'delete',id:r.id,user:u}); if(!res.ok) throw 0; rows=rows.filter(x=>x.id!==r.id); }
+      const q=readQueue(), k=q.findIndex(x=>x.id===r.id); if(k>=0){ q.splice(k,1); save(QUEUE_KEY,q); }
+      SEL.delete(r.id); ok++; }catch{ fail++; } }
+  save(uk('expense-rows'),rows); batchBusy=false; render(); updSel(); bsay(fail?'ลบแล้ว '+ok+' · ไม่สำเร็จ '+fail+' (กดลองใหม่ได้)':'ลบแล้ว '+ok+' รายการ',!!fail); refresh(); };
+$('#bMove').onclick=async()=>{ if(batchBusy) return; const sel=$('#bCat'), cat=sel.value; if(!cat){ bsay('เลือกหมวดปลายทางก่อน',true); return; }
+  const tp=sel.selectedOptions[0].parentElement.label==='รายรับ'?'in':'out', rs=allRows().filter(r=>SEL.has(r.id)&&r.type===tp&&r.category!==cat), skip=SEL.size-rs.length;
+  if(!rs.length){ bsay('ไม่มีรายการ'+(tp==='in'?'รายรับ':'รายจ่าย')+'ที่ต้องย้าย (ย้ายได้เฉพาะประเภทเดียวกับหมวดที่เลือก)',true); return; }
+  batchBusy=true; updSel(); const u=user; let ok=0, fail=0;
+  for(const r of rs){ if(u!==user) break; bsay('กำลังย้าย '+(ok+fail+1)+'/'+rs.length+'…');
+    try{ if(rows.some(x=>x.id===r.id)){ const res=await api({action:'update',id:r.id,expense:{id:r.id,date:r.date,category:cat,description:r.description||'',amount:String(r.amount),type:r.type,account:r.account||'',to_account:''},user:u}); if(!res.ok) throw 0; rows=rows.map(x=>x.id===r.id?{...x,category:cat}:x); }
+      const q=readQueue(), k=q.findIndex(x=>x.id===r.id); if(k>=0){ q[k]={...q[k],category:cat}; save(QUEUE_KEY,q); }
+      SEL.delete(r.id); ok++; }catch{ fail++; } }
+  save(uk('expense-rows'),rows); batchBusy=false; render(); updSel();
+  bsay('ย้ายแล้ว '+ok+' รายการ'+(fail?' · ไม่สำเร็จ '+fail:'')+(skip>0?' · ข้าม '+skip+' (คนละประเภท/อยู่หมวดนี้แล้ว)':''),!!fail); refresh(); };
+
+/* ---------- เป้าหมายเงินเก็บ (เก็บในเครื่องนี้) ---------- */
+const saveGoals=()=>save(uk('goals'),GOALS);
+function renderGoals(every){ const el=$('#goalCard'); if(!el) return;
+  const items=GOALS.map((g,i)=>{ const a=g.a&&ACCS.find(x=>x.n===g.a), s=a?Math.max(0,accBal(a,every)):Math.max(0,Number(g.s)||0), t=Number(g.t)||0, p=t>0?Math.min(s/t*100,100):0, done=t>0&&s>=t;
+    return `<div class="g${done?' done':''}" role="button" tabindex="0" data-i="${i}"><div class="gt"><span>${esc(g.n)}${done?' ✅':''}</span><b class="gv">${baht(s)} / ${baht(t)} · ${Math.floor(p)}%</b></div><div class="gb" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.floor(p)}"><i style="width:${p}%"></i></div>${g.a?`<div class="ge">ดึงยอดจากบัญชี ${esc(g.a)}</div>`:''}</div>`; }).join('');
+  el.innerHTML='<div class="gh"><h2>🎯 เป้าหมายเงินเก็บ</h2><button type="button" class="gadd" id="goalAdd">＋ เพิ่ม</button></div>'+(items||'<div class="ge">ตั้งเป้าหมาย เช่น เก็บเงินซื้อของ หรือเงินสำรองฉุกเฉิน</div>'); }
+function addGoal(){
+  const n=(prompt('ชื่อเป้าหมาย (เช่น ซื้อโน้ตบุ๊ก, เงินสำรองฉุกเฉิน)','')||'').trim().slice(0,30); if(!n) return;
+  const t=Number(String(prompt('ยอดเป้าหมาย (บาท)','')||'').replace(/,/g,'')); if(!(t>0)||t>999999999){ alert('ยอดเป้าหมายต้องมากกว่า 0'); return; }
+  const ar=prompt('ผูกกับบัญชีเงินเก็บเพื่อดึงยอดอัตโนมัติ — พิมพ์ชื่อบัญชี: '+ACCS.map(x=>x.n).join(', ')+'\nเว้นว่าง = ใส่ยอดที่เก็บได้เองทีหลัง',''); if(ar===null) return;
+  const a=ar.trim(); if(a&&!ACCS.some(x=>x.n===a)){ alert('ไม่พบบัญชีชื่อนี้'); return; }
+  GOALS.push({id:crypto.randomUUID(),n,t,a,s:0}); saveGoals(); render(); }
+function editGoal(i){ const g=GOALS[i]; if(!g) return;
+  const v=prompt(g.n+'\n'+(g.a?'ยอดดึงจากบัญชี '+g.a+' อัตโนมัติ':'พิมพ์ตัวเลขเพื่อเพิ่มเงินเก็บ (ใส่ - นำหน้าเพื่อถอน)')+'\nพิมพ์ เป้า 20000 เพื่อเปลี่ยนยอดเป้าหมาย · พิมพ์ ลบ เพื่อลบเป้าหมายนี้',''); if(v===null) return;
+  const s=v.trim().replace(/,/g,'');
+  if(s==='ลบ'){ if(!confirm('ลบเป้าหมาย "'+g.n+'" ?')) return; GOALS.splice(i,1); }
+  else if(/^เป้า\s*\d/.test(s)){ const t=Number(s.replace(/^เป้า\s*/,'')); if(!(t>0)){ alert('ยอดไม่ถูกต้อง'); return; } g.t=t; }
+  else if(!g.a&&/^[+-]?\d+(\.\d{1,2})?$/.test(s)) g.s=r2(Math.max(0,(Number(g.s)||0)+Number(s)));
+  else if(s){ alert('พิมพ์ไม่ถูกต้อง'); return; }
+  saveGoals(); render(); }
+$('#goalCard').addEventListener('click',e=>{ if(e.target.closest('#goalAdd')) return addGoal(); const g=e.target.closest('.g'); if(g) editGoal(+g.dataset.i); });
+$('#goalCard').addEventListener('keydown',e=>{ if(e.key!=='Enter'&&e.key!==' ') return; const g=e.target.closest('.g'); if(g){ e.preventDefault(); editGoal(+g.dataset.i); } });
+
+/* ---------- กราฟ 7 วัน: เลื่อนสัปดาห์ ---------- */
+$('#wkPrev').onclick=()=>{ wkOff=Math.min(wkOff+1,52); render(); };
+$('#wkNext').onclick=()=>{ wkOff=Math.max(wkOff-1,0); render(); };
 
 /* ---------- popup รายการของวัน ---------- */
 const dayModal=$('#dayModal');
