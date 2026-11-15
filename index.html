@@ -923,11 +923,11 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 :root[data-theme=rwb] .st .down{color:#17121a}
 :root[data-theme=rwb] .st:nth-child(6) .up{color:#ff7a84}
 :root[data-theme=rwb] .st:nth-child(6) .down{color:#fff}
-:root[data-theme=rwb] .ac{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M0 12L6 1L12 12Z' fill='%23ffc83d'/%3E%3Cpath d='M0 12L6 1L6 12Z' fill='%23d99a1e'/%3E%3Cpath d='M12 12L18 6L24 12Z' fill='%23ffe08a' fill-opacity='.85'/%3E%3C/svg%3E") repeat-x left bottom/24px 12px,linear-gradient(135deg,var(--c1),var(--c2))!important;border:2px solid #17121a;border-radius:14px;box-shadow:3px 3px 0 #17121a}
+:root[data-theme=rwb] .ac{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0C11 6 14 9 20 10C14 11 11 14 10 20C9 14 6 11 0 10C6 9 9 6 10 0Z' fill='white' fill-opacity='.8'/%3E%3C/svg%3E") no-repeat right 11px top 9px/11px 11px,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0C11 6 14 9 20 10C14 11 11 14 10 20C9 14 6 11 0 10C6 9 9 6 10 0Z' fill='white' fill-opacity='.5'/%3E%3C/svg%3E") no-repeat right 28px top 21px/6px 6px,linear-gradient(135deg,var(--c1),var(--c2))!important;border:2px solid #17121a;border-radius:14px;box-shadow:3px 3px 0 #17121a}
 :root[data-theme=rwb] .ac.add{background:#fff!important;color:#e0141f;border:2px dashed #e0141f;box-shadow:none}
 :root[data-theme=rwb] #fab{background:#e0141f!important;color:#fff;border:3px solid #fff;box-shadow:0 0 0 2px #17121a,0 8px 20px #e0141f66;letter-spacing:.03em}
 :root[data-theme=rwb] nav{position:relative;background:#17121a;border-top:3px solid #e0141f}
-:root[data-theme=rwb] nav::before{content:'';position:absolute;left:0;right:0;bottom:100%;height:12px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M0 12L6 0L12 12Z' fill='%2317121a'/%3E%3Cpath d='M6 3.5L7.7 6L6 8.5L4.3 6Z' fill='%23ffc83d'/%3E%3Cpath d='M12 12L18 5L24 12Z' fill='%23e0141f'/%3E%3C/svg%3E") repeat-x left bottom/24px 12px;pointer-events:none}
+:root[data-theme=rwb] nav::before{content:'';position:absolute;left:0;right:0;bottom:100%;height:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 8'%3E%3Cpath d='M7 .6L11.2 4L7 7.4L2.8 4Z' fill='%2317121a'/%3E%3Cpath d='M21 1.8L24 4L21 6.2L18 4Z' fill='%23e0141f'/%3E%3C/svg%3E") repeat-x left bottom/28px 8px;pointer-events:none}
 :root[data-theme=rwb] nav button{color:#bbb}
 :root[data-theme=rwb] nav button.on{background:#e0141f!important;color:#fff!important}
 :root[data-theme=rwb] .bar{background:#17121a}
@@ -998,18 +998,23 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 .bud .track{height:16px;border-radius:9px;border:2px solid var(--ink);background:#fff;overflow:hidden}
 .bud .fill{height:100%;background:var(--bc);transition:width .6s cubic-bezier(.2,.8,.2,1);background-image:repeating-linear-gradient(135deg,#ffffff33 0 6px,transparent 6px 12px)}
 .bud .bm{font:600 .76rem var(--cute);color:var(--ink)}
+.bud .dy{display:grid;gap:6px;--bc:#2ea36b}
+.bud .dy.warn{--bc:#ffb400}.bud .dy.over{--bc:#e0141f}
+.bud .dy.over .bt span{color:#e0141f}
+.bud .track.sm{height:12px}
+.bud>.dy:not(:first-child){padding-top:8px;border-top:2px dashed var(--ink)}
 .bud.over .bm{color:#e0141f;font-weight:700}
 /* ใช้บ่อย + เครื่องคิดเลข */
-.qk{display:grid;gap:4px}
+.qk{display:grid;margin-top:-4px}
 .qk[hidden]{display:none}
-.qkt{font:700 .74rem var(--cute);letter-spacing:.06em;color:var(--mute)}
 .qkl{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;margin:0 -2px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .qkl::-webkit-scrollbar{display:none}
 .qkl button{flex:none;scroll-snap-align:start;display:inline-flex;align-items:center;gap:6px;min-height:42px;padding:0 12px;border-radius:10px;border:2px solid var(--ink);background:var(--soft);color:var(--ink);font:700 .8rem var(--cute);cursor:pointer;white-space:nowrap;max-width:75vw;-webkit-tap-highlight-color:transparent}
 .qkl button span.t{overflow:hidden;text-overflow:ellipsis}
 .qkl button b{color:var(--green);font:900 .8rem 'Orbitron','Chakra Petch',sans-serif}
 .qkl button:active{transform:translate(1px,1px)}
-.calc{display:flex;align-items:center;gap:6px;margin-top:-2px}
+.calc{display:flex;align-items:center;gap:6px;margin-top:-4px}
+.calc[hidden]{display:none}
 .calc button{flex:none;width:44px;min-height:38px;border:2px solid var(--ink);border-radius:9px;background:var(--soft);color:var(--ink);font:900 1.05rem var(--cute);cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent}
 .calc button.eq{background:var(--green);color:#fff}
 .calc button:active{transform:translate(1px,1px)}
@@ -1078,7 +1083,6 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
     <section id="p-add" class="pg hide">
       <form id="expense" class="card">
         <div class="seg" id="typeSeg"><label><input type="radio" name="type" value="out" checked><span>▼ รายจ่าย</span></label><label><input type="radio" name="type" value="in"><span>▲ รายรับ</span></label><label><input type="radio" name="type" value="transfer"><span>⇄ โอน</span></label></div>
-        <div class="qk" id="qk" hidden><span class="qkt">⚡ ใช้บ่อย — แตะเพื่อเติมให้</span><div class="qkl" id="qkl"></div></div>
         <button type="button" class="slipbtn" id="slipBtn">📷 อ่านจากสลิปโอนเงิน</button><input type="file" id="slipFile" accept="image/*" hidden>
         <div id="slipReview" class="card hide" style="padding:10px 12px;font-size:.8rem;gap:6px">
           <b id="slipReviewTitle">ผลตรวจสลิป</b>
@@ -1087,10 +1091,11 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
           <details><summary>ข้อความที่ OCR อ่านได้</summary><pre id="slipRaw" style="white-space:pre-wrap;overflow-wrap:anywhere;max-height:150px;overflow:auto"></pre></details>
         </div>
         <div class="row2">
-          <label class="f">จำนวนเงิน (บาท)<input class="amt" name="amount" type="text" inputmode="decimal" maxlength="40" autocomplete="off" placeholder="0.00 หรือ 45+60×2" required></label>
+          <label class="f">จำนวนเงิน (บาท)<input class="amt" name="amount" type="text" inputmode="decimal" maxlength="40" autocomplete="off" placeholder="0.00" required></label>
           <label class="f">วันที่<input name="date" type="date" required></label>
         </div>
-        <div class="calc" id="calc" aria-label="เครื่องคิดเลข"><button type="button" data-op="+" aria-label="บวก">＋</button><button type="button" data-op="-" aria-label="ลบ">－</button><button type="button" data-op="*" aria-label="คูณ">×</button><button type="button" data-op="/" aria-label="หาร">÷</button><button type="button" data-op="=" class="eq" aria-label="คำนวณ">＝</button><span id="calcRes"></span></div>
+        <div class="calc" id="calc" hidden aria-label="เครื่องคิดเลข"><button type="button" data-op="+" aria-label="บวก">＋</button><button type="button" data-op="-" aria-label="ลบ">－</button><button type="button" data-op="*" aria-label="คูณ">×</button><button type="button" data-op="/" aria-label="หาร">÷</button><button type="button" data-op="=" class="eq" aria-label="คำนวณ">＝</button><span id="calcRes"></span></div>
+        <div class="qk" id="qk" hidden><div class="qkl" id="qkl" role="group" aria-label="ใช้บ่อย"></div></div>
         <div class="row2 single" id="accountRow"><label class="f" id="accLbl">บัญชีที่ใช้จ่าย<select name="account" id="accSel" required></select></label><label class="f" id="toWrap" hidden>บัญชีปลายทาง<select name="to_account" id="toSel"></select></label></div>
         <div class="f">หมวดหมู่<div class="cats" id="cats"></div></div>
         <div class="f">รายละเอียด (ไม่บังคับ)
@@ -1152,12 +1157,12 @@ nav button span .gi{width:1.35rem;height:1.35rem;color:inherit}
 </div></div>
 <div id="budModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
   <div class="box">
-    <h2>🎯 ตั้งงบรายเดือน</h2>
-    <p class="rst-tip">ใส่งบที่อยากใช้ต่อเดือน แถบความคืบหน้าจะเตือนด้วยสีเมื่อใช้ไปถึง 80% และ 100% (ไม่นับบัญชีเงินเก็บ)</p>
-    <div class="rst-row" style="grid-template-columns:1fr 150px"><b>งบต่อเดือน (บาท)</b><input type="text" inputmode="decimal" id="budInput" autocomplete="off" placeholder="เช่น 8000"></div>
+    <h2>🎯 ตั้งงบ</h2>
+    <div class="rst-row" style="grid-template-columns:1fr 140px"><b>ต่อเดือน</b><input type="text" inputmode="decimal" id="budInput" autocomplete="off" placeholder="0" aria-label="งบต่อเดือน (บาท)"></div>
+    <div class="rst-row" style="grid-template-columns:1fr 140px"><b>ต่อวัน</b><input type="text" inputmode="decimal" id="budDay" autocomplete="off" placeholder="0" aria-label="งบต่อวัน (บาท)"></div>
     <p class="rst-err" id="budErr" role="status"></p>
     <button type="button" class="cancel" id="budClear">ล้างงบ</button>
-    <div class="acts two"><button type="button" class="cancel" id="budCancel">ยกเลิก</button><button type="button" class="go" id="budSave">บันทึกงบ</button></div>
+    <div class="acts two"><button type="button" class="cancel" id="budCancel">ยกเลิก</button><button type="button" class="go" id="budSave">บันทึก</button></div>
   </div>
 </div></div>
 <div id="ordModal" class="modal hide"><div class="sheet" role="dialog" aria-modal="true">
@@ -1407,38 +1412,53 @@ const rcHtml=(r,act=true)=>{ const tr=r.type==='transfer', inn=r.type==='in', de
   const actions=act?'<div class="act"><button type="button" data-act="edit" aria-label="แก้ไข">✏️</button><button type="button" data-act="del" aria-label="ลบ">🗑️</button></div>':'';
   return `<div class="rc${isExRow(r)?' exr':''}" data-id="${esc(r.id)}"><div class="ico" style="background:${c[1]}55">${ic('icons/cat/'+c[2]+'.png',c[0])}</div><div class="n">${esc(r.description||r.category)}<small>${sub} · ${r.date.slice(8)}/${r.date.slice(5,7)}</small></div><div class="a"${(inn||dep)?' style="color:#1f9d6b"':''}>${(inn||dep)?'+':''}${baht(r.amount)}</div>${actions}</div>`; };
 /* ---------- งบรายเดือน ---------- */
-let BUD=Number(load(uk('budget'),0))||0;
+let BUD=Number(load(uk('budget'),0))||0, DAYB=Number(load(uk('budget-day'),0))||0;
 function renderBud(total,key){
   const el=$('#bud');
-  if(!BUD){ el.className='bud'; el.innerHTML='<div class="bt"><b>🎯 งบรายเดือน</b><button type="button" id="budSet">ตั้งงบ</button></div><div class="bm">ตั้งงบไว้ ดูว่าเดือนนี้ใช้ไปเท่าไรแล้ว</div>'; return; }
-  const pct=total/BUD*100, left=BUD-total, now=new Date(), cur=key===ymd(now).slice(0,7);
-  let note;
-  if(left<0) note='🚨 เกินงบ '+baht(-left);
-  else if(cur){ const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(), rem=dim-now.getDate()+1; note='เหลือ '+baht(left)+' · ใช้ได้วันละ '+baht(Math.floor(left/rem))+' (อีก '+rem+' วัน)'; }
-  else note='เหลือ '+baht(left);
-  el.className='bud'+(pct>=100?' over':pct>=80?' warn':'');
-  el.innerHTML='<div class="bt"><b>🎯 งบรายเดือน</b><span>'+baht(total)+' / '+baht(BUD)+' · '+Math.round(pct)+'%</span><button type="button" id="budSet" aria-label="แก้งบ">✎</button></div><div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.min(Math.round(pct),100)+'"><div class="fill" style="width:'+Math.min(pct,100)+'%"></div></div><div class="bm">'+note+'</div>';
+  if(!BUD&&!DAYB){ el.className='bud'; el.innerHTML='<div class="bt"><b>🎯 งบ</b><button type="button" id="budSet">ตั้งงบ</button></div>'; return; }
+  const now=new Date(), todayS=ymd(now), cur=key===todayS.slice(0,7), btn='<button type="button" id="budSet" aria-label="แก้งบ">✎</button>';
+  let first=true, html='', cls='bud';
+  if(BUD){
+    const pct=total/BUD*100, left=BUD-total; let note;
+    if(left<0) note='🚨 เกินงบ '+baht(-left);
+    else if(cur){ const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate(), rem=dim-now.getDate()+1; note='เหลือ '+baht(left)+' · วันละ '+baht(Math.floor(left/rem))+' · อีก '+rem+' วัน'; }
+    else note='เหลือ '+baht(left);
+    cls+=pct>=100?' over':pct>=80?' warn':'';
+    html+='<div class="bt"><b>🎯 รายเดือน</b><span>'+baht(total)+' / '+baht(BUD)+' · '+Math.round(pct)+'%</span>'+(first?btn:'')+'</div><div class="track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.min(Math.round(pct),100)+'"><div class="fill" style="width:'+Math.min(pct,100)+'%"></div></div><div class="bm">'+note+'</div>';
+    first=false;
+  }
+  if(DAYB){
+    const spent=allRows().filter(r=>r.type==='out'&&!isExRow(r)&&r.date===todayS).reduce((t,r)=>t+Number(r.amount),0), pct=spent/DAYB*100, left=DAYB-spent;
+    html+='<div class="dy'+(pct>=100?' over':pct>=80?' warn':'')+'"><div class="bt"><b>☀ วันนี้</b><span>'+baht(spent)+' / '+baht(DAYB)+(left<0?' · เกิน '+baht(-left):'')+'</span>'+(first?btn:'')+'</div><div class="track sm" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+Math.min(Math.round(pct),100)+'"><div class="fill" style="width:'+Math.min(pct,100)+'%"></div></div></div>';
+  }
+  el.className=cls; el.innerHTML=html;
 }
 const closeBud=()=>$('#budModal').classList.add('hide');
-$('#bud').onclick=e=>{ if(!e.target.closest('#budSet')) return; $('#budInput').value=BUD?String(BUD):''; $('#budErr').textContent=''; $('#budModal').classList.remove('hide'); setTimeout(()=>$('#budInput').focus(),60); };
+$('#bud').onclick=e=>{ if(!e.target.closest('#budSet')) return; $('#budInput').value=BUD?String(BUD):''; $('#budDay').value=DAYB?String(DAYB):''; $('#budErr').textContent=''; $('#budModal').classList.remove('hide'); setTimeout(()=>$('#budInput').focus(),60); };
 $('#budCancel').onclick=closeBud;
 $('#budModal').addEventListener('click',e=>{ if(e.target===$('#budModal')) closeBud(); });
-$('#budClear').onclick=()=>{ BUD=0; save(uk('budget'),0); closeBud(); render(); };
-$('#budSave').onclick=()=>{ const raw=$('#budInput').value.replace(/,/g,'').trim(), v=Number(raw);
-  if(!/^\d{1,9}(?:\.\d{1,2})?$/.test(raw)||!(v>0)){ $('#budErr').textContent='กรุณากรอกงบเป็นตัวเลขมากกว่า 0'; return; }
-  BUD=v; save(uk('budget'),v); closeBud(); render(); };
+$('#budClear').onclick=()=>{ BUD=0; DAYB=0; save(uk('budget'),0); save(uk('budget-day'),0); closeBud(); render(); };
+$('#budSave').onclick=()=>{
+  const rd=x=>{ const raw=x.value.replace(/,/g,'').trim(); if(!raw) return 0; return /^\d{1,9}(?:\.\d{1,2})?$/.test(raw)&&Number(raw)>0?Number(raw):NaN; };
+  const m=rd($('#budInput')), d=rd($('#budDay'));
+  if(Number.isNaN(m)||Number.isNaN(d)){ $('#budErr').textContent='กรอกเป็นตัวเลขมากกว่า 0 หรือเว้นว่าง'; return; }
+  BUD=m; DAYB=d; save(uk('budget'),m); save(uk('budget-day'),d); closeBud(); render(); };
 
 /* ---------- เครื่องคิดเลขในช่องจำนวนเงิน ---------- */
 const evalAmt=raw=>{ const s=String(raw).replace(/,/g,'').replace(/[×xX]/g,'*').replace(/÷/g,'/').replace(/[−–－]/g,'-').replace(/＋/g,'+').trim();
   if(!s||s.length>40||!/^[0-9+\-*/().\s]+$/.test(s)) return null;
   try{ const v=Function('"use strict";return ('+s+')')(); return Number.isFinite(v)?Math.round(v*100)/100:null; }catch(_){ return null; } };
 const amtIn=form.elements.amount, hasOp=v=>/[+\-*/×÷xX−]/.test(String(v).trim().replace(/^-/,''));
-function updCalc(){ const v=amtIn.value, el=$('#calcRes'); if(!hasOp(v)){ el.textContent=''; return; } const r=evalAmt(v); el.textContent=(r!==null&&r>0)?'= '+baht(r):'⚠ สูตรไม่ถูกต้อง'; }
+function updCalc(){ const v=amtIn.value, el=$('#calcRes'); if(!hasOp(v)){ el.textContent=''; return; } const r=evalAmt(v); el.textContent=(r!==null&&r>0)?'= '+baht(r):'⚠'; }
+const calcBox=$('#calc'); let calcT;
+const showCalc=()=>{ clearTimeout(calcT); calcBox.hidden=false; };
+const hideCalc=()=>{ clearTimeout(calcT); calcT=setTimeout(()=>{ if(!hasOp(amtIn.value)&&document.activeElement!==amtIn&&!calcBox.contains(document.activeElement)) calcBox.hidden=true; },450); };
+amtIn.addEventListener('focus',showCalc); amtIn.addEventListener('blur',hideCalc);
 amtIn.addEventListener('input',updCalc);
 amtIn.addEventListener('blur',()=>{ if(hasOp(amtIn.value)){ const r=evalAmt(amtIn.value); if(r!==null&&r>0) amtIn.value=String(r); } updCalc(); });
 $('#calc').addEventListener('mousedown',e=>e.preventDefault());
 $('#calc').onclick=e=>{ const b=e.target.closest('button[data-op]'); if(!b) return; const op=b.dataset.op;
-  if(op==='='){ const r=evalAmt(amtIn.value); if(r!==null&&r>0) amtIn.value=String(r); else if(amtIn.value.trim()) showStatus('สูตรไม่ถูกต้อง',true); updCalc(); return; }
+  if(op==='='){ const r=evalAmt(amtIn.value); if(r!==null&&r>0) amtIn.value=String(r); updCalc(); return; }
   const v=amtIn.value.trim(); if(!v&&op!=='-') return; amtIn.value=v.replace(/[+\-*/]$/,'')+op; updCalc(); };
 
 /* ---------- ใช้บ่อย (สร้างจากประวัติ 120 วันล่าสุด) ---------- */
@@ -1457,7 +1477,7 @@ $('#qkl').onclick=e=>{ const b=e.target.closest('button[data-i]'); if(!b) return
   if(r.account&&[...form.elements.account.options].some(o=>o.value===r.account)) form.elements.account.value=r.account;
   const rad=[...form.querySelectorAll('input[name=category]')].find(x=>x.value===r.category); if(rad) rad.checked=true;
   form.elements.description.value=r.description||'';
-  updCalc(); renderChips(); navigator.vibrate&&navigator.vibrate(10); showStatus('เติมให้แล้ว ตรวจแล้วกด "บันทึก" ได้เลย'); };
+  updCalc(); hideCalc(); renderChips(); navigator.vibrate&&navigator.vibrate(10); };
 $('#typeSeg').addEventListener('change',renderQuick);
 
 let lsMonth='';
@@ -1732,7 +1752,7 @@ form.addEventListener('submit',e=>{
   if(slipScanMeta){ f.slipRef=slipScanMeta.slipRef||''; f.slipHash=slipScanMeta.slipHash||''; }
   const q=readQueue(); q.push({...f,id:crypto.randomUUID(),user}); save(QUEUE_KEY,q);
   remember(f.category,f.description); slipScanMeta=null; $('#slipReview').classList.add('hide'); $('#slipConfirm').checked=false;
-  const keep=f.date,kt=f.type; form.reset(); form.elements.date.value=keep; form.elements.type.value=kt; setAccMode(kt); drawCats(kt); updCalc();
+  const keep=f.date,kt=f.type; form.reset(); form.elements.date.value=keep; form.elements.type.value=kt; setAccMode(kt); drawCats(kt); updCalc(); hideCalc();
   showStatus('กำลังส่ง…'); renderChips(); render(); document.activeElement&&document.activeElement.blur(); burst(); navigator.vibrate&&navigator.vibrate(18); flush();
 });
 
